@@ -8,7 +8,7 @@ import myLoader from '../../helpers/myloader'
 import { IBlog } from '../../types'
 
 interface IBlogPostProps {
-    post: IBlog & { style: CSSProperties }
+    post: IBlog & { style?: CSSProperties }
     tagsOnTop: boolean
 }
 
