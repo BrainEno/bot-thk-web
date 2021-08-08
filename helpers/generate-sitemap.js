@@ -12,17 +12,17 @@ const prettier = require('prettier')
     const tags = await tagres.json()
     // Ignore Next.js specific files (e.g., _app.js) and API routes.
     const pages = await globby([
-        'pages/**/*{.js,.jsx}',
-        '!pages/_*.jsx',
-        '!pages/500.jsx',
+        'pages/**/*{.js,.jsx,.tsx}',
+        '!pages/_*{.jsx,.tsx}',
+        '!pages/500{.jsx,.tsx}',
         '!pages/api',
         '!pages/auth',
         '!pages/admin',
         '!pages/user',
         '!pages/account',
         '!pages/profile',
-        '!pages/**/[id].jsx',
-        '!pages/**/[slug].jsx',
+        '!pages/**/[id]{.jsx,.tsx}',
+        '!pages/**/[slug]{.jsx,.tsx}',
     ])
 
     const sitemap = `

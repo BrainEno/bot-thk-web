@@ -1,16 +1,16 @@
 import MyIcon from '../components/MyIcon'
 
-const Custom500 = () => {
+const Custom404 = () => {
     return (
         <div className="fl-center">
             <div className="row">
                 <MyIcon width={100} height={100} />
                 <h1 className="text-center" style={{ marginLeft: 20 }}>
-                    | 服务器繁忙，请刷新页面！
+                    | 未找到该页面，请重试！
                 </h1>
             </div>
         </div>
     )
 }
 
-export default Custom500
+export default Custom404

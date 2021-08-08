@@ -1,16 +1,5 @@
-declare global {
-    namespace NodeJS {
-        interface Global {
-            document: Document
-            window: Window
-            navigator: Navigator
-            mongoose: any
-        }
-    }
-}
-
 import mongoose from 'mongoose'
-
+import { globalThis } from '../global'
 const MONGODB_URI = process.env.MONGODB_URI
 
 if (!MONGODB_URI) {
@@ -24,6 +13,7 @@ if (!MONGODB_URI) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
+let global: globalThis = { mongoose }
 let cached = global.mongoose
 
 if (!cached) {
@@ -48,6 +38,7 @@ async function dbConnect() {
         cached.promise = mongoose
             .connect(MONGODB_URI!, opts)
             .then((mongoose) => {
+                console.log('MongoDB Connected')
                 return mongoose
             })
     }

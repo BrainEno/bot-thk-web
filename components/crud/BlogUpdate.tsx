@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { useRouter, withRouter } from 'next/router'
+import { NextRouter, useRouter, withRouter } from 'next/router'
 import { getCookie, isAuth } from '../../actions/auth'
 import { listCategories } from '../../actions/category'
 import { listTags } from '../../actions/tag'
@@ -9,29 +9,35 @@ const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
 })
 import { UploadOutlined } from '@ant-design/icons'
-import { QuillModules, QuillFormats } from '../../helper/quill'
+import { QuillModules, QuillFormats } from '../../helpers/quill'
 import SlideImage from '../SlideImage'
+import { ICategory, ITag } from '../../types'
 
-const BlogUpdate = ({ router }) => {
+const BlogUpdate = ({ router }: { router: NextRouter }) => {
     const myRouter = useRouter()
     const [body, setBody] = useState('')
 
-    const [categories, setCategories] = useState([])
-    const [tags, setTags] = useState([])
+    const [categories, setCategories] = useState<ICategory[]>([])
+    const [tags, setTags] = useState<ITag[]>([])
 
-    const [checked, setChecked] = useState([])
-    const [checkedTag, setCheckedTag] = useState([])
+    const [checkedCats, setCheckedCats] = useState<string[]>([])
+    const [checkedTags, setCheckedTags] = useState<string[]>([])
 
-    const [values, setValues] = useState({
+    const [values, setValues] = useState<{
+        title: string
+        error: string
+        successMsg: string
+        formData: null | FormData
+        body: string
+    }>({
         title: '',
         error: '',
-        success: '',
-        formData: '',
-        title: '',
+        successMsg: '',
+        formData: null,
         body: '',
     })
 
-    const { error, success, formData, title } = values
+    const { error, successMsg, formData, title } = values
     const token = getCookie('token')
 
     useEffect(() => {
@@ -56,20 +62,20 @@ const BlogUpdate = ({ router }) => {
         }
     }
 
-    const setCategoriesArray = (blogCategories) => {
-        let ca = []
-        blogCategories.map((c, i) => {
+    const setCategoriesArray = (blogCategories: ICategory[]) => {
+        let ca: string[] = []
+        blogCategories.map((c) => {
             ca.push(c._id)
         })
-        setChecked(ca)
+        setCheckedCats(ca)
     }
 
-    const setTagsArray = (blogTags) => {
-        let ta = []
-        blogTags.map((t, i) => {
+    const setTagsArray = (blogTags: ITag[]) => {
+        let ta: string[] = []
+        blogTags.map((t) => {
             ta.push(t._id)
         })
-        setCheckedTag(ta)
+        setCheckedTags(ta)
     }
 
     const initCategories = () => {
@@ -92,25 +98,25 @@ const BlogUpdate = ({ router }) => {
         })
     }
 
-    const handleToggle = (c) => () => {
+    const handleToggle = (catId: string) => () => {
         setValues({ ...values, error: '' })
-        const clickedCategory = checked.indexOf(c)
-        const all = [...checked]
+        const clickedCategory = checkedCats.indexOf(catId)
+        const all = [...checkedCats]
 
         if (clickedCategory === -1) {
-            all.push(c)
+            all.push(catId)
         } else {
             all.splice(clickedCategory, 1)
         }
 
-        setChecked(all)
-        if (formData) formData.set('categories', all)
+        setCheckedCats(all)
+        formData!.set('categories', all.toString())
     }
 
-    const handleTagsToggle = (t) => () => {
+    const handleTagsToggle = (t: string) => () => {
         setValues({ ...values, error: '' })
-        const clickedTag = checkedTag.indexOf(t)
-        const all = [...checkedTag]
+        const clickedTag = checkedTags.indexOf(t)
+        const all = [...checkedTags]
 
         if (clickedTag === -1) {
             all.push(t)
@@ -118,12 +124,12 @@ const BlogUpdate = ({ router }) => {
             all.splice(clickedTag, 1)
         }
         console.log(all)
-        setCheckedTag(all)
-        formData.set('tags', all)
+        setCheckedTags(all)
+        formData!.set('tags', all.toString())
     }
 
-    const findOutCategory = (c) => {
-        const result = checked.indexOf(c)
+    const findOutCategory = (c: string) => {
+        const result = checkedCats.indexOf(c)
         if (result !== -1) {
             return true
         } else {
@@ -131,8 +137,8 @@ const BlogUpdate = ({ router }) => {
         }
     }
 
-    const findOutTag = (t) => {
-        const result = checkedTag.indexOf(t)
+    const findOutTag = (t: string) => {
+        const result = checkedTags.indexOf(t)
         if (result !== -1) {
             return true
         } else {
@@ -174,19 +180,20 @@ const BlogUpdate = ({ router }) => {
         )
     }
 
-    const handleChange = (name) => (e) => {
-        console.log(e.target.value)
-        const value = name === 'image' ? e.target.files[0] : e.target.value
-        formData.set(name, value, (e) => console.log(e))
-        setValues({ ...values, [name]: value, formData, error: '' })
-    }
+    const handleChange =
+        (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+            console.log(e.target.value)
+            const value = name === 'image' ? e.target.files![0] : e.target.value
+            formData!.set(name, value)
+            setValues({ ...values, [name]: value, formData, error: '' })
+        }
 
-    const handleBody = (e) => {
+    const handleBody = (e: string) => {
         setBody(e)
-        formData.set('body', e)
+        formData!.set('body', e)
     }
 
-    const editBlog = (e) => {
+    const editBlog: React.FormEventHandler = (e) => {
         e.preventDefault()
         console.log(router.query.id)
         updateBlog(formData, token, router.query.id).then((data) => {
@@ -196,7 +203,7 @@ const BlogUpdate = ({ router }) => {
                 setValues({
                     ...values,
                     title: '',
-                    sucess: `您的文章《${data.title}》已成功更新`,
+                    successMsg: `您的文章《${data.title}》已成功更新`,
                 })
                 if (isAuth() && isAuth().role === 1) {
                     myRouter.replace(`/admin`)
@@ -215,10 +222,10 @@ const BlogUpdate = ({ router }) => {
 
     const showSuccess = () => (
         <div
-            className="alert alert-success"
-            style={{ display: success ? '' : 'none' }}
+            className="alert alert-successMsg"
+            style={{ display: successMsg ? '' : 'none' }}
         >
-            {success}
+            {successMsg}
         </div>
     )
 
@@ -256,27 +263,12 @@ const BlogUpdate = ({ router }) => {
         <div className="blog-update-container">
             <div className="blogUpdate-form">
                 {body && (
-                    // <div>
-                    //   {/* <img
-                    //     src={`${process.env.NEXT_PUBLIC_API}/blog/image/${router.query.id}`}
-                    //     style={{ width: "100%", marginBottom: "20px" }}
-                    //   /> */}
-                    //   {router.query.id && (
-                    //     <Image
-                    //       src={`/blog/image/${router.query.id}`}
-                    //       layout='fill'
-                    //       objectFit='cover'
-                    //       alt='post image'
-                    //       loader={myLoader}
-                    //     />
-                    //   )}
-                    // </div>
                     <div style={{ marginBottom: '20px' }}>
-                        <SlideImage img={`/blog/image/${router.query.id}`} />
+                        <SlideImage imgSrc={`/blog/image/${router.query.id}`} />
                     </div>
                 )}
                 {error && showError()}
-                {success && showSuccess()}
+                {successMsg && showSuccess()}
                 <div className="blog-form-container">{updateBlogForm()}</div>
             </div>
             <div className="right-container">

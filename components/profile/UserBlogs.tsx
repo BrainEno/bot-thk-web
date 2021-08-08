@@ -3,8 +3,13 @@ import dayjs from 'dayjs'
 import { Pagination } from 'antd'
 import 'antd/dist/antd.css'
 import MyBrand from '../MyBrand'
+import { IBlog, IUser } from '../../types'
 
-const UserBlogs = ({ blogs, user }) => {
+interface IUserBlogsProps {
+    blogs: IBlog[]
+    user: IUser
+}
+const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
     const [pageSize, setPageSize] = useState(6)
     const [current, setCurrent] = useState(1)
 

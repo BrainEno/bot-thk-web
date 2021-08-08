@@ -1,25 +1,40 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { BlogCategory, TagRow } from '../../components/blog'
-import renderHTML from 'react-render-html'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CustomerServiceOutlined } from '@ant-design/icons'
 import SlideImage from '../../components/SlideImage'
 import { APP_NAME, DOMAIN } from '../../config'
 import dayjs from 'dayjs'
 import { singleBlog, listRelated } from '../../actions/blog'
-import { mergeStyles } from '../../helper/mergeStyles'
-import DisqusThread from '../../components/DisqusThread'
+import { mergeStyles } from '../../helpers/mergeStyles'
+// import DisqusThread from '../../components/DisqusThread'
+const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
+    ssr: false,
+})
 import { singleCategory } from '../../actions/category'
 import useSWR from 'swr'
+import { IBlog } from '../../types'
+import {
+    GetStaticPaths,
+    GetStaticPathsResult,
+    GetStaticProps,
+    GetStaticPropsContext,
+} from 'next'
 
-const SingleBlog = ({ initialBlog, id }) => {
+interface SingleBlogProps {
+    initialBlog: any
+    id: any
+}
+
+const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
     const [related, setRelated] = useState([])
-    const [voices, setVoices] = useState([])
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [selectedVoice, setSelectedVoice] = useState('')
     const { data: blog } = useSWR(
-        [`${process.env.NEXT_PUBLIC_API}/blog/`, id],
-        (url, id) => fetch(url, { id }).then((r = r.json())),
+        `${process.env.NEXT_PUBLIC_API}/blog/${id}`,
+        (url, id) => fetch(url, { id } as any).then((r) => r.json()),
         {
             initialData: initialBlog,
         }
@@ -37,34 +52,35 @@ const SingleBlog = ({ initialBlog, id }) => {
 
     const showComents = () => {
         return (
-            <div>
-                <DisqusThread
-                    id={blog._id}
-                    title={blog.title}
-                    path={`blog/${blog._id}`}
-                />
-            </div>
+            <DisqusThread
+                id={blog._id}
+                title={blog.title}
+                path={`blog/${blog._id}`}
+            />
         )
     }
 
-    const getVoices = () => {
+    const getVoices = (): Promise<SpeechSynthesisVoice[]> => {
         return new Promise((resolve) => {
             if (typeof window !== 'undefined') {
                 const synth = window.speechSynthesis
-                const allVoices = synth.getVoices()
+                const allVoices: SpeechSynthesisVoice[] = synth.getVoices()
                 resolve(allVoices)
             }
         })
     }
 
-    const handleVoiceChange = (e) => {
+    const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedVoice(e.target.value)
     }
 
-    const handleRead = (e) => {
+    const handleRead: React.FormEventHandler = (
+        e: React.FormEvent<HTMLSelectElement>
+    ) => {
         e.preventDefault()
 
         if (typeof window !== 'undefined') {
+            let speakText: SpeechSynthesisUtterance | undefined
             let readContent = blog.body.replace(/<[^>]+>/g, '')
             const synth = window.speechSynthesis
 
@@ -82,7 +98,7 @@ const SingleBlog = ({ initialBlog, id }) => {
             if (readContent !== '' && typeof speakText === 'undefined') {
                 const speakText = new SpeechSynthesisUtterance(readContent)
 
-                speakText.onend = (e) => {
+                speakText.onend = (_) => {
                     console.log('文章结束了')
                     synth.cancel()
                 }
@@ -95,7 +111,7 @@ const SingleBlog = ({ initialBlog, id }) => {
                     console.log('有什么地方出错了', e)
                 }
 
-                voices.forEach((voice) => {
+                voices!.forEach((voice) => {
                     if (voice.name === selectedVoice) {
                         speakText.voice = voice
                         speakText.lang = voice.lang
@@ -112,13 +128,21 @@ const SingleBlog = ({ initialBlog, id }) => {
         }
     }
 
+    const initVoice = async () => {
+        try {
+            const allVoices = await getVoices()
+            setVoices(allVoices)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         loadRelated()
     }, [])
 
-    useEffect(async () => {
-        const allVoices = await getVoices()
-        setVoices(allVoices)
+    useEffect(() => {
+        initVoice()
     }, [voices])
 
     const head = () => (
@@ -139,7 +163,7 @@ const SingleBlog = ({ initialBlog, id }) => {
             />
             <meta
                 property="og:image:secure_url"
-                ccontent={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog._id}`}
+                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog._id}`}
             />
             <meta property="og:image:type" content="image/jpg" />
             <meta name="theme-color" content="#eff3f8" />
@@ -164,11 +188,7 @@ const SingleBlog = ({ initialBlog, id }) => {
     return (
         <>
             {head()}
-            <SlideImage
-                img={`/blog/image/${blog._id}`}
-                alt={blog.title}
-                className="banner"
-            />
+            <SlideImage imgSrc={`/blog/image/${blog._id}`} alt={blog.title} />
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
@@ -178,10 +198,7 @@ const SingleBlog = ({ initialBlog, id }) => {
                         <p>
                             <span className="author-text">
                                 By : {'  '}
-                                <Link
-                                    href={`/profile/${blog.author.username}`}
-                                    className="a-blue"
-                                >
+                                <Link href={`/profile/${blog.author.username}`}>
                                     {blog.author.name}
                                 </Link>
                             </span>
@@ -220,7 +237,9 @@ const SingleBlog = ({ initialBlog, id }) => {
                     </div>
                 )}
                 <article className="article-content">
-                    <section>{renderHTML(blog.body)}</section>
+                    <section
+                        dangerouslySetInnerHTML={{ __html: blog.body }}
+                    ></section>
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
                     {showComents()}
@@ -234,7 +253,7 @@ const SingleBlog = ({ initialBlog, id }) => {
     )
 }
 
-function initRecent() {
+function initRecent(): Promise<IBlog[]> {
     return new Promise((resolve, reject) => {
         singleCategory('recent-post').then((data) => {
             if (data.error) {
@@ -248,7 +267,7 @@ function initRecent() {
     })
 }
 
-function initTrending() {
+function initTrending(): Promise<IBlog[]> {
     return new Promise((resolve, reject) => {
         singleCategory('trending').then((data) => {
             if (data.error) {
@@ -262,7 +281,7 @@ function initTrending() {
     })
 }
 
-function initFeatured() {
+function initFeatured(): Promise<IBlog[]> {
     return new Promise((resolve, reject) => {
         singleCategory('featured').then((data) => {
             if (data.error) {
@@ -276,24 +295,25 @@ function initFeatured() {
     })
 }
 
-export async function getStaticPaths() {
-    const recentPosts = await initRecent()
-    const trendingPosts = await initTrending()
-    const featuredPosts = await initFeatured()
-    const posts = [...recentPosts, ...trendingPosts, ...featuredPosts]
-    const paths = posts.map((post) => ({
-        params: {
-            id: post._id,
-        },
-    }))
+export const getStaticPaths: GetStaticPaths =
+    async (): Promise<GetStaticPathsResult> => {
+        const recentPosts = await initRecent()
+        const trendingPosts = await initTrending()
+        const featuredPosts = await initFeatured()
+        const posts = [...recentPosts, ...trendingPosts, ...featuredPosts]
+        const paths = posts.map((post) => ({
+            params: {
+                id: post._id,
+            },
+        }))
 
-    return {
-        paths,
-        fallback: false,
+        return {
+            paths,
+            fallback: true,
+        }
     }
-}
 
-function initBlog(id) {
+function initBlog(id: string): Promise<IBlog> {
     return new Promise((resolve, reject) => {
         singleBlog(id).then((data) => {
             if (data.error) {
@@ -305,9 +325,11 @@ function initBlog(id) {
     })
 }
 
-export async function getStaticProps({ params }) {
-    const initialBlog = await initBlog(params.id)
-    return { props: { initialBlog, id: params.id } }
+export const getStaticProps: GetStaticProps = async ({
+    params,
+}: GetStaticPropsContext) => {
+    const initialBlog = await initBlog(params!.id as any)
+    return { props: { initialBlog, id: params!.id! }, revalidate: 1 }
 }
 
 export default SingleBlog

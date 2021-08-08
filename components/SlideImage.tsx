@@ -1,36 +1,34 @@
-import Image from "next/image";
-import useWindowSize from "../helper/useWindowSize";
+import Image from 'next/image'
+import useWindowSize from '../helpers/useWindowSize'
+import myLoader from '../helpers/myloader'
 
-const myLoader = ({ src, width, quality }) => {
-  return `${process.env.NEXT_PUBLIC_API}${src}?w=${width}&q=${quality || 75}`;
-};
+const SlideImage = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
+    const { windowWidth } = useWindowSize()
 
-const SlideImage = ({ img }) => {
-  const windowSize = useWindowSize();
+    return (
+        <div
+            className="banner-container"
+            style={{
+                height: windowWidth! > 900 ? '500px' : '300px',
+                width: '100%',
+                position: 'relative',
+            }}
+        >
+            {windowWidth && (
+                <Image
+                    className="banner-img"
+                    priority={true}
+                    src={imgSrc}
+                    layout="fill"
+                    alt={alt || 'banner'}
+                    objectFit="cover"
+                    objectPosition="50% 50%"
+                    loader={myLoader}
+                    quality={windowWidth! > 900 ? 75 : 45}
+                />
+            )}
+        </div>
+    )
+}
 
-  return (
-    <div
-      className='banner-container'
-      style={{
-        height: windowSize.width > 900 ? "500px" : "300px",
-        width: "100%",
-        position: "relative",
-      }}>
-      {windowSize && (
-        <Image
-          className='banner-img'
-          priority={true}
-          src={img}
-          layout='fill'
-          alt='banner'
-          objectFit='cover'
-          objectPosition='50% 50%'
-          loader={myLoader}
-          quality={windowSize.width > 900 ? 75 : 45}
-        />
-      )}
-    </div>
-  );
-};
-
-export default SlideImage;
+export default SlideImage

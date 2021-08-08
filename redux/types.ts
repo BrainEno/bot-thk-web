@@ -4,6 +4,7 @@ export enum ActionTypes {
     LOGOUT_USER = 'LOGOUT_USER',
     LOAD_USER_PROFILE = 'LOAD_USER_PROFILE',
 }
+
 export const LOAD_USER = 'LOAD_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
 export const LOAD_USER_PROFILE = 'LOAD_USER_PROFILE'

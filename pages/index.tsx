@@ -2,7 +2,7 @@ import { PostGrid, BlogCategory } from '../components/blog'
 import { NextRouter, withRouter } from 'next/router'
 import Head from 'next/head'
 import { singleCategory } from '../actions/category'
-import { mergeStyles } from '../helper/mergeStyles'
+import { mergeStyles } from '../helpers/mergeStyles'
 import { APP_NAME, DOMAIN } from '../config'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
@@ -10,14 +10,14 @@ import Link from 'next/link'
 import useSWR from 'swr'
 import { IBlog } from 'types'
 
-interface IndexProps {
+interface IndexPageProps {
     router: NextRouter
     recentPost: IBlog[]
     trending: IBlog[]
     featured: IBlog[]
 }
 
-const Index: React.FC<IndexProps> = ({
+const Index: React.FC<IndexPageProps> = ({
     router,
     recentPost,
     trending,
@@ -145,10 +145,8 @@ function initRecent() {
     return new Promise((resolve, reject) => {
         singleCategory('recent-post').then((data) => {
             if (data.error) {
-                // console.log(data.error);
                 reject(data.error)
             } else {
-                // return { recentPost: data.blogs };
                 resolve(data.blogs)
             }
         })
@@ -159,10 +157,8 @@ function initTrending() {
     return new Promise((resolve, reject) => {
         singleCategory('trending').then((data) => {
             if (data.error) {
-                // console.log(data.error);
                 reject(data.error)
             } else {
-                // return { recentPost: data.blogs };
                 resolve(data.blogs)
             }
         })
@@ -173,10 +169,8 @@ function initFeatured() {
     return new Promise((resolve, reject) => {
         singleCategory('featured').then((data) => {
             if (data.error) {
-                // console.log(data.error);
                 reject(data.error)
             } else {
-                // return { recentPost: data.blogs };
                 resolve(data.blogs)
             }
         })
@@ -187,7 +181,7 @@ export async function getStaticProps() {
     const recentPost = await initRecent()
     const trending = await initTrending()
     const featured = await initFeatured()
-    return { props: { recentPost, trending, featured } }
+    return { props: { recentPost, trending, featured }, revalidate: 1 }
 }
 
 export default withRouter(Index)

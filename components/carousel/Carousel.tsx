@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { CarouselItem } from './CarouselItem'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import { ICarouselItem } from '../../types'
 
-const items = [
+const items: ICarouselItem[] = [
     {
         src: '/images/recent.jpg',
         title: 'Reacent Post',
-        description: '',
         link: '/categories/recent-post',
         width: 2048,
         height: 1701,
@@ -14,7 +14,6 @@ const items = [
     {
         src: '/images/featured.png',
         title: 'Featured',
-        description: '',
         link: '/categories/featured',
         width: 1920,
         height: 1657,
@@ -22,7 +21,6 @@ const items = [
     {
         src: '/images/trending.png',
         title: 'Trending',
-        description: '',
         link: '/categories/trending',
         width: 1920,
         height: 1299,
@@ -39,19 +37,18 @@ const CarouselComponent = () => {
         setActiveIndex(nextIndex)
     }
 
-    const previous = (e) => {
-        e.preventDefault()
+    const previous = () => {
         if (animating) return
         const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1
         setActiveIndex(nextIndex)
     }
 
-    const goToIndex = (newIndex) => {
+    const goToIndex = (newIndex: number) => {
         if (animating) return
         setActiveIndex(newIndex)
     }
 
-    let cycleInterval
+    let cycleInterval: NodeJS.Timer
     const set = () => {
         clear()
 

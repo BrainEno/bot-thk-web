@@ -1,36 +1,50 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image'
+import Link from 'next/link'
 
-const MyBrand = ({ width, height, fontSize, cursor = "default" }) => (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-    }}>
-    <Link href='/'>
-      <span
+interface IMyBrand {
+    width: number
+    height: number
+    fontSize?: string
+    cursor?: string
+}
+
+const MyBrand: React.FC<IMyBrand> = ({
+    width,
+    height,
+    fontSize,
+    cursor = 'default',
+}) => (
+    <div
         style={{
-          fontSize: fontSize ?? "28px",
-          fontWeight: 700,
-          fontFamily: "-apple-system",
-          marginRight: "10px",
-          cursor: "default",
-        }}>
-        BOT THK
-      </span>
-    </Link>
-    <div style={{ cursor }}>
-      <Image
-        src='/moshIcon.svg'
-        alt='logo'
-        qulity={70}
-        width={width}
-        height={height}
-      />
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}
+    >
+        <Link href="/">
+            <span
+                style={{
+                    fontSize: fontSize ?? '28px',
+                    fontWeight: 700,
+                    fontFamily: '-apple-system',
+                    marginRight: '10px',
+                    cursor: 'default',
+                }}
+            >
+                BOT THK
+            </span>
+        </Link>
+        <div style={{ cursor }}>
+            <Image
+                src="/moshIcon.svg"
+                alt="logo"
+                quality={60}
+                width={width}
+                height={height}
+            />
+        </div>
     </div>
-  </div>
-);
+)
 
-export default MyBrand;
+export default MyBrand
