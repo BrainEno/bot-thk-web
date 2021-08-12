@@ -8,7 +8,6 @@ import SlideImage from '../../components/SlideImage'
 import dayjs from 'dayjs'
 import { singleBlog, listRelated } from '../../actions/blog'
 import { mergeStyles } from '../../helpers/mergeStyles'
-// import DisqusThread from '../../components/DisqusThread'
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
 })
@@ -23,12 +22,16 @@ import {
 } from 'next'
 
 interface SingleBlogProps {
-    initialBlog: any
-    id: any
+    initialBlog: IBlog
+    id: string
+    relatedBlogs: IBlog[]
 }
 
-const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
-    const [related, setRelated] = useState([])
+const SingleBlog: React.FC<SingleBlogProps> = ({
+    initialBlog,
+    id,
+    relatedBlogs,
+}) => {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [selectedVoice, setSelectedVoice] = useState('')
     const { data: blog } = useSWR(
@@ -38,16 +41,6 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
             initialData: initialBlog,
         }
     )
-
-    const loadRelated = useCallback(() => {
-        listRelated({ blog }).then((data) => {
-            if (data.error) {
-                console.log(data.error)
-            } else {
-                setRelated(data)
-            }
-        })
-    }, [blog])
 
     const showComents = () => {
         return (
@@ -137,10 +130,6 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
     }, [])
 
     useEffect(() => {
-        loadRelated()
-    }, [loadRelated])
-
-    useEffect(() => {
         initVoice()
     }, [initVoice])
 
@@ -190,10 +179,12 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
         },
     }
 
-    mergeStyles(related, relatedConfig)
+    mergeStyles(relatedBlogs, relatedConfig)
 
     const showRelatedBlog = () => {
-        return <BlogCategory posts={related} columns={3} tagsOnTop={true} />
+        return (
+            <BlogCategory posts={relatedBlogs} columns={3} tagsOnTop={true} />
+        )
     }
 
     return (
@@ -324,23 +315,21 @@ export const getStaticPaths: GetStaticPaths =
         }
     }
 
-function initBlog(id: string): Promise<IBlog> {
-    return new Promise((resolve, reject) => {
-        singleBlog(id).then((data) => {
-            if (data.error) {
-                reject(data.error)
-            } else {
-                resolve(data)
-            }
-        })
-    })
-}
-
 export const getStaticProps: GetStaticProps = async ({
     params,
 }: GetStaticPropsContext) => {
-    const initialBlog = await initBlog(params!.id as any)
-    return { props: { initialBlog, id: params!.id! }, revalidate: 1 }
+    const initialBlog = await singleBlog(params!.id as any)
+    const blog = {
+        _id: initialBlog._id,
+        tags: initialBlog.tags,
+        categories: initialBlog.categories,
+    }
+    const relatedBlogs = await listRelated({ blog })
+
+    return {
+        props: { initialBlog, relatedBlogs, id: params!.id! },
+        revalidate: 1,
+    }
 }
 
 export default SingleBlog

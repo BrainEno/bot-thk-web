@@ -75,7 +75,6 @@ const Category: React.FC<ICategoryProps> = ({ category, blogs, query }) => {
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
     const data = await singleCategory(query.slug)
-    console.log(data)
     return { props: { category: data.category, blogs: data.blogs, query } }
 }
 
