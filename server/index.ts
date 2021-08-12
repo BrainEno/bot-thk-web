@@ -3,7 +3,7 @@ import fastifyNext from 'fastify-nextjs'
 
 const bootstrap = async () => {
     const port = parseInt(process.env.PORT!, 10) || 3000
-    const dev = process.env.NODE_ENV != 'production'
+    // const dev = process.env.NODE_ENV != 'production'
 
     const server: FastifyInstance = fastify({ logger: { level: 'debug' } })
 

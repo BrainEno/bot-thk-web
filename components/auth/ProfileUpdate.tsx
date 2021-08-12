@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import MyBrand from '../MyBrand'
 import Avatar from '../profile/Avatar'
 import { getCookie, isAuth, updateUser } from '../../actions/auth'
@@ -43,30 +43,26 @@ const ProfileUpdate = () => {
         userData,
     } = values
 
-    const init = () => {
+    const init = useCallback(() => {
         getProfile(token).then((data) => {
             if (data.error) {
-                setValues({ ...values, error: data.error })
+                setValues((values) => ({ ...values, error: data.error }))
             } else {
-                setValues({
+                setValues((values) => ({
                     ...values,
                     username: data.username,
                     name: data.name,
                     email: data.email,
                     about: data.about,
-                })
-                console.log(data.username)
-                console.log(
-                    `${process.env.NEXT_PUBLIC_API}/user/photo/${username}`
-                )
+                }))
             }
         })
-    }
+    }, [token])
 
     useEffect(() => {
         isAuth()
         if (isAuth()) init()
-    }, [values.username])
+    }, [init])
 
     const handleChange =
         (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,32 +1,32 @@
-@import 'variables';
-@import 'index';
-@import 'editor';
-@import 'sign';
-@import 'blogPost';
-@import 'tagRow';
-@import 'allBlogs';
-@import 'blogCategory';
-@import 'postGrid';
-@import 'article';
-@import 'search';
-@import 'header';
-@import 'userDashboard';
-@import 'userBlogs';
-@import 'publicProfile';
-@import 'updateProfile';
-@import 'blogUpdate';
-@import 'manageBlogs';
-@import 'tagBlogs';
-@import 'categoryBlogs';
-@import 'carousel.scss';
-@import 'image.scss';
-@import 'footer.scss';
-@import './NotoSans.scss';
+@import "variables";
+@import "index";
+@import "editor";
+@import "sign";
+@import "blogPost";
+@import "tagRow";
+@import "allBlogs";
+@import "blogCategory";
+@import "postGrid";
+@import "article";
+@import "search";
+@import "header";
+@import "userDashboard";
+@import "userBlogs";
+@import "publicProfile";
+@import "updateProfile";
+@import "blogUpdate";
+@import "manageBlogs";
+@import "tagBlogs";
+@import "categoryBlogs";
+@import "carousel.scss";
+@import "image.scss";
+@import "footer.scss";
+@import "./NotoSans.scss";
 
 html,
 body {
     box-sizing: border-box;
-    font-family: 'Noto Sans SC', sans-serif;
+    font-family: "Noto Sans SC", sans-serif;
     font-weight: 400;
     margin: 0;
     height: 100%;
@@ -48,7 +48,7 @@ h1 {
 }
 
 h2 {
-    font-family: 'Noto Sans SC', sans-serif;
+    font-family: "Noto Sans SC", sans-serif;
     font-weight: 400;
     font-size: 32px;
 }
@@ -69,7 +69,7 @@ a {
     text-decoration: none;
     cursor: pointer;
     color: $text-color !important;
-    font-family: 'Noto Sans SC', sans-serif;
+    font-family: "Noto Sans SC", sans-serif;
     font-weight: 400;
 
     &:hover {
@@ -118,7 +118,7 @@ a {
 .overlay::before {
     transition: all ease-in-out 0.2s;
     z-index: 11;
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     right: 0;
@@ -135,7 +135,7 @@ a {
 
 .overlay:hover::before {
     z-index: 1;
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     right: 0;

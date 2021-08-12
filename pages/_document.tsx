@@ -13,6 +13,19 @@ class MyDocument extends Document {
                         name="apple-mobile-web-app-status-bar"
                         content="#90cdf4"
                     />
+                    <link
+                        rel="preconnect"
+                        href="https://fonts.googleapis.com"
+                    />
+                    <link
+                        rel="preconnect"
+                        href="https://fonts.gstatic.com"
+                        crossOrigin="true"
+                    />
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap"
+                        rel="stylesheet"
+                    ></link>
                     <link rel="icon" href="/favicon.ico" />
                     <link rel="apple-touch-icon" href="/moshIcon.png"></link>
                     <link rel="manifest" href="/manifest.json" />
@@ -24,13 +37,13 @@ class MyDocument extends Document {
                     <script
                         dangerouslySetInnerHTML={{
                             __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_path: window.location.pathname,
-            });
-          `,
+                          window.dataLayer = window.dataLayer || [];
+                          function gtag(){dataLayer.push(arguments);}
+                          gtag('js', new Date());
+                          gtag('config', '${GA_TRACKING_ID}', {
+                            page_path: window.location.pathname,
+                          });
+                        `,
                         }}
                     />
                 </Head>

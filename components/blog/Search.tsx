@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { SearchOutlined } from '@ant-design/icons'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { listSearch } from '../../actions/blog'
 import classNames from 'classnames'
 import { IBlog } from '../../types'
@@ -44,18 +44,21 @@ const Search = () => {
 
     const ref = useRef<null | HTMLDivElement>(null)
 
-    const handleClickOutside = (e: any) => {
-        if (ref.current && !ref.current!.contains(e.target)) {
-            setValues({ ...values, searched: false })
-        }
-    }
+    const handleClickOutside = useCallback(
+        (e: any) => {
+            if (ref.current && !ref.current!.contains(e.target)) {
+                setValues((values) => ({ ...values, searched: false }))
+            }
+        },
+        [ref]
+    )
 
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)
         return () => {
             document.removeEventListener('click', handleClickOutside, true)
         }
-    }, [ref, values])
+    }, [ref, handleClickOutside])
 
     const searchedBlogs = (results: IBlog[] = []) => {
         return (

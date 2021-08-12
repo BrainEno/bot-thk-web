@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { NextRouter, useRouter, withRouter } from 'next/router'
 import { getCookie, isAuth } from '../../actions/auth'
-import { listCategories } from '../../actions/category'
-import { listTags } from '../../actions/tag'
 import { singleBlog, updateBlog } from '../../actions/blog'
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
@@ -12,13 +10,19 @@ import { UploadOutlined } from '@ant-design/icons'
 import { QuillModules, QuillFormats } from '../../helpers/quill'
 import SlideImage from '../SlideImage'
 import { ICategory, ITag } from '../../types'
+import { useDispatch, useSelector } from 'react-redux'
+import { loadTags, loadCats } from '../../redux/actions'
+import { RootState } from '../../redux/reducers'
 
 const BlogUpdate = ({ router }: { router: NextRouter }) => {
     const myRouter = useRouter()
     const [body, setBody] = useState('')
 
-    const [categories, setCategories] = useState<ICategory[]>([])
-    const [tags, setTags] = useState<ITag[]>([])
+    const dispatch = useDispatch()
+    const selectCats = (state: RootState) => state.tagsCats.cats
+    const selectTags = (state: RootState) => state.tagsCats.tags
+    const tags = useSelector(selectTags)
+    const cats = useSelector(selectCats)
 
     const [checkedCats, setCheckedCats] = useState<string[]>([])
     const [checkedTags, setCheckedTags] = useState<string[]>([])
@@ -40,27 +44,20 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
     const { error, successMsg, formData, title } = values
     const token = getCookie('token')
 
-    useEffect(() => {
-        setValues({ ...values, formData: new FormData() })
-        initBlog()
-        initCategories()
-        initTags()
-    }, [router])
-
-    const initBlog = () => {
+    const initBlog = useCallback(() => {
         if (router.query.id) {
             singleBlog(router.query.id).then((data) => {
                 if (data.error) {
                     console.log(data.error)
                 } else {
-                    setValues({ ...values, title: data.title })
+                    setValues((values) => ({ ...values, title: data.title }))
                     setBody(data.body)
                     setCategoriesArray(data.categories)
                     setTagsArray(data.tags)
                 }
             })
         }
-    }
+    }, [router.query.id])
 
     const setCategoriesArray = (blogCategories: ICategory[]) => {
         let ca: string[] = []
@@ -76,26 +73,6 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
             ta.push(t._id)
         })
         setCheckedTags(ta)
-    }
-
-    const initCategories = () => {
-        listCategories().then((data) => {
-            if (data.error) {
-                setValues({ ...values, error: data.error })
-            } else {
-                setCategories(data)
-            }
-        })
-    }
-
-    const initTags = () => {
-        listTags().then((data) => {
-            if (data.error) {
-                setValues({ ...values, error: data.error })
-            } else {
-                setTags(data)
-            }
-        })
     }
 
     const handleToggle = (catId: string) => () => {
@@ -148,8 +125,8 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
 
     const showCategories = () => {
         return (
-            categories &&
-            categories.map((c, i) => (
+            cats &&
+            cats.map((c, i) => (
                 <li key={i} className="checkbox-group">
                     <input
                         type="checkbox"
@@ -192,6 +169,13 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
         setBody(e)
         formData!.set('body', e)
     }
+
+    useEffect(() => {
+        setValues((values) => ({ ...values, formData: new FormData() }))
+        initBlog()
+        dispatch(loadCats())
+        dispatch(loadTags())
+    }, [router, initBlog, dispatch])
 
     const editBlog: React.FormEventHandler = (e) => {
         e.preventDefault()

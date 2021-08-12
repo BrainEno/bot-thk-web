@@ -29,7 +29,7 @@ const SignupComponent = () => {
 
     useEffect(() => {
         isAuth() && router.push('/')
-    }, [])
+    }, [router])
 
     const handleSubmit: React.FormEventHandler = (e) => {
         e.preventDefault()
@@ -189,7 +189,7 @@ const SignupComponent = () => {
             {showLoading()}
             {showMessage()}
             {showForm && signupForm()}
-            <Link href="/auth/password/forgot">
+            <Link href="/auth/password/forgot" passHref>
                 <span
                     style={{
                         textDecoration: 'underline',

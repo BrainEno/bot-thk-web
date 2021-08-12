@@ -2,10 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { BlogCategory, TagRow } from '../../components/blog'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CustomerServiceOutlined } from '@ant-design/icons'
 import SlideImage from '../../components/SlideImage'
-import { APP_NAME, DOMAIN } from '../../config'
 import dayjs from 'dayjs'
 import { singleBlog, listRelated } from '../../actions/blog'
 import { mergeStyles } from '../../helpers/mergeStyles'
@@ -40,7 +39,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
         }
     )
 
-    const loadRelated = () => {
+    const loadRelated = useCallback(() => {
         listRelated({ blog }).then((data) => {
             if (data.error) {
                 console.log(data.error)
@@ -48,7 +47,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
                 setRelated(data)
             }
         })
-    }
+    }, [blog])
 
     const showComents = () => {
         return (
@@ -128,35 +127,47 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
         }
     }
 
-    const initVoice = async () => {
+    const initVoice = useCallback(async () => {
         try {
             const allVoices = await getVoices()
             setVoices(allVoices)
         } catch (error) {
             console.log(error)
         }
-    }
-
-    useEffect(() => {
-        loadRelated()
     }, [])
 
     useEffect(() => {
+        loadRelated()
+    }, [loadRelated])
+
+    useEffect(() => {
         initVoice()
-    }, [voices])
+    }, [initVoice])
 
     const head = () => (
         <Head>
             <title>
-                {blog.title} | {APP_NAME}
+                {blog.title} | {process.env.NEXT_PUBLIC_APP_NAME}
             </title>
             <meta name="description" content={blog.description} />
-            <link rel="canonical" href={`${DOMAIN}/blogs/${blog._id}`} />
-            <meta property="og:title" content={`${blog.title}| ${APP_NAME}`} />
+            <link
+                rel="canonical"
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog._id}`}
+            />
+            <meta
+                property="og:title"
+                content={`${blog.title}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
             <meta property="og:description" content={blog.description} />
             <meta property="og:type" content="webiste" />
-            <meta property="og:url" content={`${DOMAIN}/blogs/${blog._id}`} />
-            <meta property="og:site_name" content={`${APP_NAME}`} />
+            <meta
+                property="og:url"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog._id}`}
+            />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
             <meta
                 property="og:image"
                 content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog._id}`}

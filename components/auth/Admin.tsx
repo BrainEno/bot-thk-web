@@ -10,7 +10,7 @@ const Admin = ({ children }: { children: ReactChild }) => {
         } else if (isAuth().role != 1) {
             router.push('/')
         }
-    }, [])
+    }, [router])
     return <>{children}</>
 }
 

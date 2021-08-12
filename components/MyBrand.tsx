@@ -22,7 +22,7 @@ const MyBrand: React.FC<IMyBrand> = ({
             alignItems: 'center',
         }}
     >
-        <Link href="/">
+        <Link href="/" passHref>
             <span
                 style={{
                     fontSize: fontSize ?? '28px',

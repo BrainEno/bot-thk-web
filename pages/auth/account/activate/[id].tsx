@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import jwt from 'jsonwebtoken'
 import { NextRouter, withRouter } from 'next/router'
 import { signup } from '../../../../actions/auth'
 
-interface ActivateAccountProps {
-    router: NextRouter
-}
-
-const ActivateAccount: React.FC<ActivateAccountProps> = ({ router }) => {
+const ActivateAccount = ({ router }: { router: NextRouter }) => {
     const [values, setValues] = useState<{
         name: string
         token: string
@@ -25,17 +21,17 @@ const ActivateAccount: React.FC<ActivateAccountProps> = ({ router }) => {
     })
 
     const { name, token, error, loading, success, showButton } = values
-    const setToken = (name: string, token: string) => {
-        setValues({ ...values, name, token })
-    }
-
-    useEffect(() => {
+    const setToken = useCallback(() => {
         let token: string = router.query.id as string
         if (token) {
             const { name } = jwt.decode(token) as { name: string }
-            setToken(name, token)
+            setValues((values) => ({ ...values, name, token }))
         }
-    }, [router])
+    }, [router.query.id])
+
+    useEffect(() => {
+        setToken()
+    }, [router, setToken])
 
     const clickSubmit = (event: React.MouseEvent): void => {
         event.preventDefault()
@@ -69,7 +65,7 @@ const ActivateAccount: React.FC<ActivateAccountProps> = ({ router }) => {
                     {error && error}
                 </div>
                 {success ? (
-                    <h3>Hi, {name}!你的账号已激活！Let's Jam！</h3>
+                    <h3>Hi, {name}!你的账号已激活！Let&apos;s Jam！</h3>
                 ) : (
                     <h3 className="pb-4 text-center">
                         你好, {name}！准备好激活你的账号了吗？

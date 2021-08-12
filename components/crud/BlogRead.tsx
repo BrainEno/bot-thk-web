@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { getCookie, isAuth } from '../../actions/auth'
 import { list, removeBlog } from '../../actions/blog'
@@ -14,11 +14,7 @@ const BlogRead = ({ username }: { username?: string }) => {
     const [message, setMessage] = useState('')
     const token = getCookie('token')
 
-    useEffect(() => {
-        loadBlogs()
-    }, [])
-
-    const loadBlogs = () => {
+    const loadBlogs = useCallback(() => {
         list(username).then((data) => {
             if (data.error) {
                 console.log(data.error)
@@ -26,7 +22,7 @@ const BlogRead = ({ username }: { username?: string }) => {
                 setBlogs(data)
             }
         })
-    }
+    }, [username])
 
     const deleteBlogs = (id: string) => {
         removeBlog(id, token).then((data) => {
@@ -52,7 +48,7 @@ const BlogRead = ({ username }: { username?: string }) => {
     const showUpdateButton = (blog: IBlog) => {
         if (isAuth() && isAuth().role === 0) {
             return (
-                <Link href={`/user/crud/${blog._id}`}>
+                <Link href={`/user/crud/${blog._id}`} passHref>
                     <button className="update-btn">
                         <EditOutlined />
                         更新
@@ -61,7 +57,7 @@ const BlogRead = ({ username }: { username?: string }) => {
             )
         } else if (isAuth() && isAuth().role === 1) {
             return (
-                <Link href={`/admin/crud/${blog._id}`}>
+                <Link href={`/admin/crud/${blog._id}`} passHref>
                     <button className="update-btn">
                         <EditOutlined />
                         更新
@@ -101,6 +97,9 @@ const BlogRead = ({ username }: { username?: string }) => {
             )
         })
     }
+    useEffect(() => {
+        loadBlogs()
+    }, [loadBlogs])
 
     return (
         <>
@@ -114,6 +113,7 @@ const BlogRead = ({ username }: { username?: string }) => {
             ) : (
                 <Link
                     href={isAuth() && isAuth().role === 1 ? 'admin' : '/user'}
+                    passHref
                 >
                     <h3 style={{ marginTop: '50px', cursor: 'pointer' }}>
                         还没有发布过文章，

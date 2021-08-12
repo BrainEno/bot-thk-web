@@ -3,7 +3,6 @@ import { NextRouter, withRouter } from 'next/router'
 import Head from 'next/head'
 import { singleCategory } from '../actions/category'
 import { mergeStyles } from '../helpers/mergeStyles'
-import { APP_NAME, DOMAIN } from '../config'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
 import Link from 'next/link'
@@ -23,7 +22,7 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
-    const { data: recentPosts } = useSWR(
+    const { data: recentPosts } = useSWR<any>(
         `${process.env.NEXT_PUBLIC_API}/category/recent-post`,
         initRecent,
         {
@@ -68,28 +67,40 @@ const Index: React.FC<IndexPageProps> = ({
 
     const head = () => (
         <Head>
-            <title>Home | {APP_NAME}</title>
+            <title>Home | {process.env.NEXT_PUBLIC_APP_NAME}</title>
             <meta
                 name="description"
                 content="Cruel Literature,novels,poemes,and else"
             />
-            <link rel="canonical" href={`${DOMAIN}${router.pathname}`} />
+            <link
+                rel="canonical"
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}${router.pathname}`}
+            />
             <meta
                 property="og:title"
-                content={`Cruel Literature,novels,poemes,and else | ${APP_NAME}`}
+                content={`Cruel Literature,novels,poemes,and else | ${process.env.NEXT_PUBLIC_APP_NAME}`}
             />
             <meta
                 property="og:description"
                 content="Cruel Literature,novels,poemes,and else"
             />
             <meta property="og:type" content="webiste" />
-            <meta property="og:url" content={`${DOMAIN}${router.pathname}`} />
-            <meta property="og:site_name" content={`${APP_NAME}`} />
+            <meta
+                property="og:url"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}${router.pathname}`}
+            />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
 
-            <meta property="og:image" content={`${DOMAIN}/images/recent.jpg`} />
+            <meta
+                property="og:image"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/recent.jpg`}
+            />
             <meta
                 property="og:image:secure_url"
-                content={`${DOMAIN}/images/recent.jpg`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/recent.jpg`}
             />
             <meta property="og:image:type" content="image/jpg" />
             <meta name="theme-color" content="#eff3f8" />
@@ -103,7 +114,7 @@ const Index: React.FC<IndexPageProps> = ({
                 <Carousel />
                 <section className="featured-posts-container">
                     <div>
-                        <Link href="/categories/featured">
+                        <Link href="/categories/featured" passHref>
                             <h1>Featured</h1>
                         </Link>
                         <BlogCategory
@@ -116,7 +127,7 @@ const Index: React.FC<IndexPageProps> = ({
 
                 <section className="bg-white">
                     <div className="recent-container">
-                        <Link href="/categories/recent-post">
+                        <Link href="/categories/recent-post" passHref>
                             <h1>Reacent Post</h1>
                         </Link>
                         <PostGrid posts={recentPosts} />
@@ -125,7 +136,7 @@ const Index: React.FC<IndexPageProps> = ({
 
                 <section className="trending-posts-container">
                     <div>
-                        <Link href="/categories/trending">
+                        <Link href="/categories/trending" passHref>
                             <h1>Trending</h1>
                         </Link>
                         <BlogCategory

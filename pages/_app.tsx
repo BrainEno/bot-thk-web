@@ -5,8 +5,8 @@ import { Provider } from 'react-redux'
 import { useStore } from '../redux/store'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { AppProps } from 'next/app'
 import * as gtag from '../lib/gtag'
-import { AppProps } from 'next/dist/next-server/lib/router/router'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const store = useStore(pageProps.initialReduxState)

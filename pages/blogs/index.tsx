@@ -1,7 +1,6 @@
 import { NextRouter, withRouter } from 'next/router'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { APP_NAME, DOMAIN } from '../../config'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import PostCard from '../../components/blog/PostCard'
 import { useSWRInfinite } from 'swr'
@@ -18,21 +17,24 @@ const Blogs = ({ router }: { router: NextRouter }) => {
 
     const isInitialLoading = !data && !error
 
-    const posts: any = data ? [].concat(...data) : []
+    const posts: any = useMemo(() => (data ? [].concat(...data) : []), [data])
 
-    const observeElement = (element: HTMLElement | null) => {
-        if (!element) return
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting === true) {
-                    setSize(size + 1)
-                    observer.unobserve(element)
-                }
-            },
-            { threshold: 1 }
-        )
-        observer.observe(element)
-    }
+    const observeElement = useCallback(
+        (element: HTMLElement | null) => {
+            if (!element) return
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    if (entries[0].isIntersecting === true) {
+                        setSize(size + 1)
+                        observer.unobserve(element)
+                    }
+                },
+                { threshold: 1 }
+            )
+            observer.observe(element)
+        },
+        [size, setSize]
+    )
 
     useEffect(() => {
         if (!posts || posts.length === 0) return
@@ -43,16 +45,19 @@ const Blogs = ({ router }: { router: NextRouter }) => {
             setObservedPost(id)
             observeElement(document.getElementById(id))
         }
-    }, [posts])
+    }, [posts, observedPost, observeElement])
 
     const head = () => (
         <Head>
-            <title>All Blogs | {APP_NAME}</title>
+            <title>All Blogs | {process.env.NEXT_PUBLIC_APP_NAME}</title>
             <meta
                 name="description"
                 content="Cruel Literature,novels,poemes,and else"
             />
-            <link rel="canonical" href={`${DOMAIN}${router.pathname}`} />
+            <link
+                rel="canonical"
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}${router.pathname}`}
+            />
             <meta
                 property="og:title"
                 content={`cruel literature | BOT THINK`}
@@ -62,8 +67,14 @@ const Blogs = ({ router }: { router: NextRouter }) => {
                 content="Cruel Literature,novels,poemes,and else"
             />
             <meta property="og:type" content="webiste" />
-            <meta property="og:url" content={`${DOMAIN}${router.pathname}`} />
-            <meta property="og:site_name" content={`${APP_NAME}`} />
+            <meta
+                property="og:url"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}${router.pathname}`}
+            />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
         </Head>
     )
 

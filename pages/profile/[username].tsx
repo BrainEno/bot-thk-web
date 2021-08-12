@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useState, useMemo } from 'react'
 import { userPublicProfile } from '../../actions/user'
-import { DOMAIN, APP_NAME } from '../../config'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import Avatar from '../../components/profile/Avatar'
@@ -24,16 +23,16 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
     const head = () => (
         <Head>
             <title>
-                {user.username} | {APP_NAME}
+                {user.username} | {process.env.NEXT_PUBLIC_APP_NAME}
             </title>
             <meta name="description" content={`Blogs by ${user.username}`} />
             <link
                 rel="canonical"
-                href={`${DOMAIN}/profile/${query.username}`}
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
             />
             <meta
                 property="og:title"
-                content={`${user.username}| ${APP_NAME}`}
+                content={`${user.username}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
             />
             <meta
                 property="og:description"
@@ -42,14 +41,20 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
             <meta property="og:type" content="webiste" />
             <meta
                 property="og:url"
-                content={`${DOMAIN}/profile/${query.username}`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
             />
-            <meta property="og:site_name" content={`${APP_NAME}`} />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
 
-            <meta property="og:image" content={`${DOMAIN}/public/pic3.jpg`} />
+            <meta
+                property="og:image"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
+            />
             <meta
                 property="og:image:secure_url"
-                content={`${DOMAIN}/public/pic3.jpg`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
             />
             <meta property="og:image:type" content="image/jpg" />
         </Head>
@@ -146,8 +151,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
 export const getServerSideProps: GetServerSideProps = async ({
     query,
 }: GetServerSidePropsContext) => {
-    const res = await userPublicProfile(query.username)
-    const data = await res.json()
+    const data = await userPublicProfile(query.username)
     return { props: { user: data.user, blogs: data.blogs, query } }
 }
 

@@ -8,7 +8,7 @@ const Private = ({ children }: { children: ReactChild }) => {
         if (!isAuth()) {
             router.push('/signin')
         }
-    }, [])
+    }, [router])
     return <>{children}</>
 }
 

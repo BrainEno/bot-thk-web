@@ -17,7 +17,7 @@ const BlogPost: React.FC<IBlogPostProps> = ({ post, tagsOnTop }) => {
     const style = windowWidth! > 900 ? { ...post.style } : {}
 
     return (
-        <Link href="/blogs/[id]" as={`/blogs/${post._id}`}>
+        <Link href="/blogs/[id]" as={`/blogs/${post._id}`} passHref>
             <div className="post overlay" style={style}>
                 <Image
                     src={`/blog/image/${post._id}`}

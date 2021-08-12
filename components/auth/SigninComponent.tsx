@@ -19,7 +19,7 @@ const SigninComponent = () => {
 
     useEffect(() => {
         isAuth() && router.push('/')
-    }, [])
+    }, [router])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name
@@ -141,7 +141,7 @@ const SigninComponent = () => {
         <>
             {loading && showLoading()}
             {showForm && signinForm()}
-            <Link href="/auth/password/forgot">
+            <Link href="/auth/password/forgot" passHref>
                 <span
                     style={{
                         textDecoration: 'underline',

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { CarouselItem } from './CarouselItem'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { ICarouselItem } from '../../types'
@@ -31,11 +31,11 @@ const CarouselComponent = () => {
     const [activeIndex, setActiveIndex] = useState(0)
     const [animating, setAnimating] = useState(false)
 
-    const next = () => {
+    const next = useCallback(() => {
         if (animating) return
         const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1
         setActiveIndex(nextIndex)
-    }
+    }, [animating, activeIndex])
 
     const previous = () => {
         if (animating) return
@@ -48,25 +48,26 @@ const CarouselComponent = () => {
         setActiveIndex(newIndex)
     }
 
-    let cycleInterval: NodeJS.Timer
-    const set = () => {
+    const cycleInterval = useRef<null | NodeJS.Timer>(null)
+
+    const clear = useCallback(() => {
+        clearInterval(cycleInterval.current!)
+    }, [])
+
+    const set = useCallback(() => {
         clear()
 
-        cycleInterval = setInterval(() => {
+        cycleInterval.current = setInterval(() => {
             next()
         }, 5000)
-    }
-
-    const clear = () => {
-        clearInterval(cycleInterval)
-    }
+    }, [clear, next])
 
     useEffect(() => {
         animating && set()
         return () => {
             clear()
         }
-    }, [activeIndex])
+    }, [activeIndex, animating, set, clear])
 
     return (
         <div className="carousel">

@@ -1,19 +1,26 @@
-import { useState, useEffect, CSSProperties } from 'react'
+import React, { useState, useEffect, CSSProperties } from 'react'
 import { NextRouter, withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import { getCookie } from '../../actions/auth'
-import { listCategories } from '../../actions/category'
-import { listTags } from '../../actions/tag'
 import { createBlog } from '../../actions/blog'
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
 })
 import { QuillModules, QuillFormats } from '../../helpers/quill'
 import { UploadOutlined } from '@ant-design/icons'
-import { ICategory, ITag } from '../../types'
+import { useDispatch, useSelector } from 'react-redux'
+import { loadTags, loadCats, clearTagCats } from '../../redux/actions'
+import { RootState } from '../../redux/reducers'
 
 const CreateBlog = ({ router }: { router: NextRouter }) => {
     const token = getCookie('token')
+    const selectTags = (state: RootState) => state.tagsCats.tags
+    const selectCats = (state: RootState) => state.tagsCats.cats
+    const tags = useSelector(selectTags)
+    const cats = useSelector(selectCats)
+    const dispatch = useDispatch()
+
+    if (cats.length > 0) console.log(cats)
 
     const blogFromLS = () => {
         if (typeof window === 'undefined') {
@@ -26,9 +33,6 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
             return false
         }
     }
-
-    const [categories, setCategories] = useState<ICategory[]>([])
-    const [tags, setTags] = useState<ITag[]>([])
 
     const [checkedCats, setCheckedCats] = useState<string[]>([])
     const [checkedTags, setCheckedTags] = useState<string[]>([])
@@ -53,30 +57,10 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
     const { error, successMsg, formData, title } = values
 
     useEffect(() => {
-        setValues({ ...values, formData: new FormData() })
-        initCategories()
-        initTags()
-    }, [router])
-
-    const initCategories = () => {
-        listCategories().then((data) => {
-            if (data.error) {
-                setValues({ ...values, error: data.error })
-            } else {
-                setCategories(data)
-            }
-        })
-    }
-
-    const initTags = () => {
-        listTags().then((data) => {
-            if (data.error) {
-                setValues({ ...values, error: data.error })
-            } else {
-                setTags(data)
-            }
-        })
-    }
+        setValues((values) => ({ ...values, formData: new FormData() }))
+        dispatch(loadCats())
+        dispatch(loadTags())
+    }, [router, dispatch])
 
     const publishBlog: React.FormEventHandler = (e) => {
         e.preventDefault()
@@ -92,8 +76,7 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
                     successMsg: `《${data.title}》已成功发布！`,
                 })
                 setBody('')
-                setCategories([])
-                setTags([])
+                dispatch(clearTagCats())
             }
         })
     }
@@ -106,7 +89,6 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
         }
 
     const handleBody = (e: string) => {
-        // console.log(e);
         setBody(e)
         formData!.set('body', e)
         if (typeof window !== 'undefined') {
@@ -116,7 +98,6 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
 
     const handleToggle = (c: string) => () => {
         setValues({ ...values, error: '' })
-        //return the first index of -1
         const clickedCategory = checkedCats.indexOf(c)
         const all = [...checkedCats]
 
@@ -132,7 +113,6 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
 
     const handleTagsToggle = (t: string) => () => {
         setValues({ ...values, error: '' })
-        //return the first index of -1
         const clickedTag = checkedTags.indexOf(t)
         const all = [...checkedTags]
 
@@ -148,8 +128,8 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
 
     const showCategories = () => {
         return (
-            categories &&
-            categories.map((c) => (
+            cats &&
+            cats.map((c) => (
                 <li key={c._id} className="checkbox-group">
                     <input type="checkbox" onChange={handleToggle(c._id)} />
                     <label>{c.name}</label>

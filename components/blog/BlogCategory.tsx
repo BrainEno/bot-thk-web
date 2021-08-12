@@ -19,7 +19,7 @@ const BlogCategory: React.FC<IBlogCategoryProps> = ({
             }}
         >
             {posts.map((post, index) => (
-                <BlogPost {...{ post, index, tagsOnTop, key: index }} />
+                <BlogPost {...{ post, index, tagsOnTop }} key={post._id} />
             ))}
         </section>
     )

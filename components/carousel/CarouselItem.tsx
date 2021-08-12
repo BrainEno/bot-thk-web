@@ -7,22 +7,22 @@ interface ICarouselItemProps {
     item: ICarouselItem
     items: ICarouselItem[]
     goToIndex: (nextIndex: number) => void
-    onExiting: () => void
-    onExited: () => void
+    onExiting?: () => void
+    onExited?: () => void
 }
 
 export const CarouselItem: React.FC<ICarouselItemProps> = ({
     item,
     items,
     goToIndex,
-    onExiting,
-    onExited,
+    // onExiting,
+    // onExited,
 }) => {
     const { windowWidth } = useWindowSize()
 
     return (
         <>
-            <Link href={item.link}>
+            <Link href={item.link} passHref>
                 <div
                     style={{
                         height: windowWidth! > 900 ? '600px' : '300px',

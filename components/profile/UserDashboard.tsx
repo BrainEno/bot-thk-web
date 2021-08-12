@@ -9,20 +9,21 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { useSelector, useDispatch } from 'react-redux'
 import { loadUser, loadUserProfile } from '../../redux/actions'
 import UserBlogs from './UserBlogs'
+import { RootState } from '../../redux/reducers'
 
 dayjs.extend(relativeTime)
 
 const UserDashboard = ({ router }: { router: NextRouter }) => {
-    const DefaultRootState = useSelector((state) => state)
-    const { user, userProfile }: any = DefaultRootState
+    const selectUser = (state: RootState) => state.user
+    const selectUserProfile = (state: RootState) => state.userProfile
+    const user = useSelector(selectUser)
+    const userProfile = useSelector(selectUserProfile)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        ;async () => {
-            dispatch(loadUser())
-            dispatch(loadUserProfile())
-        }
+        dispatch(loadUser())
+        dispatch(loadUserProfile())
     }, [router, dispatch])
 
     return (
@@ -56,10 +57,10 @@ const UserDashboard = ({ router }: { router: NextRouter }) => {
 
                 <ul>
                     <li>
-                        <Link href="/">
+                        <Link href="/" passHref>
                             <HomeOutlined title="返回首页" />
                         </Link>
-                        <Link href="/">
+                        <Link href="/" passHref>
                             <span className="span-text">返回首页</span>
                         </Link>
                     </li>
@@ -70,6 +71,7 @@ const UserDashboard = ({ router }: { router: NextRouter }) => {
                                     ? '/admin/crud/blog'
                                     : '/user/crud/blog'
                             }
+                            passHref
                         >
                             <FormOutlined title="新建文章" />
                         </Link>
@@ -79,6 +81,7 @@ const UserDashboard = ({ router }: { router: NextRouter }) => {
                                     ? '/admin/crud/blog'
                                     : '/user/crud/blog'
                             }
+                            passHref
                         >
                             <span className="span-text">新建文章</span>
                         </Link>
@@ -90,6 +93,7 @@ const UserDashboard = ({ router }: { router: NextRouter }) => {
                                     ? '/admin/crud/blogs'
                                     : '/user/crud/blogs'
                             }
+                            passHref
                         >
                             <EditOutlined title="编辑文章" />
                         </Link>
@@ -99,6 +103,7 @@ const UserDashboard = ({ router }: { router: NextRouter }) => {
                                     ? '/admin/crud/blogs'
                                     : '/user/crud/blogs'
                             }
+                            passHref
                         >
                             <span className="span-text">编辑文章</span>
                         </Link>

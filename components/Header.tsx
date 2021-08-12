@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import MyBrand from './MyBrand'
 import { signout, isAuth } from '../actions/auth'
@@ -31,7 +31,7 @@ const Header = () => {
         }
     }
 
-    const handleScrolling = () => {
+    const handleScrolling = useCallback(() => {
         let currScrollPos
         let preScrollPos =
             document.body.scrollTop || document.documentElement.scrollTop
@@ -47,12 +47,10 @@ const Header = () => {
             }
             preScrollPos = currScrollPos
         })
-    }
+    }, [])
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-            handleScrolling()
-        }
+        handleScrolling()
         return () => {
             window.removeEventListener('scroll', handleScrolling)
         }
@@ -146,6 +144,7 @@ const Header = () => {
                                     ? `/admin/`
                                     : `/user/`
                             }
+                            passHref
                         >
                             <div className="my-avatar">
                                 {!!isAuth().username && (

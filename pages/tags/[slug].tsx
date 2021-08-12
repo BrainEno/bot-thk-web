@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { singleTag } from '../../actions/tag'
-import { APP_NAME, DOMAIN } from '../../config'
 import { PostGrid } from '../../components/blog'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { IBlog, ITag } from '../../types'
@@ -16,26 +15,35 @@ const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({ tag, blogs, query }) => {
     const head = () => (
         <Head>
             <title>
-                {tag.name} | {APP_NAME}
+                {tag.name} | {process.env.NEXT_PUBLIC_APP_NAME}
             </title>
             <meta name="description" content={`${tag.name} articles`} />
-            <link rel="canonical" href={`${DOMAIN}/categories/${query.slug}`} />
-            <meta property="og:title" content={`${tag.name}| ${APP_NAME}`} />
+            <link
+                rel="canonical"
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${query.slug}`}
+            />
+            <meta
+                property="og:title"
+                content={`${tag.name}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
             <meta property="og:description" content={`${tag.name} articles`} />
             <meta property="og:type" content="webiste" />
             <meta
                 property="og:url"
-                content={`${DOMAIN}/categories/${query.slug}`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${query.slug}`}
             />
-            <meta property="og:site_name" content={`${APP_NAME}`} />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
 
             <meta
                 property="og:image"
-                content={`${DOMAIN}/static/images/seoblog.jpg`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/static/images/seoblog.jpg`}
             />
             <meta
                 property="og:image:secure_url"
-                content={`${DOMAIN}/static/images/seoblog.jpg`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/static/images/seoblog.jpg`}
             />
             <meta property="og:image:type" content="image/jpg" />
         </Head>
