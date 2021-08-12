@@ -51,7 +51,7 @@ const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({ tag, blogs, query }) => {
 
     return (
         <>
-            {head()}
+            {tag && head()}
             <main className="tagBlogs">
                 <section className="tagBlogs-container">
                     <h1 className="">{tag.name.toUpperCase()}</h1>

@@ -198,7 +198,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({ initialBlog, id }) => {
 
     return (
         <>
-            {head()}
+            {blog && head()}
             <SlideImage imgSrc={`/blog/image/${blog._id}`} alt={blog.title} />
             <main className="blog-article">
                 <article className="article-header-container">

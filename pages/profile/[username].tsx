@@ -72,7 +72,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
 
     return (
         <>
-            {head()}
+            {user && head()}
             <div className="profile-container">
                 <div className="profile-user">
                     <div className="avatar-container">

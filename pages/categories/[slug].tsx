@@ -62,7 +62,7 @@ const Category: React.FC<ICategoryProps> = ({ category, blogs, query }) => {
 
     return (
         <>
-            {head()}
+            {category && head()}
             <main className="category-blogs">
                 <section className="category-blogs-container">
                     <h1>{category.name}</h1>
