@@ -255,53 +255,11 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     )
 }
 
-function initRecent(): Promise<IBlog[]> {
-    return new Promise((resolve, reject) => {
-        singleCategory('recent-post').then((data) => {
-            if (data.error) {
-                // console.log(data.error);
-                reject(data.error)
-            } else {
-                // return { recentPost: data.blogs };
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
-function initTrending(): Promise<IBlog[]> {
-    return new Promise((resolve, reject) => {
-        singleCategory('trending').then((data) => {
-            if (data.error) {
-                // console.log(data.error);
-                reject(data.error)
-            } else {
-                // return { recentPost: data.blogs };
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
-function initFeatured(): Promise<IBlog[]> {
-    return new Promise((resolve, reject) => {
-        singleCategory('featured').then((data) => {
-            if (data.error) {
-                // console.log(data.error);
-                reject(data.error)
-            } else {
-                // return { recentPost: data.blogs };
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
 export const getStaticPaths: GetStaticPaths =
     async (): Promise<GetStaticPathsResult> => {
-        const recentPosts = await initRecent()
-        const trendingPosts = await initTrending()
-        const featuredPosts = await initFeatured()
+        const { blogs: recentPosts } = await singleCategory('recent-post')
+        const { blogs: trendingPosts } = await singleCategory('trending')
+        const { blogs: featuredPosts } = await singleCategory('featured')
         const posts = [...recentPosts, ...trendingPosts, ...featuredPosts]
         const paths = posts.map((post) => ({
             params: {

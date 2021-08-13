@@ -11,22 +11,22 @@ import { IBlog } from 'types'
 
 interface IndexPageProps {
     router: NextRouter
-    recentPost: IBlog[]
+    recent: IBlog[]
     trending: IBlog[]
     featured: IBlog[]
 }
 
 const Index: React.FC<IndexPageProps> = ({
     router,
-    recentPost,
+    recent,
     trending,
     featured,
 }) => {
     const { data: recentPosts } = useSWR<any>(
         `${process.env.NEXT_PUBLIC_API}/category/recent-post`,
-        initRecent,
+        (url) => fetch(url).then((r: any) => r.blogs.json()),
         {
-            initialData: recentPost,
+            initialData: recent,
         }
     )
 
@@ -62,8 +62,8 @@ const Index: React.FC<IndexPageProps> = ({
         },
     }
 
-    if (trending) mergeStyles(trending, trendingConfig)
-    if (featured) mergeStyles(featured, featuredConfig)
+    trending && mergeStyles(trending, trendingConfig)
+    featured && mergeStyles(featured, featuredConfig)
 
     const head = () => (
         <Head>
@@ -130,7 +130,7 @@ const Index: React.FC<IndexPageProps> = ({
                         <Link href="/categories/recent-post" passHref>
                             <h1>Reacent Post</h1>
                         </Link>
-                        <PostGrid posts={recentPosts} />
+                        <PostGrid posts={recentPosts!} />
                     </div>
                 </section>
 
@@ -152,47 +152,15 @@ const Index: React.FC<IndexPageProps> = ({
     )
 }
 
-function initRecent() {
-    return new Promise((resolve, reject) => {
-        singleCategory('recent-post').then((data) => {
-            if (data.error) {
-                reject(data.error)
-            } else {
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
-function initTrending() {
-    return new Promise((resolve, reject) => {
-        singleCategory('trending').then((data) => {
-            if (data.error) {
-                reject(data.error)
-            } else {
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
-function initFeatured() {
-    return new Promise((resolve, reject) => {
-        singleCategory('featured').then((data) => {
-            if (data.error) {
-                reject(data.error)
-            } else {
-                resolve(data.blogs)
-            }
-        })
-    })
-}
-
 export async function getStaticProps() {
-    const recentPost = await initRecent()
-    const trending = await initTrending()
-    const featured = await initFeatured()
-    return { props: { recentPost, trending, featured }, revalidate: 1 }
+    const { blogs: recent } = await singleCategory('recent-post')
+    const { blogs: trending } = await singleCategory('trending')
+    const { blogs: featured } = await singleCategory('featured')
+
+    return {
+        props: { recent, trending, featured },
+        revalidate: 1,
+    }
 }
 
 export default withRouter(Index)
