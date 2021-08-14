@@ -1,5 +1,5 @@
 import Private from '../../../components/auth/Private'
-import BlogRead from '../../../components/crud/BlogRead'
+import BlogList from '../../../components/crud/BlogList'
 import { isAuth } from '../../../actions/auth'
 
 const Blog = () => {
@@ -7,7 +7,7 @@ const Blog = () => {
     return (
         <Private>
             <div className="manageBlog-container">
-                <BlogRead username={username} />
+                <BlogList username={username} />
             </div>
         </Private>
     )

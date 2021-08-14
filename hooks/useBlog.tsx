@@ -1,17 +1,15 @@
 import useSWR from 'swr'
 
-const fetcher = async (
-    input: RequestInfo,
-    init?: RequestInit
-): Promise<any> => {
-    const res = await fetch(input, init)
-    return res.json()
-}
+const fetcher = (resource: RequestInfo, init?: RequestInit) =>
+    fetch(resource, init).then((res) => res.json())
 
-const useBlog = (id: string) => {
+const useBlog = (id: string, initialData?: any) => {
+    console.log('blog id:', id)
+
     return useSWR(
         () => (id ? `${process.env.NEXT_PUBLIC_API}/blog/${id}` : null),
-        fetcher
+        fetcher,
+        { initialData, refreshInterval: 0 }
     )
 }
 

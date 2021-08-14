@@ -2,14 +2,10 @@ import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { BlogCategory, TagRow } from '../../components/blog'
-import React, { useCallback, useEffect, useState } from 'react'
-import { CustomerServiceOutlined } from '@ant-design/icons'
+import React from 'react'
 import SlideImage from '../../components/SlideImage'
 import dayjs from 'dayjs'
 import { singleBlog, listRelated } from '../../actions/blog'
-const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
-    ssr: false,
-})
 import { singleCategory } from '../../actions/category'
 import { IBlog } from '../../types'
 import {
@@ -18,24 +14,30 @@ import {
     GetStaticProps,
     GetStaticPropsContext,
 } from 'next'
-import useBlog from '../../hooks/useBlog'
-import useMergeStyles from '../../hooks/mergeStyles'
+// import useBlog from '../../hooks/useBlog'
+import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles'
+
+const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
+    ssr: false,
+})
+const ReadBlog = dynamic(() => import('../../components/blog/ReadBlog'), {
+    ssr: false,
+})
 
 interface SingleBlogProps {
-    initialBlog: IBlog
-    id: string
+    // initialBlog: IBlog
+    // id: string
+    blog: IBlog
     relatedBlogs: IBlog[]
 }
 
 const SingleBlog: React.FC<SingleBlogProps> = ({
-    initialBlog,
-    id,
+    // initialBlog,
+    // id,
+    blog,
     relatedBlogs,
 }) => {
-    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
-    const [selectedVoice, setSelectedVoice] = useState('')
-
-    const { data: blog = initialBlog } = useBlog(id)
+    // const { data: blog } = useBlog(id)
 
     const showComents = () => {
         return (
@@ -46,87 +48,6 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
             />
         )
     }
-
-    const getVoices = (): Promise<SpeechSynthesisVoice[]> => {
-        return new Promise((resolve) => {
-            if (typeof window !== 'undefined') {
-                const synth = window.speechSynthesis
-                const allVoices: SpeechSynthesisVoice[] = synth.getVoices()
-                resolve(allVoices)
-            }
-        })
-    }
-
-    const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedVoice(e.target.value)
-    }
-
-    const handleRead: React.FormEventHandler = (
-        e: React.FormEvent<HTMLSelectElement>
-    ) => {
-        e.preventDefault()
-
-        if (typeof window !== 'undefined') {
-            let speakText: SpeechSynthesisUtterance | undefined
-            let readContent = blog.body.replace(/<[^>]+>/g, '')
-            const synth = window.speechSynthesis
-
-            if (synth.speaking) {
-                if (!synth.paused) {
-                    synth.pause()
-                    console.log('已暂停朗读', synth.paused)
-                } else {
-                    synth.resume()
-                    console.log('已继续朗读', synth.paused)
-                }
-                return
-            }
-
-            if (readContent !== '' && typeof speakText === 'undefined') {
-                const speakText = new SpeechSynthesisUtterance(readContent)
-
-                speakText.onend = (_) => {
-                    console.log('文章结束了')
-                    synth.cancel()
-                }
-
-                if (synth.onvoiceschanged !== undefined) {
-                    synth.cancel()
-                }
-
-                speakText.onerror = (e) => {
-                    console.log('有什么地方出错了', e)
-                }
-
-                voices!.forEach((voice) => {
-                    if (voice.name === selectedVoice) {
-                        speakText.voice = voice
-                        speakText.lang = voice.lang
-                    }
-                })
-
-                speakText.volume = 1
-                speakText.rate = 1
-                speakText.pitch = 1
-
-                synth.cancel()
-                synth.speak(speakText)
-            }
-        }
-    }
-
-    const initVoice = useCallback(async () => {
-        try {
-            const allVoices = await getVoices()
-            setVoices(allVoices)
-        } catch (error) {
-            console.log(error)
-        }
-    }, [])
-
-    useEffect(() => {
-        initVoice()
-    }, [initVoice])
 
     const head = () => (
         <Head>
@@ -165,16 +86,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         </Head>
     )
 
-    const relatedConfig = {
-        0: {
-            height: '275px',
-        },
-        2: {
-            height: '275px',
-        },
-    }
-
-    useMergeStyles(relatedBlogs, relatedConfig)
+    blog && mergeStyles(relatedBlogs, relatedConfig)
 
     const showRelatedBlog = () => {
         return (
@@ -210,36 +122,14 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                         <TagRow tags={blog.tags} />
                     </section>
                 </article>
-                {voices.length > 0 && (
-                    <div className="speaker-container">
-                        <form onSubmit={handleRead}>
-                            <select
-                                value={selectedVoice}
-                                onChange={handleVoiceChange}
-                            >
-                                {voices.length > 0 &&
-                                    voices.map((voice) => (
-                                        <option
-                                            value={voice.name}
-                                            key={voice.name}
-                                        >
-                                            {voice.name}
-                                        </option>
-                                    ))}
-                            </select>
-                            <button type="submit">
-                                <CustomerServiceOutlined />
-                            </button>
-                        </form>
-                    </div>
-                )}
+                {blog && <ReadBlog blog={blog} />}
                 <article className="article-content">
                     <section
                         dangerouslySetInnerHTML={{ __html: blog.body }}
                     ></section>
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
-                    {showComents()}
+                    {blog && showComents()}
                 </div>
                 <div className="container">
                     <h4 className="text-center">相关推荐</h4>
@@ -272,15 +162,15 @@ export const getStaticProps: GetStaticProps = async ({
     params,
 }: GetStaticPropsContext) => {
     const initialBlog = await singleBlog(params!.id as any)
-    const blog = {
+    const currBlog = {
         _id: initialBlog._id,
         tags: initialBlog.tags,
         categories: initialBlog.categories,
     }
-    const relatedBlogs = await listRelated({ blog })
+    const relatedBlogs = await listRelated({ currBlog })
 
     return {
-        props: { initialBlog, relatedBlogs, id: params!.id! },
+        props: { blog: initialBlog, relatedBlogs, id: params!.id! },
         revalidate: 1,
     }
 }

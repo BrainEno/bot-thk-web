@@ -9,7 +9,7 @@ import { IBlog } from '../../types'
 
 dayjs.extend(relativeTime)
 
-const BlogRead = ({ username }: { username?: string }) => {
+const BlogList = ({ username }: { username?: string }) => {
     const [blogs, setBlogs] = useState<IBlog[]>([])
     const [message, setMessage] = useState('')
     const token = getCookie('token')
@@ -133,4 +133,4 @@ const BlogRead = ({ username }: { username?: string }) => {
     )
 }
 
-export default BlogRead
+export default BlogList

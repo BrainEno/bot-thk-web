@@ -1,11 +1,11 @@
 import Admin from '../../../components/auth/Admin'
-import BlogRead from '../../../components/crud/BlogRead'
+import BlogList from '../../../components/crud/BlogList'
 
 const Blog = () => {
     return (
         <Admin>
             <div className="manageBlog-container">
-                <BlogRead />
+                <BlogList />
             </div>
         </Admin>
     )

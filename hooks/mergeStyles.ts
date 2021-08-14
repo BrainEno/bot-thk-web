@@ -1,5 +1,16 @@
 import { IBlogWithStyle } from '../types'
 
+const mergeStyles = (
+    posts: IBlogWithStyle[],
+    config: { [key: number]: any }
+) => {
+    posts.forEach((post, index) => {
+        post.style = config[index]
+        post.author = post.author
+        post.description = post.description
+    })
+}
+
 export const normalConfig = {
     0: {
         gridArea: '1/1/2/2',
@@ -38,15 +49,13 @@ export const featuredConfig = {
     },
 }
 
-const mergeStyles = (
-    posts: IBlogWithStyle[],
-    config: { [key: number]: any }
-) => {
-    posts.forEach((post, index) => {
-        post.style = config[index]
-        post.author = post.author
-        post.description = post.description
-    })
+export const relatedConfig = {
+    0: {
+        height: '275px',
+    },
+    2: {
+        height: '275px',
+    },
 }
 
 export default mergeStyles
