@@ -167,7 +167,7 @@ export const getStaticProps: GetStaticProps = async ({
         tags: initialBlog.tags,
         categories: initialBlog.categories,
     }
-    const relatedBlogs = await listRelated({ currBlog })
+    const relatedBlogs = await listRelated({ blog: currBlog })
 
     return {
         props: { blog: initialBlog, relatedBlogs, id: params!.id! },
