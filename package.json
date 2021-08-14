@@ -8,7 +8,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "analyze": "cross-env NODE_ENV=development ANALYZE=true API=http://localhost:5000/api yarn build"
+        "analyze": "cross-env ANALYZE=true  yarn build"
     },
     "keywords": [
         "Literature",

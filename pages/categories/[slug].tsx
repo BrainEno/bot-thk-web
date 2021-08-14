@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import { singleCategory } from '../../actions/category'
 import { BlogCategory } from '../../components/blog'
-import { mergeStyles } from '../../helpers/mergeStyles'
 import { GetServerSidePropsContext } from 'next'
 import { IBlog, ICategory } from '../../types'
 import { ParsedUrlQuery } from 'querystring'
+import mergeStyles, { normalConfig } from '../../hooks/mergeStyles'
 
 interface ICategoryProps {
     category: ICategory
@@ -12,13 +12,7 @@ interface ICategoryProps {
     query: ParsedUrlQuery
 }
 const Category: React.FC<ICategoryProps> = ({ category, blogs, query }) => {
-    const normalConfig = {
-        0: {
-            gridArea: '1/1/2/2',
-        },
-    }
-
-    mergeStyles(blogs, normalConfig)
+    blogs && mergeStyles(blogs, normalConfig)
 
     const head = () => (
         <Head>

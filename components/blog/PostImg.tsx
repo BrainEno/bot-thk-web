@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import myLoader from '../../helpers/myloader'
+import myLoader from '../../hooks/myloader'
 
 interface IPostImgProps {
     src: string

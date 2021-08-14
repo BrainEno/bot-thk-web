@@ -1,14 +1,14 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import { TagRow } from './index'
 import Link from 'next/link'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import useWindowSize from '../../helpers/useWindowSize'
-import myLoader from '../../helpers/myloader'
-import { IBlog } from '../../types'
+import useWindowSize from '../../hooks/useWindowSize'
+import myLoader from '../../hooks/myloader'
+import { IBlogWithStyle } from '../../types'
 
 interface IBlogPostProps {
-    post: IBlog & { style?: CSSProperties }
+    post: IBlogWithStyle
     tagsOnTop: boolean
 }
 

@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import MyBrand from './MyBrand'
 import { signout, isAuth } from '../actions/auth'
 import Search from './blog/Search'
 import { useRouter } from 'next/router'
 import { MenuOutlined } from '@ant-design/icons'
-import Avatar from './profile/Avatar'
+import Avatar from './Avatar'
+import useScrollDown from '../hooks/useScrollDown'
 
 const Header = () => {
     const router = useRouter()
+    const scrollDown = useScrollDown()
     const [menuActive, setMenuActive] = useState(false)
-
-    const [scrollDown, setScrollDown] = useState(false)
 
     const menuRef = useRef<HTMLDivElement>(null)
     const btnRef = useRef<HTMLSpanElement>(null)
@@ -30,31 +30,6 @@ const Header = () => {
             setMenuActive(false)
         }
     }
-
-    const handleScrolling = useCallback(() => {
-        let currScrollPos
-        let preScrollPos =
-            document.body.scrollTop || document.documentElement.scrollTop
-
-        window.addEventListener('scroll', () => {
-            currScrollPos =
-                document.body.scrollTop || document.documentElement.scrollTop
-
-            if (currScrollPos - preScrollPos > 0) {
-                setScrollDown(true)
-            } else {
-                setScrollDown(false)
-            }
-            preScrollPos = currScrollPos
-        })
-    }, [])
-
-    useEffect(() => {
-        handleScrolling()
-        return () => {
-            window.removeEventListener('scroll', handleScrolling)
-        }
-    }, [handleScrolling])
 
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)

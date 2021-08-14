@@ -2,7 +2,10 @@ import { PostGrid, BlogCategory } from '../components/blog'
 import { NextRouter, withRouter } from 'next/router'
 import Head from 'next/head'
 import { singleCategory } from '../actions/category'
-import { mergeStyles } from '../helpers/mergeStyles'
+import mergeStyles, {
+    featuredConfig,
+    trendingConfig,
+} from '../hooks/mergeStyles'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
 import Link from 'next/link'
@@ -29,38 +32,6 @@ const Index: React.FC<IndexPageProps> = ({
             initialData: recent,
         }
     )
-
-    const trendingConfig = {
-        0: {
-            gridArea: '1/2/3/3',
-        },
-        1: { height: '173px' },
-        3: {
-            height: '173px',
-        },
-    }
-
-    const featuredConfig = {
-        0: {
-            gridArea: '2/3/5/5',
-            height: '635px',
-        },
-        1: {
-            gridArea: '1/1/2/5',
-            height: '400px',
-        },
-
-        2: {
-            height: '300px',
-        },
-        3: {
-            height: '300px',
-        },
-        4: {
-            gridArea: '3/1/4/3',
-            height: '300px',
-        },
-    }
 
     trending && mergeStyles(trending, trendingConfig)
     featured && mergeStyles(featured, featuredConfig)

@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import useWindowSize from '../helpers/useWindowSize'
-import myLoader from '../helpers/myloader'
+import useWindowSize from '../hooks/useWindowSize'
+import myLoader from '../hooks/myloader'
 
 const SlideImage = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
     const { windowWidth } = useWindowSize()

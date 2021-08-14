@@ -1,4 +1,4 @@
-import useWindowSize from '../../helpers/useWindowSize'
+import useWindowSize from '../../hooks/useWindowSize'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ICarouselItem } from '../../types'

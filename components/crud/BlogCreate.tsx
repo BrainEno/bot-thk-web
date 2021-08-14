@@ -6,7 +6,7 @@ import { createBlog } from '../../actions/blog'
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
 })
-import { QuillModules, QuillFormats } from '../../helpers/quill'
+import { QuillModules, QuillFormats } from '../../helpers/quillConfig'
 import { UploadOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadTags, loadCats, clearTagCats } from '../../redux/actions'

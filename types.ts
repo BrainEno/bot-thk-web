@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react'
+
 export interface IBlog {
     _id: string
     title: string
@@ -9,6 +11,10 @@ export interface IBlog {
     createdAt: string
     updatedAt: string
     __v: number
+}
+
+export interface IBlogWithStyle extends IBlog {
+    style?: CSSProperties
 }
 
 export interface IUser {

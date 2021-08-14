@@ -7,7 +7,7 @@ const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
 })
 import { UploadOutlined } from '@ant-design/icons'
-import { QuillModules, QuillFormats } from '../../helpers/quill'
+import { QuillModules, QuillFormats } from '../../helpers/quillConfig'
 import SlideImage from '../SlideImage'
 import { ICategory, ITag } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'

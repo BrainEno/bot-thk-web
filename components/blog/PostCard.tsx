@@ -3,7 +3,7 @@ import PostImg from './PostImg'
 import dayjs from 'dayjs'
 import { TagRow } from './index'
 import Link from 'next/link'
-import useWindowSize from '../../helpers/useWindowSize'
+import useWindowSize from '../../hooks/useWindowSize'
 import { IBlog } from '../../types'
 
 interface IPostCardProps {

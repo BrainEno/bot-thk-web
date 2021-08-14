@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import MyBrand from '../MyBrand'
-import Avatar from '../profile/Avatar'
+import Avatar from '../Avatar'
 import { getCookie, isAuth, updateUser } from '../../actions/auth'
 import { getProfile, update } from '../../actions/user'
 import { UploadOutlined } from '@ant-design/icons'

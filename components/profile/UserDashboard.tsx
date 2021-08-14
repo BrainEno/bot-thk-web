@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
-import Avatar from './Avatar'
+import Avatar from '../Avatar'
 import { isAuth } from '../../actions/auth'
 import { FormOutlined, HomeOutlined, EditOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'

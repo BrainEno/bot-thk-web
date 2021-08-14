@@ -7,12 +7,10 @@ import { CustomerServiceOutlined } from '@ant-design/icons'
 import SlideImage from '../../components/SlideImage'
 import dayjs from 'dayjs'
 import { singleBlog, listRelated } from '../../actions/blog'
-import { mergeStyles } from '../../helpers/mergeStyles'
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
 })
 import { singleCategory } from '../../actions/category'
-import useSWR from 'swr'
 import { IBlog } from '../../types'
 import {
     GetStaticPaths,
@@ -20,6 +18,8 @@ import {
     GetStaticProps,
     GetStaticPropsContext,
 } from 'next'
+import useBlog from '../../hooks/useBlog'
+import useMergeStyles from '../../hooks/mergeStyles'
 
 interface SingleBlogProps {
     initialBlog: IBlog
@@ -34,13 +34,8 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 }) => {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [selectedVoice, setSelectedVoice] = useState('')
-    const { data: blog } = useSWR(
-        `${process.env.NEXT_PUBLIC_API}/blog/${id}`,
-        (url, id) => fetch(url, { id } as any).then((r) => r.json()),
-        {
-            initialData: initialBlog,
-        }
-    )
+
+    const { data: blog = initialBlog } = useBlog(id)
 
     const showComents = () => {
         return (
@@ -179,7 +174,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         },
     }
 
-    mergeStyles(relatedBlogs, relatedConfig)
+    useMergeStyles(relatedBlogs, relatedConfig)
 
     const showRelatedBlog = () => {
         return (
