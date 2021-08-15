@@ -84,7 +84,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         </Head>
     )
 
-    blog && mergeStyles(relatedBlogs, relatedConfig)
+    relatedBlogs && mergeStyles(relatedBlogs, relatedConfig)
 
     const showRelatedBlog = () => {
         return (
@@ -142,7 +142,9 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                 </div>
                 <div className="container">
                     <h4 className="text-center">相关推荐</h4>
-                    <div className="related-blogs">{showRelatedBlog()}</div>
+                    <div className="related-blogs">
+                        {relatedBlogs && showRelatedBlog()}
+                    </div>
                 </div>
             </main>
         </>
