@@ -14,8 +14,8 @@ import {
     GetStaticProps,
     GetStaticPropsContext,
 } from 'next'
-// import useBlog from '../../hooks/useBlog'
 import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles'
+import useBlog from '../../hooks/useBlog'
 
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
@@ -25,19 +25,17 @@ const ReadBlog = dynamic(() => import('../../components/blog/ReadBlog'), {
 })
 
 interface SingleBlogProps {
-    // initialBlog: IBlog
-    // id: string
-    blog: IBlog
+    initialBlog: IBlog
+    id: string
     relatedBlogs: IBlog[]
 }
 
 const SingleBlog: React.FC<SingleBlogProps> = ({
-    // initialBlog,
-    // id,
-    blog,
+    initialBlog,
+    id,
     relatedBlogs,
 }) => {
-    // const { data: blog } = useBlog(id)
+    const { data: blog } = useBlog(id, initialBlog)
 
     const showComents = () => {
         return (
@@ -97,35 +95,46 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     return (
         <>
             {blog && head()}
-            <SlideImage imgSrc={`/blog/image/${blog._id}`} alt={blog.title} />
+            {blog && (
+                <SlideImage
+                    imgSrc={`/blog/image/${blog._id}`}
+                    alt={blog.title}
+                />
+            )}
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
                         <>
-                            <h1>{blog.title}</h1>
+                            <h1>{blog && blog.title}</h1>
                         </>
                         <p>
                             <span className="author-text">
                                 By : {'  '}
-                                <Link href={`/profile/${blog.author.username}`}>
-                                    {blog.author.name}
-                                </Link>
+                                {blog && (
+                                    <Link
+                                        href={`/profile/${blog.author.username}`}
+                                    >
+                                        {blog.author.name}
+                                    </Link>
+                                )}
                             </span>
                             <span className="description-text">
                                 {' '}
                                 |{' '}
-                                {dayjs(blog.createdAt, 'zh', true).format(
-                                    'MMMM,DD,YYYY'
-                                )}
+                                {dayjs(
+                                    blog && blog.createdAt,
+                                    'zh',
+                                    true
+                                ).format('MMMM,DD,YYYY')}
                             </span>
                         </p>
-                        <TagRow tags={blog.tags} />
+                        {blog && <TagRow tags={blog.tags} />}
                     </section>
                 </article>
                 {blog && <ReadBlog blog={blog} />}
                 <article className="article-content">
                     <section
-                        dangerouslySetInnerHTML={{ __html: blog.body }}
+                        dangerouslySetInnerHTML={blog && { __html: blog.body }}
                     ></section>
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
