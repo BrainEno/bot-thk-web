@@ -95,46 +95,35 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     return (
         <>
             {blog && head()}
-            {blog && (
-                <SlideImage
-                    imgSrc={`/blog/image/${blog._id}`}
-                    alt={blog.title}
-                />
-            )}
+            <SlideImage imgSrc={`/blog/image/${blog._id}`} alt={blog.title} />
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
                         <>
-                            <h1>{blog && blog.title}</h1>
+                            <h1>{blog.title}</h1>
                         </>
                         <p>
                             <span className="author-text">
                                 By : {'  '}
-                                {blog && (
-                                    <Link
-                                        href={`/profile/${blog.author.username}`}
-                                    >
-                                        {blog.author.name}
-                                    </Link>
-                                )}
+                                <Link href={`/profile/${blog.author.username}`}>
+                                    {blog.author.name}
+                                </Link>
                             </span>
                             <span className="description-text">
                                 {' '}
                                 |{' '}
-                                {dayjs(
-                                    blog && blog.createdAt,
-                                    'zh',
-                                    true
-                                ).format('MMMM,DD,YYYY')}
+                                {dayjs(blog.createdAt, 'zh', true).format(
+                                    'MMMM,DD,YYYY'
+                                )}
                             </span>
                         </p>
-                        {blog && <TagRow tags={blog.tags} />}
+                        <TagRow tags={blog.tags} />
                     </section>
                 </article>
                 {blog && <ReadBlog blog={blog} />}
                 <article className="article-content">
                     <section
-                        dangerouslySetInnerHTML={blog && { __html: blog.body }}
+                        dangerouslySetInnerHTML={{ __html: blog.body }}
                     ></section>
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
@@ -181,7 +170,7 @@ export const getStaticProps: GetStaticProps = async ({
     const relatedBlogs = await listRelated({ blog: currBlog })
 
     return {
-        props: { blog: initialBlog, relatedBlogs, id: params!.id! },
+        props: { initialBlog, relatedBlogs, id: params!.id! },
         revalidate: 1,
     }
 }
