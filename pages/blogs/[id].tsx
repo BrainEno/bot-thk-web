@@ -16,7 +16,7 @@ import {
 } from 'next'
 import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles'
 import useBlog from '../../hooks/useBlog'
-
+import { useRouter } from 'next/router'
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
 })
@@ -36,6 +36,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     relatedBlogs,
 }) => {
     const { data: blog } = useBlog(id, initialBlog)
+    const { isFallback } = useRouter()
 
     const showComents = () => {
         return (
@@ -47,7 +48,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         )
     }
 
-    const head = () => (
+    const head = (blog: IBlog) => (
         <Head>
             <title>
                 {blog.title} | {process.env.NEXT_PUBLIC_APP_NAME}
@@ -94,36 +95,61 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
     return (
         <>
-            {blog && head()}
-            <SlideImage imgSrc={`/blog/image/${blog._id}`} alt={blog.title} />
+            {isFallback ? head(initialBlog) : head(blog)}
+            <SlideImage
+                imgSrc={
+                    isFallback
+                        ? `/blog/image/${initialBlog._id}`
+                        : `/blog/image/${blog._id}`
+                }
+                alt={blog.title}
+            />
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
                         <>
-                            <h1>{blog.title}</h1>
+                            <h1>
+                                {isFallback ? initialBlog.title : blog.title}
+                            </h1>
                         </>
                         <p>
                             <span className="author-text">
                                 By : {'  '}
-                                <Link href={`/profile/${blog.author.username}`}>
-                                    {blog.author.name}
+                                <Link
+                                    href={`/profile/${
+                                        isFallback
+                                            ? initialBlog.author.username
+                                            : blog.author.username
+                                    }`}
+                                >
+                                    {isFallback
+                                        ? initialBlog.author.name
+                                        : blog.author.name}
                                 </Link>
                             </span>
                             <span className="description-text">
                                 {' '}
                                 |{' '}
-                                {dayjs(blog.createdAt, 'zh', true).format(
-                                    'MMMM,DD,YYYY'
-                                )}
+                                {dayjs(
+                                    isFallback
+                                        ? initialBlog.createdAt
+                                        : blog.createdAt,
+                                    'zh',
+                                    true
+                                ).format('MMMM,DD,YYYY')}
                             </span>
                         </p>
-                        <TagRow tags={blog.tags} />
+                        <TagRow
+                            tags={isFallback ? initialBlog.tags : blog.tags}
+                        />
                     </section>
                 </article>
                 {blog && <ReadBlog blog={blog} />}
                 <article className="article-content">
                     <section
-                        dangerouslySetInnerHTML={{ __html: blog.body }}
+                        dangerouslySetInnerHTML={{
+                            __html: isFallback ? initialBlog.body : blog.body,
+                        }}
                     ></section>
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
@@ -162,12 +188,12 @@ export const getStaticProps: GetStaticProps = async ({
     params,
 }: GetStaticPropsContext) => {
     const initialBlog = await singleBlog(params!.id as any)
-    const currBlog = {
+    const blog = {
         _id: initialBlog._id,
         tags: initialBlog.tags,
         categories: initialBlog.categories,
     }
-    const relatedBlogs = await listRelated({ blog: currBlog })
+    const relatedBlogs = await listRelated({ blog })
 
     return {
         props: { initialBlog, relatedBlogs, id: params!.id! },
