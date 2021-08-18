@@ -166,11 +166,23 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     )
 }
 
+const getBlogsByCat = (category: string): Promise<IBlog[]> => {
+    return new Promise((resolve, reject) => {
+        singleCategory(category).then((data) => {
+            if (data.error) {
+                reject(data.error)
+            } else {
+                resolve(data.blogs)
+            }
+        })
+    })
+}
+
 export const getStaticPaths: GetStaticPaths =
     async (): Promise<GetStaticPathsResult> => {
-        const { blogs: recentPosts } = await singleCategory('recent-post')
-        const { blogs: trendingPosts } = await singleCategory('trending')
-        const { blogs: featuredPosts } = await singleCategory('featured')
+        const recentPosts = await getBlogsByCat('recent-post')
+        const trendingPosts = await getBlogsByCat('trending')
+        const featuredPosts = await getBlogsByCat('featured')
         const posts = [...recentPosts, ...trendingPosts, ...featuredPosts]
         const paths = posts.map((post) => ({
             params: {
