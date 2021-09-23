@@ -15,8 +15,8 @@ import {
     GetStaticPropsContext,
 } from 'next'
 import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles'
-import useBlog from '../../hooks/useBlog'
-import { useRouter } from 'next/router'
+// import useBlog from '../../hooks/useBlog'
+import useSWR from 'swr'
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
 })
@@ -35,38 +35,44 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     id,
     relatedBlogs,
 }) => {
-    const { data: blog } = useBlog(id, initialBlog)
-    const { isFallback } = useRouter()
+    console.log(`${process.env.NEXT_PUBLIC_API}/blog/${id}`)
+    const { data: blog, error } = useSWR(
+        process.env.NEXT_PUBLIC_API && id
+            ? [`${process.env.NEXT_PUBLIC_API}/blog`, id]
+            : null,
+        (url, id) => fetch(`${url}/${id}`).then((r) => r.json()),
+        { fallbackData: initialBlog }
+    )
 
     const showComents = () => {
         return (
             <DisqusThread
-                id={blog._id}
-                title={blog.title}
-                path={`blog/${blog._id}`}
+                id={blog!._id}
+                title={blog!.title}
+                path={`blog/${blog!._id}`}
             />
         )
     }
 
-    const head = (blog: IBlog) => (
+    const head = () => (
         <Head>
             <title>
-                {blog.title} | {process.env.NEXT_PUBLIC_APP_NAME}
+                {blog!.title} | {process.env.NEXT_PUBLIC_APP_NAME}
             </title>
-            <meta name="description" content={blog.description} />
+            <meta name="description" content={blog!.description} />
             <link
                 rel="canonical"
-                href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog._id}`}
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog!._id}`}
             />
             <meta
                 property="og:title"
-                content={`${blog.title}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+                content={`${blog!.title}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
             />
-            <meta property="og:description" content={blog.description} />
+            <meta property="og:description" content={blog!.description} />
             <meta property="og:type" content="webiste" />
             <meta
                 property="og:url"
-                content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog._id}`}
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog!._id}`}
             />
             <meta
                 property="og:site_name"
@@ -74,11 +80,15 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
             />
             <meta
                 property="og:image"
-                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog._id}`}
+                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
+                    blog!._id
+                }`}
             />
             <meta
                 property="og:image:secure_url"
-                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog._id}`}
+                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
+                    blog!._id
+                }`}
             />
             <meta property="og:image:type" content="image/jpg" />
             <meta name="theme-color" content="#eff3f8" />
@@ -95,65 +105,48 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
     return (
         <>
-            {isFallback ? head(initialBlog) : head(blog)}
-            <SlideImage
-                imgSrc={
-                    isFallback
-                        ? `/blog/image/${initialBlog._id}`
-                        : `/blog/image/${blog._id}`
-                }
-                alt={blog.title}
-            />
+            {blog && head()}
+            <SlideImage imgSrc={`/blog/image/${blog!._id}`} alt={blog!.title} />
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
                         <>
-                            <h1>
-                                {isFallback ? initialBlog.title : blog.title}
-                            </h1>
+                            <h1>{blog!.title}</h1>
                         </>
                         <p>
                             <span className="author-text">
                                 By : {'  '}
                                 <Link
-                                    href={`/profile/${
-                                        isFallback
-                                            ? initialBlog.author.username
-                                            : blog.author.username
-                                    }`}
+                                    href={`/profile/${blog!.author.username}`}
                                 >
-                                    {isFallback
-                                        ? initialBlog.author.name
-                                        : blog.author.name}
+                                    {blog!.author.name}
                                 </Link>
                             </span>
                             <span className="description-text">
                                 {' '}
                                 |{' '}
-                                {dayjs(
-                                    isFallback
-                                        ? initialBlog.createdAt
-                                        : blog.createdAt,
-                                    'zh',
-                                    true
-                                ).format('MMMM,DD,YYYY')}
+                                {dayjs(blog!.createdAt, 'zh', true).format(
+                                    'MMMM,DD,YYYY'
+                                )}
                             </span>
                         </p>
-                        <TagRow
-                            tags={isFallback ? initialBlog.tags : blog.tags}
-                        />
+                        <TagRow tags={error ? initialBlog.tags : blog!.tags} />
                     </section>
                 </article>
                 {blog && <ReadBlog blog={blog} />}
                 <article className="article-content">
-                    <section
-                        dangerouslySetInnerHTML={{
-                            __html: isFallback ? initialBlog.body : blog.body,
-                        }}
-                    ></section>
+                    {error ? (
+                        <div>正在加载...</div>
+                    ) : (
+                        <section
+                            dangerouslySetInnerHTML={{
+                                __html: blog!.body,
+                            }}
+                        ></section>
+                    )}
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
-                    {blog && showComents()}
+                    {blog! && showComents()}
                 </div>
                 <div className="container">
                     <h4 className="text-center">相关推荐</h4>
@@ -184,6 +177,7 @@ export const getStaticPaths: GetStaticPaths =
         const trendingPosts = await getBlogsByCat('trending')
         const featuredPosts = await getBlogsByCat('featured')
         const posts = [...recentPosts, ...trendingPosts, ...featuredPosts]
+
         const paths = posts.map((post) => ({
             params: {
                 id: post._id,

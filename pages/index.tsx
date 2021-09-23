@@ -25,11 +25,16 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
-    const { data: recentPosts } = useSWR<any>(
-        `${process.env.NEXT_PUBLIC_API}/category/recent-post`,
-        (url) => fetch(url).then((r: any) => r.blogs.json()),
+    const { data: recentPosts, error } = useSWR<any>(
+        process.env.NEXT_PUBLIC_API
+            ? `${process.env.NEXT_PUBLIC_API}/category/recent-post`
+            : null,
+        (url) =>
+            fetch(url)
+                .then((r: any) => r.json())
+                .then((d) => d.blogs),
         {
-            initialData: recent,
+            fallbackData: recent,
         }
     )
 
@@ -101,7 +106,11 @@ const Index: React.FC<IndexPageProps> = ({
                         <Link href="/categories/recent-post" passHref>
                             <h1>Reacent Post</h1>
                         </Link>
-                        <PostGrid posts={recentPosts!} />
+                        {error ? (
+                            <PostGrid posts={recent!} />
+                        ) : (
+                            <PostGrid posts={recentPosts!} />
+                        )}
                     </div>
                 </section>
 

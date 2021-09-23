@@ -17,11 +17,15 @@
         "isolatedModules": true,
         "removeComments": false,
         "preserveConstEnums": true,
+        "experimentalDecorators": true,
         "sourceMap": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "noImplicitThis": false,
-        "outDir": "dist"
+        "strictPropertyInitialization": false,
+        "outDir": "dist",
+        "typeRoots": ["./node_modules/@types"],
+        "types": []
     },
     "exclude": [
         "node_modules",
@@ -31,11 +35,5 @@
         "next.config.js",
         "src/helpers/*.js"
     ],
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        "lib/gtag.js",
-        "next.config.js"
-    ]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/gtag.ts"]
 }

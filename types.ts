@@ -3,9 +3,12 @@ import { CSSProperties } from 'react'
 export interface IBlog {
     _id: string
     title: string
+    slug:string
     body: string
-    author: IUser
     description: string
+    mtitle:string
+    image?:string
+    author: IUser
     tags: ITag[]
     categories: ICategory[]
     createdAt: string

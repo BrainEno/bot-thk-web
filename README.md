@@ -1,3 +1,3 @@
 # bot-thk
 
-built with nextjs
+built with nextjs and typescript

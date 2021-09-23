@@ -12,7 +12,7 @@ const Blogs = ({ router }: { router: NextRouter }) => {
     const [observedPost, setObservedPost] = useState('')
     const { data, error, size, setSize, isValidating } = useSWRInfinite(
         getKey,
-        (url) => fetch(url).then((r) => r.json())
+        (url: string) => fetch(url).then((r) => r.json())
     )
 
     const isInitialLoading = !data && !error
