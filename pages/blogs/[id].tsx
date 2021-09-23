@@ -35,7 +35,6 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     id,
     relatedBlogs,
 }) => {
-    console.log(`${process.env.NEXT_PUBLIC_API}/blog/${id}`)
     const { data: blog, error } = useSWR(
         process.env.NEXT_PUBLIC_API && id
             ? [`${process.env.NEXT_PUBLIC_API}/blog`, id]

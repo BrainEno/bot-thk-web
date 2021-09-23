@@ -46,7 +46,7 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
 
     const initBlog = useCallback(() => {
         if (router.query.id) {
-            singleBlog(router.query.id).then((data) => {
+            singleBlog(router.query.id as any).then((data) => {
                 if (data.error) {
                     console.log(data.error)
                 } else {

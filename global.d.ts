@@ -8,6 +8,7 @@ export declare interface Window {
     disqus_identifier: string
     disqus_title: string
     disqus_url: string
+    gtag: any
 }
 
 window.DISQUS = window.DISQUS || {}

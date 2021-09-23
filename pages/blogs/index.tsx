@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import PostCard from '../../components/blog/PostCard'
-import { useSWRInfinite } from 'swr'
+import useSWRInfinite from 'swr/infinite'
 
 const Blogs = ({ router }: { router: NextRouter }) => {
     const getKey = (index: number) => {

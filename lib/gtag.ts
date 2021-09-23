@@ -1,5 +1,7 @@
+import { Window } from '../global'
 export const GA_TRACKING_ID = process.env.GA_TRACKING_ID
 
+let window: Window
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: string) => {
     window.gtag('config' as any, GA_TRACKING_ID as string, {
