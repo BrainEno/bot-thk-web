@@ -15,7 +15,6 @@ import {
     GetStaticPropsContext,
 } from 'next'
 import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles'
-// import useBlog from '../../hooks/useBlog'
 import useSWR from 'swr'
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
     ssr: false,
@@ -30,18 +29,20 @@ interface SingleBlogProps {
     relatedBlogs: IBlog[]
 }
 
+const getURL = (id: string) => `${process.env.NEXT_PUBLIC_API}/blog/${id}`
+
 const SingleBlog: React.FC<SingleBlogProps> = ({
     initialBlog,
     id,
     relatedBlogs,
 }) => {
     const { data: blog, error } = useSWR(
-        process.env.NEXT_PUBLIC_API && id
-            ? [`${process.env.NEXT_PUBLIC_API}/blog`, id]
-            : null,
-        (url, id) => fetch(`${url}/${id}`).then((r) => r.json()),
+        process.env.NEXT_PUBLIC_API && id ? getURL(id) : null,
+        (url) => fetch(url).then((r) => r.json()),
         { fallbackData: initialBlog }
     )
+
+    if (error) console.log('ERROR:', error)
 
     const showComents = () => {
         return (
@@ -53,7 +54,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         )
     }
 
-    const head = () => (
+    const head = (blog: IBlog) => (
         <Head>
             <title>
                 {blog!.title} | {process.env.NEXT_PUBLIC_APP_NAME}
@@ -104,42 +105,78 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
     return (
         <>
-            {blog && head()}
-            <SlideImage imgSrc={`/blog/image/${blog!._id}`} alt={blog!.title} />
+            {blog ? head(blog) : head(initialBlog)}
+            {blog ? (
+                <SlideImage
+                    imgSrc={`/blog/image/${blog!._id}`}
+                    alt={blog!.title}
+                />
+            ) : (
+                <SlideImage
+                    imgSrc={`/blog/image/${initialBlog!._id}`}
+                    alt={initialBlog!.title}
+                />
+            )}
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
                         <>
-                            <h1>{blog!.title}</h1>
+                            <h1>{blog ? blog!.title : initialBlog.title}</h1>
                         </>
                         <p>
                             <span className="author-text">
                                 By : {'  '}
-                                <Link
-                                    href={`/profile/${blog!.author.username}`}
-                                >
-                                    {blog!.author.name}
-                                </Link>
+                                {blog ? (
+                                    <Link
+                                        href={`/profile/${
+                                            blog!.author.username
+                                        }`}
+                                    >
+                                        {blog!.author.name}
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href={`/profile/${
+                                            initialBlog!.author.username
+                                        }`}
+                                    >
+                                        {initialBlog!.author.name}
+                                    </Link>
+                                )}
                             </span>
                             <span className="description-text">
                                 {' '}
                                 |{' '}
-                                {dayjs(blog!.createdAt, 'zh', true).format(
-                                    'MMMM,DD,YYYY'
-                                )}
+                                {blog
+                                    ? dayjs(blog!.createdAt, 'zh', true).format(
+                                          'MMMM,DD,YYYY'
+                                      )
+                                    : dayjs(
+                                          initialBlog!.createdAt,
+                                          'zh',
+                                          true
+                                      ).format('MMMM,DD,YYYY')}
                             </span>
                         </p>
-                        <TagRow tags={error ? initialBlog.tags : blog!.tags} />
+                        <TagRow tags={blog ? blog!.tags : initialBlog.tags} />
                     </section>
                 </article>
-                {blog && <ReadBlog blog={blog} />}
+                {blog ? (
+                    <ReadBlog blog={blog} />
+                ) : (
+                    <ReadBlog blog={initialBlog} />
+                )}
                 <article className="article-content">
-                    {error ? (
-                        <div>正在加载...</div>
-                    ) : (
+                    {blog ? (
                         <section
                             dangerouslySetInnerHTML={{
                                 __html: blog!.body,
+                            }}
+                        ></section>
+                    ) : (
+                        <section
+                            dangerouslySetInnerHTML={{
+                                __html: initialBlog!.body,
                             }}
                         ></section>
                     )}
