@@ -1,7 +1,15 @@
 import { Field, ObjectType } from 'type-graphql'
-import { BeforeInsert, Column, Entity, Index } from 'typeorm'
+import {
+    BeforeInsert,
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    ManyToMany,
+} from 'typeorm'
 import { slugify } from '../utils/slugify'
 import MongoEntity from './MongoEntity'
+import Blog from './Blog'
 
 @ObjectType()
 @Entity('tags')
@@ -19,6 +27,15 @@ export default class Tag extends MongoEntity {
     @Field({ nullable: false })
     @Index()
     slug: string
+
+    @ManyToMany(() => Blog, (blog) => blog.tags)
+    @JoinColumn({ name: 'blogIds', referencedColumnName: '_id' })
+    @Field(() => [Blog])
+    blogs: Blog[]
+
+    @Column()
+    @Field(() => String)
+    blogIds: string[]
 
     @BeforeInsert()
     makeSlug() {

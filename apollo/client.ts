@@ -44,7 +44,7 @@ const createApolloClient = (headers: IncomingHttpHeaders | null = null) => {
                     console.log(
                         `[Network error]:${networkError}. Backend is unreachable.Is it running?`
                     )
-            }),
+            }) as any,
             createUploadLink({
                 uri: 'http://localhost:3000/api/graphql',
                 //Make sure that CORS and cookies work

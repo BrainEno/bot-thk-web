@@ -18,17 +18,17 @@ export default class Like extends MongoEntity {
 
     @ManyToOne(() => Blog, (blog) => blog.likes)
     @Field(() => Blog)
-    @JoinColumn({ name: 'blogId', referencedColumnName: 'blogId' })
+    @JoinColumn({ name: 'blogId', referencedColumnName: '_id' })
     blog: Blog
 
     @ManyToOne(() => User, (user) => user.likes)
-    @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+    @JoinColumn({ name: 'userName', referencedColumnName: 'name' })
     @Field(() => User)
     user: User
 
     @Column()
     @Field()
-    username: string
+    userName: string
 
     @Column()
     @Field()

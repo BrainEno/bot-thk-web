@@ -17,16 +17,16 @@ export default class Comment extends MongoEntity {
     content: string
 
     @ManyToOne(() => User, (user) => user.comments)
-    @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'userName', referencedColumnName: 'name' })
     @Field(() => User)
     user: User
 
     @Column()
     @Index()
-    userId: string
+    userName: string
 
     @ManyToOne(() => Blog, (blog) => blog.comments)
-    @JoinColumn({ name: 'blogId', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'blogId', referencedColumnName: '_id' })
     @Field(() => Blog)
     commentedBlog: Blog
 

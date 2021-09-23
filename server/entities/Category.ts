@@ -30,10 +30,10 @@ export default class Category extends MongoEntity {
 
     @ManyToMany(() => Blog, (blog) => blog.categories)
     @Field(() => [Blog])
-    @JoinColumn({ name: 'blogIds', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'blogIds', referencedColumnName: '_id' })
     blogs: Blog[]
 
-    @Column()
+    // @Column()
     @Field(() => String)
     blogIds: string[]
 

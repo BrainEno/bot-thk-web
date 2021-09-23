@@ -4,10 +4,10 @@ import {
     Column,
     Index,
     OneToMany,
-    ObjectID,
     Entity,
     JoinColumn,
     ManyToMany,
+    OneToOne,
 } from 'typeorm'
 import MongoEntity from './MongoEntity'
 import Category from './Category'
@@ -52,21 +52,17 @@ export default class Blog extends MongoEntity {
     @Field()
     image: string
 
-    @OneToMany(() => ObjectID, (id) => id)
-    @Field(() => [Tag])
-    tags: ObjectID[]
-
-    @Column(() => ObjectID)
+    @OneToOne(() => User, (user) => user.name)
     @Field(() => User)
-    author: ObjectID[]
+    author: User
 
     @Column()
     @Field()
     active: boolean
 
-    @Column(() => ObjectID)
-    @Field(() => Like)
-    likes: ObjectID
+    @OneToMany(() => Like, (like) => like.blog)
+    @Field(() => [Like])
+    likes: Like[]
 
     @OneToMany(() => Comment, (comment) => comment.commentedBlog)
     @Field(() => [Comment])
@@ -84,4 +80,13 @@ export default class Blog extends MongoEntity {
     @Column()
     @Field(() => [String])
     categoriyNames: string[]
+
+    @ManyToMany(() => Tag, (tag) => tag.blogs)
+    @JoinColumn({ name: 'tagNames', referencedColumnName: 'name' })
+    @Field(() => [Tag])
+    tags: Tag[]
+
+    @Column()
+    @Field(() => [String])
+    tagNames: string[]
 }
