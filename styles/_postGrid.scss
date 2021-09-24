@@ -67,9 +67,17 @@
 
     .description-text {
       width: 100%;
+      max-height: 85px;
       font-size: 18px;
       font-weight: 400;
       color: #555;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: pre-wrap;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      line-clamp: 3;
+      display: -webkit-box;
     }
   }
 }

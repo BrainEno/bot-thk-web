@@ -1,297 +1,296 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import dynamic from 'next/dynamic'
-import { NextRouter, useRouter, withRouter } from 'next/router'
-import { getCookie, isAuth } from '../../actions/auth'
-import { singleBlog, updateBlog } from '../../actions/blog'
+import React, { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { NextRouter, useRouter, withRouter } from 'next/router';
+import { getCookie, isAuth } from '../../actions/auth';
+import { singleBlog, updateBlog } from '../../actions/blog';
 const ReactQuill = dynamic(() => import('react-quill'), {
-    ssr: false,
-})
-import { UploadOutlined } from '@ant-design/icons'
-import { QuillModules, QuillFormats } from '../../helpers/quillConfig'
-import SlideImage from '../SlideImage'
-import { ICategory, ITag } from '../../types'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadTags, loadCats } from '../../redux/actions'
-import { RootState } from '../../redux/reducers'
+  ssr: false
+});
+import { UploadOutlined } from '@ant-design/icons';
+import { QuillModules, QuillFormats } from '../../helpers/quillConfig';
+import SlideImage from '../SlideImage';
+import { ICategory, ITag } from '../../types';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadTags, loadCats } from '../../redux/actions';
+import { RootState } from '../../redux/reducers';
 
 const BlogUpdate = ({ router }: { router: NextRouter }) => {
-    const myRouter = useRouter()
-    const [body, setBody] = useState('')
+  const myRouter = useRouter();
+  const [body, setBody] = useState('');
 
-    const dispatch = useDispatch()
-    const selectCats = (state: RootState) => state.tagsCats.cats
-    const selectTags = (state: RootState) => state.tagsCats.tags
-    const tags = useSelector(selectTags)
-    const cats = useSelector(selectCats)
+  const dispatch = useDispatch();
+  const selectCats = (state: RootState) => state.tagsCats.cats;
+  const selectTags = (state: RootState) => state.tagsCats.tags;
+  const tags = useSelector(selectTags);
+  const cats = useSelector(selectCats);
 
-    const [checkedCats, setCheckedCats] = useState<string[]>([])
-    const [checkedTags, setCheckedTags] = useState<string[]>([])
+  const [checkedCats, setCheckedCats] = useState<string[]>([]);
+  const [checkedTags, setCheckedTags] = useState<string[]>([]);
 
-    const [values, setValues] = useState<{
-        title: string
-        error: string
-        successMsg: string
-        formData: null | FormData
-        body: string
-    }>({
-        title: '',
-        error: '',
-        successMsg: '',
-        formData: null,
-        body: '',
-    })
+  const [values, setValues] = useState<{
+    title: string;
+    error: string;
+    successMsg: string;
+    formData: null | FormData;
+    body: string;
+  }>({
+    title: '',
+    error: '',
+    successMsg: '',
+    formData: null,
+    body: ''
+  });
 
-    const { error, successMsg, formData, title } = values
-    const token = getCookie('token')
+  const { error, successMsg, formData, title } = values;
+  const token = getCookie('token');
 
-    const initBlog = useCallback(() => {
-        if (router.query.id) {
-            singleBlog(router.query.id as any).then((data) => {
-                if (data.error) {
-                    console.log(data.error)
-                } else {
-                    setValues((values) => ({ ...values, title: data.title }))
-                    setBody(data.body)
-                    setCategoriesArray(data.categories)
-                    setTagsArray(data.tags)
-                }
-            })
-        }
-    }, [router.query.id])
-
-    const setCategoriesArray = (blogCategories: ICategory[]) => {
-        let ca: string[] = []
-        blogCategories.map((c) => {
-            ca.push(c._id)
-        })
-        setCheckedCats(ca)
-    }
-
-    const setTagsArray = (blogTags: ITag[]) => {
-        let ta: string[] = []
-        blogTags.map((t) => {
-            ta.push(t._id)
-        })
-        setCheckedTags(ta)
-    }
-
-    const handleToggle = (catId: string) => () => {
-        setValues({ ...values, error: '' })
-        const clickedCategory = checkedCats.indexOf(catId)
-        const all = [...checkedCats]
-
-        if (clickedCategory === -1) {
-            all.push(catId)
+  const initBlog = useCallback(() => {
+    if (router.query.id) {
+      singleBlog(router.query.id as any).then((data) => {
+        if (data.error) {
+          console.log(data.error);
         } else {
-            all.splice(clickedCategory, 1)
+          setValues((values) => ({ ...values, title: data.title }));
+          setBody(data.body);
+          setCategoriesArray(data.categories);
+          setTagsArray(data.tags);
         }
+      });
+    }
+  }, [router.query.id]);
 
-        setCheckedCats(all)
-        formData!.set('categories', all.toString())
+  const setCategoriesArray = (blogCategories: ICategory[]) => {
+    const ca: string[] = [];
+    blogCategories.map((c) => {
+      ca.push(c._id);
+    });
+    setCheckedCats(ca);
+  };
+
+  const setTagsArray = (blogTags: ITag[]) => {
+    const ta: string[] = [];
+    blogTags.map((t) => {
+      ta.push(t._id);
+    });
+    setCheckedTags(ta);
+  };
+
+  const handleToggle = (catId: string) => () => {
+    setValues({ ...values, error: '' });
+    const clickedCategory = checkedCats.indexOf(catId);
+    const all = [...checkedCats];
+
+    if (clickedCategory === -1) {
+      all.push(catId);
+    } else {
+      all.splice(clickedCategory, 1);
     }
 
-    const handleTagsToggle = (t: string) => () => {
-        setValues({ ...values, error: '' })
-        const clickedTag = checkedTags.indexOf(t)
-        const all = [...checkedTags]
+    setCheckedCats(all);
+    formData!.set('categories', all.toString());
+  };
 
-        if (clickedTag === -1) {
-            all.push(t)
-        } else {
-            all.splice(clickedTag, 1)
-        }
-        console.log(all)
-        setCheckedTags(all)
-        formData!.set('tags', all.toString())
+  const handleTagsToggle = (t: string) => () => {
+    setValues({ ...values, error: '' });
+    const clickedTag = checkedTags.indexOf(t);
+    const all = [...checkedTags];
+
+    if (clickedTag === -1) {
+      all.push(t);
+    } else {
+      all.splice(clickedTag, 1);
     }
+    console.log(all);
+    setCheckedTags(all);
+    formData!.set('tags', all.toString());
+  };
 
-    const findOutCategory = (c: string) => {
-        const result = checkedCats.indexOf(c)
-        if (result !== -1) {
-            return true
-        } else {
-            return false
-        }
+  const findOutCategory = (c: string) => {
+    const result = checkedCats.indexOf(c);
+    if (result !== -1) {
+      return true;
+    } else {
+      return false;
     }
+  };
 
-    const findOutTag = (t: string) => {
-        const result = checkedTags.indexOf(t)
-        if (result !== -1) {
-            return true
-        } else {
-            return false
-        }
+  const findOutTag = (t: string) => {
+    const result = checkedTags.indexOf(t);
+    if (result !== -1) {
+      return true;
+    } else {
+      return false;
     }
+  };
 
-    const showCategories = () => {
-        return (
-            cats &&
-            cats.map((c, i) => (
-                <li key={i} className="checkbox-group">
-                    <input
-                        type="checkbox"
-                        onChange={handleToggle(c._id)}
-                        checked={findOutCategory(c._id)}
-                        className="mr-2"
-                    />
-                    <label className="form-check-label">{c.name}</label>
-                </li>
-            ))
-        )
-    }
-
-    const showTags = () => {
-        return (
-            tags &&
-            tags.map((t, i) => (
-                <li key={i} className="checkbox-group">
-                    <input
-                        type="checkbox"
-                        onChange={handleTagsToggle(t._id)}
-                        checked={findOutTag(t._id)}
-                        className="mr-2"
-                    />
-                    <label className="form-check-label">{t.name}</label>
-                </li>
-            ))
-        )
-    }
-
-    const handleChange =
-        (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-            console.log(e.target.value)
-            const value = name === 'image' ? e.target.files![0] : e.target.value
-            formData!.set(name, value)
-            setValues({ ...values, [name]: value, formData, error: '' })
-        }
-
-    const handleBody = (e: string) => {
-        setBody(e)
-        formData!.set('body', e)
-    }
-
-    useEffect(() => {
-        setValues((values) => ({ ...values, formData: new FormData() }))
-        initBlog()
-        dispatch(loadCats())
-        dispatch(loadTags())
-    }, [router, initBlog, dispatch])
-
-    const editBlog: React.FormEventHandler = (e) => {
-        e.preventDefault()
-        console.log(router.query.id)
-        updateBlog(formData, token, router.query.id).then((data) => {
-            if (data.error) {
-                setValues({ ...values, error: data.error })
-            } else {
-                setValues({
-                    ...values,
-                    title: '',
-                    successMsg: `您的文章《${data.title}》已成功更新`,
-                })
-                if (isAuth() && isAuth().role === 1) {
-                    myRouter.replace(`/admin`)
-                } else if (isAuth() && isAuth().role === 0) {
-                    myRouter.replace(`/user`)
-                }
-            }
-        })
-    }
-
-    const showError = () => (
-        <div className="alert" style={{ display: error ? '' : 'none' }}>
-            {error}
-        </div>
-    )
-
-    const showSuccess = () => (
-        <div
-            className="alert alert-successMsg"
-            style={{ display: successMsg ? '' : 'none' }}
-        >
-            {successMsg}
-        </div>
-    )
-
-    const updateBlogForm = () => {
-        return (
-            <form onSubmit={editBlog}>
-                <div className="input-container">
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={title}
-                        onChange={handleChange('title')}
-                        placeholder="Post title"
-                    />
-                </div>
-                <div className="form-group">
-                    <ReactQuill
-                        modules={QuillModules}
-                        formats={QuillFormats}
-                        value={body}
-                        placeholder="开始创作..."
-                        onChange={handleBody}
-                    />
-                </div>
-                <div className="btn-container">
-                    <button type="submit" className="form-btn my-3 right">
-                        更新文章
-                    </button>
-                </div>
-            </form>
-        )
-    }
-
+  const showCategories = () => {
     return (
-        <div className="blog-update-container">
-            <div className="blogUpdate-form">
-                {body && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <SlideImage imgSrc={`/blog/image/${router.query.id}`} />
-                    </div>
-                )}
-                {error && showError()}
-                {successMsg && showSuccess()}
-                <div className="blog-form-container">{updateBlogForm()}</div>
-            </div>
-            <div className="right-container">
-                <div className="upload-pic">
-                    <div>
-                        <h5>
-                            配图{' '}
-                            <small className="text-muted">{`(<1MB)`}</small>
-                        </h5>
-                        <hr />
-                        <label className="upload-btn">
-                            <UploadOutlined />
-                            更换图片
-                            <input
-                                type="file"
-                                onChange={handleChange('image')}
-                                accept="image/*"
-                                hidden
-                            />
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <h5>
-                        分类 <small className="text-muted">{`(必选)`}</small>
-                    </h5>
-                    <hr />
-                    <ul>{showCategories()}</ul>
-                </div>
-                <div>
-                    <h5>
-                        标签 <small className="text-muted">{`(必选)`}</small>
-                    </h5>
-                    <hr />
-                    <ul>{showTags()}</ul>
-                </div>
-            </div>
-        </div>
-    )
-}
+      cats &&
+      cats.map((c, i) => (
+        <li key={i} className="checkbox-group">
+          <input
+            type="checkbox"
+            onChange={handleToggle(c._id)}
+            checked={findOutCategory(c._id)}
+            className="mr-2"
+          />
+          <label className="form-check-label">{c.name}</label>
+        </li>
+      ))
+    );
+  };
 
-export default withRouter(BlogUpdate)
+  const showTags = () => {
+    return (
+      tags &&
+      tags.map((t, i) => (
+        <li key={i} className="checkbox-group">
+          <input
+            type="checkbox"
+            onChange={handleTagsToggle(t._id)}
+            checked={findOutTag(t._id)}
+            className="mr-2"
+          />
+          <label className="form-check-label">{t.name}</label>
+        </li>
+      ))
+    );
+  };
+
+  const handleChange =
+    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(e.target.value);
+      const value = name === 'image' ? e.target.files![0] : e.target.value;
+      formData!.set(name, value);
+      setValues({ ...values, [name]: value, formData, error: '' });
+    };
+
+  const handleBody = (e: string) => {
+    setBody(e);
+    formData!.set('body', e);
+  };
+
+  useEffect(() => {
+    setValues((values) => ({ ...values, formData: new FormData() }));
+    initBlog();
+    dispatch(loadCats());
+    dispatch(loadTags());
+  }, [router, initBlog, dispatch]);
+
+  const editBlog: React.FormEventHandler = (e) => {
+    e.preventDefault();
+    console.log(router.query.id);
+    updateBlog(formData, token!, router.query.id as string).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({
+          ...values,
+          title: '',
+          successMsg: `您的文章《${data.title}》已成功更新`
+        });
+        if (isAuth() && isAuth().role === 1) {
+          myRouter.replace(`/admin`);
+        } else if (isAuth() && isAuth().role === 0) {
+          myRouter.replace(`/user`);
+        }
+      }
+    });
+  };
+
+  const showError = () => (
+    <div className="alert" style={{ display: error ? '' : 'none' }}>
+      {error}
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div
+      className="alert alert-successMsg"
+      style={{ display: successMsg ? '' : 'none' }}
+    >
+      {successMsg}
+    </div>
+  );
+
+  const updateBlogForm = () => {
+    return (
+      <form onSubmit={editBlog}>
+        <div className="input-container">
+          <input
+            type="text"
+            className="form-control"
+            value={title}
+            onChange={handleChange('title')}
+            placeholder="Post title"
+          />
+        </div>
+        <div className="form-group">
+          <ReactQuill
+            modules={QuillModules}
+            formats={QuillFormats}
+            value={body}
+            placeholder="开始创作..."
+            onChange={handleBody}
+          />
+        </div>
+        <div className="btn-container">
+          <button type="submit" className="form-btn my-3 right">
+            更新文章
+          </button>
+        </div>
+      </form>
+    );
+  };
+
+  return (
+    <div className="blog-update-container">
+      <div className="blogUpdate-form">
+        {body && (
+          <div style={{ marginBottom: '20px' }}>
+            <SlideImage imgSrc={`/blog/image/${router.query.id}`} />
+          </div>
+        )}
+        {error && showError()}
+        {successMsg && showSuccess()}
+        <div className="blog-form-container">{updateBlogForm()}</div>
+      </div>
+      <div className="right-container">
+        <div className="upload-pic">
+          <div>
+            <h5>
+              配图 <small className="text-muted">{`(<1MB)`}</small>
+            </h5>
+            <hr />
+            <label className="upload-btn">
+              <UploadOutlined />
+              更换图片
+              <input
+                type="file"
+                onChange={handleChange('image')}
+                accept="image/*"
+                hidden
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h5>
+            分类 <small className="text-muted">{`(必选)`}</small>
+          </h5>
+          <hr />
+          <ul>{showCategories()}</ul>
+        </div>
+        <div>
+          <h5>
+            标签 <small className="text-muted">{`(必选)`}</small>
+          </h5>
+          <hr />
+          <ul>{showTags()}</ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default withRouter(BlogUpdate);

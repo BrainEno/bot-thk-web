@@ -1,15 +1,15 @@
-import { handleResponse } from "./auth";
+import { handleResponse } from './auth';
 
-//创建类别，注意必须是英语的类别
-export const createCategory = (category, token) => {
+//创建类别
+export const createCategory = (category: any, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/category`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(category),
+    body: JSON.stringify(category)
   })
     .then((response) => {
       handleResponse(response);
@@ -28,9 +28,9 @@ export const listCategories = () => {
 };
 
 //read category with blogs
-export const singleCategory = (slug) => {
+export const singleCategory = (slug: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/category/${slug}`, {
-    method: "GET",
+    method: 'GET'
   })
     .then((response) => {
       return response.json();
@@ -39,14 +39,14 @@ export const singleCategory = (slug) => {
 };
 
 //delete category
-export const removeCategory = (slug, token) => {
+export const removeCategory = (slug: string, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/category/${slug}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   })
     .then((response) => {
       handleResponse(response);

@@ -1,4 +1,4 @@
-export const emailContactForm = (data) => {
+export const emailContactForm = (data: any) => {
   let emailEndpoint;
 
   if (data.authorEmail) {
@@ -8,12 +8,12 @@ export const emailContactForm = (data) => {
   }
 
   return fetch(`${emailEndpoint}`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
     .then((res) => {
       return res.json();

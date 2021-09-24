@@ -1,11 +1,11 @@
-import { handleResponse } from "./auth";
+import { handleResponse } from './auth';
 
-export const userPublicProfile = (username) => {
+export const userPublicProfile = (username: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/user/${username}`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Accept: "application/json",
-    },
+      Accept: 'application/json'
+    }
   })
     .then((res) => {
       return res.json();
@@ -13,13 +13,13 @@ export const userPublicProfile = (username) => {
     .catch((err) => console.log(err));
 };
 
-export const getProfile = (token) => {
+export const getProfile = (token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/user/profile`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   })
     .then((res) => {
       return res.json();
@@ -27,14 +27,14 @@ export const getProfile = (token) => {
     .catch((err) => console.log(err));
 };
 
-export const update = (token, user) => {
+export const update = (token: string, user: any) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/user/update`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
     },
-    body: user,
+    body: user
   })
     .then((res) => {
       handleResponse(res);

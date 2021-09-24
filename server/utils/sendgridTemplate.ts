@@ -29,4 +29,4 @@ export const preRegisterTemplate = (token: string) => `
     <p style="text-align:center;">—— 邮件发送自BTN THK ，独立创作平台 ——</p>
     <p style='font-size:20px;text-decoration:underline;text-align:center;'>https://bot-thk.vercel.app</p>
  </div>
-`
+`;

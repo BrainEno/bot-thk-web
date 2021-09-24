@@ -1,4 +1,4 @@
-import { buildSchema } from 'type-graphql'
-import UserResolvers from '../resolvers/UserResolvers'
+import { buildSchema } from 'type-graphql';
+import UserResolvers from '../resolvers/UserResolvers';
 
-export const createSchema = () => buildSchema({ resolvers: [UserResolvers] })
+export const createSchema = () => buildSchema({ resolvers: [UserResolvers] });

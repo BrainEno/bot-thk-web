@@ -1,69 +1,69 @@
-import 'reflect-metadata'
-import { ApolloServer } from 'apollo-server-express'
-import express from 'express'
-import { createSchema } from './utils/createSchema'
-import next from 'next'
-import { parse } from 'url'
-import http from 'http'
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
-import { createConnection } from 'typeorm'
-import dotenv from 'dotenv'
-import path from 'path'
+import 'reflect-metadata';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
+import { createSchema } from './utils/createSchema';
+import next from 'next';
+import { parse } from 'url';
+import http from 'http';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { createConnection } from 'typeorm';
+import dotenv from 'dotenv';
+import path from 'path';
 
-const dev = process.env.NODE_ENV !== 'production'
-const rootDir = process.env.NODE_ENV === 'development' ? 'server' : 'dist'
+const dev = process.env.NODE_ENV !== 'production';
+const rootDir = process.env.NODE_ENV === 'development' ? 'server' : 'dist';
 
 const main = async () => {
-    dotenv.config({ path: path.join(__dirname, '../.env.local') })
+  dotenv.config({ path: path.join(__dirname, '../.env.local') });
 
-    const app = next({ dev })
-    const handle = app.getRequestHandler()
-    await app.prepare()
+  const app = next({ dev });
+  const handle = app.getRequestHandler();
+  await app.prepare();
 
-    const server = express()
+  const server = express();
 
-    server.all(/^((?!\/api\/).)*$/, (req, res) => {
-        const parsedUrl = parse(req.url!, true)
-        handle(req, res, parsedUrl)
-    })
+  server.all(/^((?!\/api\/).)*$/, (req, res) => {
+    const parsedUrl = parse(req.url!, true);
+    handle(req, res, parsedUrl);
+  });
 
-    const httpServer = http.createServer(server)
+  const httpServer = http.createServer(server);
 
-    try {
-        const entitiesPath = path.join(
-            __dirname,
-            `../${rootDir}/entities/**/*{.ts,.js}`
-        )
+  try {
+    const entitiesPath = path.join(
+      __dirname,
+      `../${rootDir}/entities/**/*{.ts,.js}`
+    );
 
-        console.log(entitiesPath)
+    console.log(entitiesPath);
 
-        await createConnection({
-            type: 'mongodb',
-            url: process.env.MONGODB_URI!,
-            entities: [entitiesPath],
-        })
-        console.log('mongodb connected')
-    } catch (error) {
-        console.log(error)
-    }
+    await createConnection({
+      type: 'mongodb',
+      url: process.env.MONGODB_URI!,
+      entities: [entitiesPath]
+    });
+    console.log('mongodb connected');
+  } catch (error) {
+    console.log(error);
+  }
 
-    const schema = await createSchema()
+  const schema = await createSchema();
 
-    const apolloServer = new ApolloServer({
-        schema,
-        context: ({ req, res }) => ({ req, res }),
-        introspection: true,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    })
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req, res }) => ({ req, res }),
+    introspection: true,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+  });
 
-    await apolloServer.start()
+  await apolloServer.start();
 
-    apolloServer.applyMiddleware({ app: server, path: '/api/graphql' })
+  apolloServer.applyMiddleware({ app: server, path: '/api/graphql' });
 
-    await new Promise((resolve) =>
-        httpServer.listen({ port: 3000 }, resolve as any)
-    )
-    console.log(`🚀 Server ready at http://localhost:3000`)
-}
+  await new Promise((resolve) =>
+    httpServer.listen({ port: 3000 }, resolve as any)
+  );
+  console.log(`🚀 Server ready at http://localhost:3000`);
+};
 
-main()
+main();

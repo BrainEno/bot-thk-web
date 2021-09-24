@@ -1,61 +1,61 @@
-import { CSSProperties } from 'react'
+import { CSSProperties } from 'react';
 
 export interface IBlog {
-    _id: string
-    title: string
-    slug:string
-    body: string
-    description: string
-    mtitle:string
-    image?:string
-    author: IUser
-    tags: ITag[]
-    categories: ICategory[]
-    createdAt: string
-    updatedAt: string
-    __v: number
+  _id: string;
+  title: string;
+  slug: string;
+  body: string;
+  description: string;
+  mtitle: string;
+  image?: string;
+  author: IUser;
+  tags: ITag[];
+  categories: ICategory[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface IBlogWithStyle extends IBlog {
-    style?: CSSProperties
+  style?: CSSProperties;
 }
 
 export interface IUser {
-    username: string
-    name?: string
-    password: string
-    email: string
-    profile?: string
-    role: number
-    photo?: Buffer
-    about: string
-    createdAt: string
-    updatedAt: string
-    __v: number
+  username: string;
+  name?: string;
+  password: string;
+  email: string;
+  profile?: string;
+  role: number;
+  photo?: Buffer;
+  about: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface ICategory {
-    _id: string
-    name: string
-    slug: string
-    createdAt: string
-    updatedAt: string
-    __v: number
+  _id: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface ITag {
-    _id: string
-    name: string
-    slug: string
-    createdAt: string
-    updatedAt: string
-    __v: number
+  _id: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface ICarouselItem {
-    src: string
-    title: string
-    link: string
-    width: number
-    height: number
+  src: string;
+  title: string;
+  link: string;
+  width: number;
+  height: number;
 }

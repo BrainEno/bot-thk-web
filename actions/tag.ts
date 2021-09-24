@@ -1,15 +1,15 @@
-import { handleResponse } from "./auth";
+import { handleResponse } from './auth';
 
 //create tags
-export const createTag = (tag, token) => {
+export const createTag = (tag: any, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/tag`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(tag),
+    body: JSON.stringify(tag)
   })
     .then((response) => {
       handleResponse(response);
@@ -28,7 +28,7 @@ export const listTags = () => {
 };
 
 //read tag
-export const singleTag = (slug) => {
+export const singleTag = (slug: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/tag/${slug}`)
     .then((response) => {
       return response.json();
@@ -37,14 +37,14 @@ export const singleTag = (slug) => {
 };
 
 //delete tag
-export const removeTag = (slug, token) => {
+export const removeTag = (slug: string, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/tag/${slug}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   })
     .then((response) => {
       handleResponse(response);
