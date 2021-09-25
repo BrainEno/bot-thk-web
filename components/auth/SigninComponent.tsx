@@ -51,9 +51,6 @@ const SigninComponent = () => {
         if (data.error) {
           setValues({ ...values, error: data.error, loading: false });
         } else {
-          //save user token to cookie
-          //save user info to localstorage
-          //authenticate user
           authenticate(data, () => {
             if (isAuth() && isAuth().role === 1) {
               router.push(`/admin`);
@@ -86,7 +83,7 @@ const SigninComponent = () => {
         error === '密码长度不得小于6个字符');
 
   const showLoading = () =>
-    loading ? <div className="alert alert-info">正在加载...</div> : '';
+    loading ? <div className="alert">正在加载...</div> : '';
 
   const signinForm = () => {
     return (

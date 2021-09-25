@@ -14,9 +14,7 @@
         .blog-form {
             flex: 1;
             height: 630px;
-            box-shadow: -3px -3px 7px #ffffff,
-                3px 3px 7px rgba(136, 165, 191, 0.48),
-                inset -3px -3px 7px #ffffff,
+            box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48), inset -3px -3px 7px #ffffff,
                 inset 3px 3px 7px rgba(136, 165, 191, 0.48);
             border-radius: 25px;
             padding: 60px;
@@ -35,8 +33,7 @@
                             height: 40px;
                             border: none;
                             border-radius: 20px;
-                            box-shadow: inset -3px -3px 7px #ffffff,
-                                inset 3px 3px 5px rgba(136, 165, 191, 0.48);
+                            box-shadow: inset -3px -3px 7px #ffffff, inset 3px 3px 5px rgba(136, 165, 191, 0.48);
                             outline: none;
                             font-size: 17px;
 
@@ -46,24 +43,24 @@
                         }
                     }
 
-                    .ql-toolbar {
-                        box-shadow: -3px -3px 7px #ffffff,
-                            3px 3px 7px rgba(136, 165, 191, 0.48);
-                        border: none;
-                    }
+                    // .ql-toolbar {
+                    //     box-shadow: -3px -3px 7px #ffffff,
+                    //         3px 3px 7px rgba(136, 165, 191, 0.48);
+                    //     border: none;
+                    // }
 
-                    .ql-container {
-                        border: none;
-                        box-shadow: -3px -3px 7px #ffffff,
-                            3px 3px 7px rgba(136, 165, 191, 0.48);
-                    }
+                    // .ql-container {
+                    //     border: none;
+                    //     box-shadow: -3px -3px 7px #ffffff,
+                    //         3px 3px 7px rgba(136, 165, 191, 0.48);
+                    // }
 
-                    .ql-editor {
-                        height: 415px !important;
-                        background-color: white;
-                        font-size: 16px;
-                        letter-spacing: 1px;
-                    }
+                    // .ql-editor {
+                    //     height: 415px !important;
+                    //     background-color: white;
+                    //     font-size: 16px;
+                    //     letter-spacing: 1px;
+                    // }
 
                     .btn-container {
                         margin-top: 55px;
@@ -132,13 +129,11 @@
                     font-size: 16px;
                     font-weight: 900px;
                     padding: 8px 15px;
-                    box-shadow: -3px -3px 7px #ffffff,
-                        3px 3px 7px rgba(136, 165, 191, 0.48);
+                    box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
 
                     &:hover,
                     &:active {
-                        box-shadow: inset -3px -3px 7px #ffffff,
-                            inset 3px 3px 5px rgba(136, 165, 191, 0.48);
+                        box-shadow: inset -3px -3px 7px #ffffff, inset 3px 3px 5px rgba(136, 165, 191, 0.48);
                     }
                 }
             }

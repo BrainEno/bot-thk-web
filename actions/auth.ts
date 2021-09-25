@@ -151,7 +151,7 @@ export const updateUser = (user: UserInput, next: any) => {
   }
 };
 
-export const forgotPassword = (email: string) => {
+export const forgotPassword = (email: any) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/forgot-password`, {
     method: 'PUT',
     headers: {
@@ -166,7 +166,7 @@ export const forgotPassword = (email: string) => {
     .catch((err) => console.log(err));
 };
 
-export const resetPassword = (resetInfo: JSON) => {
+export const resetPassword = (resetInfo: any) => {
   return fetch(`${process.env.NEXT_PUBLIC_API}/reset-password`, {
     method: 'PUT',
     headers: {
