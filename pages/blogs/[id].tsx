@@ -43,6 +43,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
   );
 
   if (error) console.log('ERROR:', error);
+  // console.log(`/blog/image/${initialBlog!._id}`);
 
   const showComents = () => {
     return (
@@ -103,14 +104,16 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
   return (
     <>
-      {head(initialBlog)}
+      {initialBlog && head(initialBlog)}
       {blog ? (
         <SlideImage imgSrc={`/blog/image/${blog!._id}`} alt={blog!.title} />
       ) : (
-        <SlideImage
-          imgSrc={`/blog/image/${initialBlog!._id}`}
-          alt={initialBlog!.title}
-        />
+        initialBlog && (
+          <SlideImage
+            imgSrc={`/blog/image/${initialBlog!._id}`}
+            alt={initialBlog!.title}
+          />
+        )
       )}
       <main className="blog-article">
         <article className="article-header-container">

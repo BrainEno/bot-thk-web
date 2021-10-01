@@ -92,6 +92,7 @@ module.exports = withPlugins([withPreact, withBundleAnalyzer, withTM], {
   },
   headers,
   transpileModules: ['antd'],
+  pageDataCollectionTimeout: '120',
   webpack: (config, { isServer }) => {
     if (isServer) {
       () => import(path.join(__dirname, 'helpers/generate-sitemap'));
