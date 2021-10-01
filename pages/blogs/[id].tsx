@@ -15,7 +15,7 @@ import {
   GetStaticPropsContext
 } from 'next';
 import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles';
-import useSWR from 'swr';
+import useSWR, { SWRResponse } from 'swr';
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
   ssr: false
 });
@@ -36,7 +36,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
   id,
   relatedBlogs
 }) => {
-  const { data: blog, error } = useSWR(
+  const { data: blog, error }: SWRResponse<IBlog, any> = useSWR(
     process.env.NEXT_PUBLIC_API && id ? getURL(id) : null,
     (url) => fetch(url).then((r) => r.json()),
     { fallbackData: initialBlog }
@@ -103,7 +103,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
   return (
     <>
-      {blog ? head(blog) : head(initialBlog)}
+      {head(initialBlog)}
       {blog ? (
         <SlideImage imgSrc={`/blog/image/${blog!._id}`} alt={blog!.title} />
       ) : (
@@ -191,7 +191,13 @@ export const getStaticPaths: GetStaticPaths =
     const recentPosts = await getBlogsByCat('recent-post');
     const trendingPosts = await getBlogsByCat('trending');
     const featuredPosts = await getBlogsByCat('featured');
-    const posts = [...recentPosts, ...trendingPosts, ...featuredPosts];
+    const postsTemp = [...recentPosts, ...trendingPosts, ...featuredPosts];
+
+    const posts = postsTemp.filter(
+      (post, index, self) =>
+        index ===
+        self.findIndex((t) => t._id === post._id && t.title === post.title)
+    );
 
     const paths = posts.map((post) => ({
       params: {

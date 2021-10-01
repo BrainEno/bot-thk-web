@@ -2,7 +2,7 @@ import { CustomerServiceOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { IBlog } from '../../types';
 
-const ReadBlog = ({ blog }: { blog: IBlog }) => {
+const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState('');
 
@@ -85,6 +85,9 @@ const ReadBlog = ({ blog }: { blog: IBlog }) => {
 
   useEffect(() => {
     initVoice();
+    return () => {
+      initVoice;
+    };
   }, [initVoice]);
 
   return (
