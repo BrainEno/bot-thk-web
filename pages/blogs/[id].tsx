@@ -218,7 +218,8 @@ export const getStaticPaths: GetStaticPaths =
 
     return {
       paths,
-      fallback: true
+      // fallback: true
+      fallback: false
     };
   };
 
