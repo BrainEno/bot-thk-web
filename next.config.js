@@ -94,15 +94,7 @@ module.exports = withPlugins([withPreact, withBundleAnalyzer, withTM], {
   transpileModules: ['antd'],
   webpack: (config, { isServer }) => {
     if (isServer) {
-      () => import('./helpers/generate-sitemap');
-    }
-
-    if (!isServer) {
-      config.resolve.fallback = {
-        fs: false,
-        stream: false,
-        crypto: false
-      };
+      () => import(path.join(__dirname, 'helpers/generate-sitemap'));
     }
 
     // if (!dev) {
