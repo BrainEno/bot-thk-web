@@ -55,27 +55,31 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     );
   };
 
-  const head = (blog: IBlog) => (
+  const head = () => (
     <>
-      {blog && (
+      {
         <Head>
           <title>
-            {blog!.title} | {process.env.NEXT_PUBLIC_APP_NAME}
+            {initialBlog!.title} | {process.env.NEXT_PUBLIC_APP_NAME}
           </title>
-          <meta name="description" content={blog!.description} />
+          <meta name="description" content={initialBlog!.description} />
           <link
             rel="canonical"
-            href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog!._id}`}
+            href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${initialBlog!._id}`}
           />
           <meta
             property="og:title"
-            content={`${blog!.title}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+            content={`${initialBlog!.title}| ${
+              process.env.NEXT_PUBLIC_APP_NAME
+            }`}
           />
-          <meta property="og:description" content={blog!.description} />
+          <meta property="og:description" content={initialBlog!.description} />
           <meta property="og:type" content="webiste" />
           <meta
             property="og:url"
-            content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${blog!._id}`}
+            content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${
+              initialBlog!._id
+            }`}
           />
           <meta
             property="og:site_name"
@@ -83,16 +87,20 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
           />
           <meta
             property="og:image"
-            content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog!._id}`}
+            content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
+              initialBlog!._id
+            }`}
           />
           <meta
             property="og:image:secure_url"
-            content={`${process.env.NEXT_PUBLIC_API}/blog/image/${blog!._id}`}
+            content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
+              initialBlog!._id
+            }`}
           />
           <meta property="og:image:type" content="image/jpg" />
           <meta name="theme-color" content="#eff3f8" />
         </Head>
-      )}
+      }
     </>
   );
 
@@ -104,7 +112,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
 
   return (
     <>
-      {initialBlog && head(initialBlog)}
+      {initialBlog && head()}
       {blog ? (
         <SlideImage imgSrc={`/blog/image/${blog!._id}`} alt={blog!.title} />
       ) : (
