@@ -1,6 +1,7 @@
 // import '@fontsource/noto-sans-sc/400.css';
 // import '@fontsource/noto-sans-sc/500.css';
 // import '@fontsource/noto-sans-sc/700.css';
+import '../public/noto-sans-sc/index.css';
 import '../styles/main.scss';
 import Header from '../components/Header';
 import '../node_modules/react-quill/dist/quill.snow.css';

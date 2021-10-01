@@ -9,7 +9,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 });
 const withTM = require('next-transpile-modules');
-const withPreact = require('next-plugin-preact');
+// const withPreact = require('next-plugin-preact');
 
 withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
 
@@ -36,7 +36,7 @@ const headers = {
   }
 };
 
-module.exports = withPlugins([withPreact, withBundleAnalyzer, withTM], {
+module.exports = withPlugins([withBundleAnalyzer, withTM], {
   env: (phase) => {
     // when started in development mode `next dev` or `npm run dev` regardless of the value of STAGING environmental variable
     const isDev = phase === PHASE_DEVELOPMENT_SERVER;
