@@ -6,13 +6,13 @@ import AddBtn from '../Common/AddBtn';
 import { Pagination } from '../Common/Pagination';
 import MyBrand from '../MyBrand';
 
+const pageSize = 6;
+
 interface IUserBlogsProps {
   blogs: IBlog[];
   user: IUser;
 }
 const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageSize, setPageSize] = useState(6);
   const [current, setCurrent] = useState(1);
 
   const paginatedBlogs = useMemo(() => {
@@ -20,7 +20,7 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
     const firstIndex = lastIndex - pageSize;
 
     return blogs.slice(firstIndex, lastIndex);
-  }, [current, pageSize, blogs]);
+  }, [current, blogs]);
 
   return (
     <div className="dashboard-right-container">

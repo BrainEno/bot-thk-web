@@ -94,7 +94,10 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <Container>
-      <button onClick={prevPage}>
+      <button
+        onClick={prevPage}
+        style={{ cursor: activedIndex === 1 ? 'not-allowed' : 'pointer' }}
+      >
         <span role="img" aria-label="left">
           <svg
             viewBox="64 64 896 896"
@@ -113,9 +116,15 @@ export const Pagination: React.FC<PaginationProps> = ({
       <span
         style={{ letterSpacing: 4, color: '#000000d9', paddingBottom: '1px' }}
       >
-        / {Math.ceil(total / pageSize)}
+        / {lastPage}
       </span>
-      <button style={{ marginLeft: '10px' }} onClick={nextPage}>
+      <button
+        style={{
+          marginLeft: '10px',
+          cursor: activedIndex === lastPage ? 'not-allowed' : 'pointer'
+        }}
+        onClick={nextPage}
+      >
         <span role="img" aria-label="right">
           <svg
             viewBox="64 64 896 896"

@@ -5,9 +5,9 @@ import { Pagination } from '../Common/Pagination';
 
 import PostCard from './PostCard';
 
+const pageSize = 9;
+
 const PostGrid = ({ posts }: { posts: IBlog[] }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageSize, setPageSize] = useState(9);
   const [current, setCurrent] = useState(1);
 
   const firstPostRef = useRef<null | HTMLDivElement>(null);
@@ -18,7 +18,7 @@ const PostGrid = ({ posts }: { posts: IBlog[] }) => {
     const firstIndex = lastIndex - pageSize;
 
     return posts.slice(firstIndex, lastIndex);
-  }, [current, pageSize, posts]);
+  }, [current, posts]);
 
   const handleSilder = () => {
     postRefPos = firstPostRef.current!.offsetTop;

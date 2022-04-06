@@ -11,6 +11,8 @@ import { Pagination } from '../../components/Common/Pagination';
 import MyBrand from '../../components/MyBrand';
 import { IBlog, IUser } from '../../types';
 
+const pageSize = 6;
+
 dayjs.extend(relativeTime);
 
 interface IUserProfileProps {
@@ -58,7 +60,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageSize, setPageSize] = useState(6);
+
   const [current, setCurrent] = useState(1);
 
   const paginatedBlogs = useMemo(() => {
@@ -66,7 +68,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
     const firstIndex = lastIndex - pageSize;
 
     return blogs.slice(firstIndex, lastIndex);
-  }, [current, pageSize, blogs]);
+  }, [current, blogs]);
 
   return (
     <>
