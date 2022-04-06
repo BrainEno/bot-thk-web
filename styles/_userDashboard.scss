@@ -10,16 +10,10 @@
   justify-content: space-between;
   align-items: center;
   width: 25%;
-  height: 100%;
-  padding-top: 85px;
+  padding-top: 100px;
   padding-bottom: 300px;
-  background: linear-gradient(
-    112.71deg,
-    #4d535c -7.06%,
-    #171c21 50.9%,
-    #121417 107.91%
-  );
-  color: #d6e1ef;
+  background-color: #2c2f33;
+  color: #eee;
 
   .userInfo {
     display: flex;
@@ -41,7 +35,6 @@
 
     & div {
       display: flex;
-
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -60,47 +53,16 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    margin-top: 70px;
+    margin-top: 90px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    & li {
-      width: 60%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      list-style: none;
-      font-size: 22px;
-      margin: 0;
-      margin-bottom: 50px;
-      background: linear-gradient(
-          191.11deg,
-          #0b9df2 -308.15%,
-          rgba(242, 109, 12, 0) 31.34%
-        ),
-        linear-gradient(144.05deg, #32383e -69.07%, #17191c 122.22%);
-      box-shadow: -4px -2px 16px rgba(195, 200, 205, 0.09),
-        4px 4px 18px rgba(0, 0, 0, 0.5);
-      border-radius: 25px;
-
-      span {
-        margin-left: 10px;
-        cursor: pointer;
-        letter-spacing: 3px;
-        color: #d6e1ef;
-
-        &:hover {
-          color: #6d737a;
-        }
-      }
-    }
   }
 }
 
 @media screen and (max-width: 900px) {
+
   html,
   body {
     width: 100%;
@@ -134,37 +96,11 @@
     }
 
     & ul {
-      width: 100vw;
+      width: 100%;
       padding: 0 20px;
       justify-content: center;
       flex-direction: row;
       margin: 0;
-
-      & li {
-        width: 50px;
-        height: 30px;
-        background: linear-gradient(
-          191.11deg,
-          rgba(8, 4, 0, 0.9) -308.15%,
-          rgba(242, 109, 12, 0) 31.34%
-        );
-        box-shadow: -4px -2px 10px rgba(53, 54, 54, 0.09),
-          4px 2px 10px rgba(0, 0, 0, 0.5);
-        border-radius: 12px;
-        margin: 10px 10px;
-        padding-right: 28px;
-
-        a {
-          justify-content: center;
-          align-items: center;
-          width: 50px;
-          border-radius: 12px;
-        }
-
-        & .span-text {
-          display: none;
-        }
-      }
     }
   }
 }

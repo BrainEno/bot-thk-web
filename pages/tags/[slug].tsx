@@ -1,9 +1,10 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import { ParsedUrlQuery } from 'querystring';
+
 import { singleTag } from '../../actions/tag';
 import { PostGrid } from '../../components/blog';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { IBlog, ITag } from '../../types';
-import { ParsedUrlQuery } from 'querystring';
 
 interface IBlogsWithTagProps {
   tag: ITag;

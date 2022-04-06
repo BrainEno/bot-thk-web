@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { CarouselItem } from './CarouselItem';
-import { RightOutlined, LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined,RightOutlined } from '@ant-design/icons';
+
 import { ICarouselItem } from '../../types';
+
+import { CarouselItem } from './CarouselItem';
 
 const items: ICarouselItem[] = [
   {

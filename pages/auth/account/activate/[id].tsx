@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback,useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { NextRouter, withRouter } from 'next/router';
+
 import { signup } from '../../../../actions/auth';
 
 const ActivateAccount = ({ router }: { router: NextRouter }) => {

@@ -1,6 +1,6 @@
+import { isAuth } from '../../../actions/auth'
 import Private from '../../../components/auth/Private'
 import BlogList from '../../../components/crud/BlogList'
-import { isAuth } from '../../../actions/auth'
 
 const Blog = () => {
     const username = isAuth() && isAuth().username

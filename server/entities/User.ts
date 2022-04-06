@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { IsEmail, Length, MaxLength, MinLength } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
 import {
@@ -8,11 +9,11 @@ import {
   JoinColumn,
   OneToMany
 } from 'typeorm';
-import MongoEntity from './MongoEntity';
-import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import Like from './Like';
+
 import Comment from './Comment';
+import Like from './Like';
+import MongoEntity from './MongoEntity';
 
 @ObjectType()
 @Entity('users')

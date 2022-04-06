@@ -1,4 +1,5 @@
 import { IBlog } from '../../types'
+
 import BlogPost from './BlogPost'
 
 interface IBlogCategoryProps {

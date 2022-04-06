@@ -5,11 +5,11 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from '@apollo/client';
-import merge from 'deepmerge';
-import { isEqual } from 'lodash';
-import { IncomingHttpHeaders } from 'http';
 import { onError } from '@apollo/link-error';
 import { createUploadLink } from 'apollo-upload-client';
+import merge from 'deepmerge';
+import { IncomingHttpHeaders } from 'http';
+import { isEqual } from 'lodash';
 import type { AppProps } from 'next/app';
 
 const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';

@@ -3,14 +3,16 @@
 // import '@fontsource/noto-sans-sc/700.css';
 import '../public/noto-sans-sc/index.css';
 import '../styles/main.scss';
-import Header from '../components/Header';
 import '../node_modules/react-quill/dist/quill.snow.css';
-import { Provider } from 'react-redux';
-import { useStore } from '../redux/store';
+
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { Provider } from 'react-redux';
 import { AppProps } from 'next/app';
-import * as gtag from '../lib/gtag';
+import { useRouter } from 'next/router';
+
+import Header from '../components/Header';
+import * as gtag from '../helpers/gtag';
+import { useStore } from '../redux/store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = useStore(pageProps.initialReduxState);

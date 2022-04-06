@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import classNames from 'classnames'
 import { NextRouter, withRouter } from 'next/router'
+
 import { resetPassword } from '../../../../actions/auth'
 import MyBrand from '../../../../components/MyBrand'
-import classNames from 'classnames'
 
 const ResetPassword = ({ router }: { router: NextRouter }) => {
     const [values, setValues] = useState({

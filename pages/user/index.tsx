@@ -1,5 +1,5 @@
-import UserDashboard from "../../components/profile/UserDashboard";
 import Private from "../../components/auth/Private";
+import UserDashboard from "../../components/profile/UserDashboard";
 
 const UserIndex = () => {
   return (

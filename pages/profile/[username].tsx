@@ -1,15 +1,15 @@
-import Head from 'next/head';
-import { useState, useMemo } from 'react';
-import { userPublicProfile } from '../../actions/user';
+import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import Avatar from '../../components/Avatar';
-import MyBrand from '../../components/MyBrand';
-import { Pagination } from 'antd';
-import 'antd/dist/antd.css';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { IBlog, IUser } from '../../types';
+import Head from 'next/head';
 import { ParsedUrlQuery } from 'node:querystring';
+
+import { userPublicProfile } from '../../actions/user';
+import Avatar from '../../components/Avatar';
+import { Pagination } from '../../components/Common/Pagination';
+import MyBrand from '../../components/MyBrand';
+import { IBlog, IUser } from '../../types';
 
 dayjs.extend(relativeTime);
 
@@ -57,6 +57,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
     </Head>
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageSize, setPageSize] = useState(6);
   const [current, setCurrent] = useState(1);
 
@@ -121,18 +122,12 @@ const UserProfile: React.FC<IUserProfileProps> = ({ user, blogs, query }) => {
               : ''}
           </div>
         </div>
-
-        <div className="pagination-container">
-          <Pagination
-            simple
-            showSizeChanger
-            onShowSizeChange={setPageSize}
-            pageSize={pageSize}
-            total={blogs.length}
-            defaultCurrent={current}
-            onChange={setCurrent}
-          />
-        </div>
+        <Pagination
+          pageSize={pageSize}
+          total={blogs.length}
+          defaultCurrent={current}
+          onChange={setCurrent}
+        />
       </div>
     </>
   );

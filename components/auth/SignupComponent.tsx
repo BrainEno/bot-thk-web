@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { isAuth, preSignup } from '../../actions/auth'
+import React, { useEffect,useState } from 'react'
+import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import classNames from 'classnames'
+
+import { isAuth, preSignup } from '../../actions/auth'
 
 const SignupComponent = () => {
     const router = useRouter()

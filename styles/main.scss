@@ -214,3 +214,13 @@ a {
     font-size: 16px;
     letter-spacing: 1px;
 }
+
+.dropzone {
+    border: #5a5959 dotted 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    height: 80px;
+    width: 120px;
+}

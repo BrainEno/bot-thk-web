@@ -29,22 +29,6 @@
         inset -3px -3px 7px #ffffff, inset 3px 3px 7px rgba(136, 165, 191, 0.48);
     }
 
-    .btn-contaienr {
-      padding-top: 18px;
-      margin-left: 35px;
-      margin-right: 35px;
-      border-radius: 70px;
-      width: 70px;
-      height: 70px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
-
-      & h1 {
-        font-size: 60px;
-      }
-    }
 
     .info-container {
       padding: 20px;
@@ -62,47 +46,47 @@
     }
   }
 
-  & .pagination-container {
-    padding: 10px;
-    box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.2),
-      -6px -6px 26px rgba(255, 255, 255, 0.8);
-    border-radius: 50px;
-  }
+
 }
 
 .blog-card-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 35px;
+  gap: 35px;
   height: 500px;
   padding: 0px;
+  transition: all ease-in 0.2s;
 
-  & a {
-    height: 210px;
-    width: 400px;
-  }
 
   & .blog-card {
-    height: 210px;
-    width: 400px;
+    height: 160px;
+    width: 350px;
     padding: 25px;
-
+    font-size: 14px;
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6),
       -6px -6px 26px rgba(255, 255, 255, 0.8);
     border-radius: 16px;
 
     & h5 {
       font-weight: 500;
-      font-size: 20px;
+      font-size: 18px;
+      margin: auto;
+      margin-bottom: 12px;
     }
 
     & .desc-text {
       margin-bottom: 10px;
       color: #7889a2;
+
     }
 
     & div {
       margin-top: 15px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.01);
     }
   }
 }

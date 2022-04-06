@@ -1,6 +1,7 @@
 import { Max, Min } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity, OneToOne } from 'typeorm';
+
 import MongoEntity from './MongoEntity';
 import User from './User';
 

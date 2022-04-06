@@ -1,9 +1,10 @@
-import { NextRouter, withRouter } from 'next/router'
-import Head from 'next/head'
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo,useState } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
-import PostCard from '../../components/blog/PostCard'
+import Head from 'next/head'
+import { NextRouter, withRouter } from 'next/router'
 import useSWRInfinite from 'swr/infinite'
+
+import PostCard from '../../components/blog/PostCard'
 
 const Blogs = ({ router }: { router: NextRouter }) => {
     const getKey = (index: number) => {

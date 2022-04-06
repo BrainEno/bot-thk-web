@@ -2,19 +2,20 @@ import { Min, MinLength } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
 import {
   Column,
-  Index,
-  OneToMany,
   Entity,
+  Index,
   JoinColumn,
   ManyToMany,
+  OneToMany,
   OneToOne
 } from 'typeorm';
-import MongoEntity from './MongoEntity';
+
 import Category from './Category';
+import Comment from './Comment';
+import Like from './Like';
+import MongoEntity from './MongoEntity';
 import Tag from './Tag';
 import User from './User';
-import Like from './Like';
-import Comment from './Comment';
 
 @ObjectType()
 @Entity('blogs')

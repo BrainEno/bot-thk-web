@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback,useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { NextRouter, useRouter, withRouter } from 'next/router';
+
 import { getCookie, isAuth } from '../../actions/auth';
 import { singleBlog, updateBlog } from '../../actions/blog';
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false
 });
-import { UploadOutlined } from '@ant-design/icons';
-import { QuillModules, QuillFormats } from '../../helpers/quillConfig';
-import SlideImage from '../SlideImage';
-import { ICategory, ITag } from '../../types';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadTags, loadCats } from '../../redux/actions';
+import { UploadOutlined } from '@ant-design/icons';
+
+import { QuillFormats,QuillModules } from '../../helpers/quillConfig';
+import { loadCats,loadTags } from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
+import { ICategory, ITag } from '../../types';
+import SlideImage from '../SlideImage';
 
 const BlogUpdate = ({ router }: { router: NextRouter }) => {
   const myRouter = useRouter();

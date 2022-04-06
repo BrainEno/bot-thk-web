@@ -7,7 +7,9 @@ import {
   JoinColumn,
   ManyToMany
 } from 'typeorm';
+
 import { slugify } from '../utils/slugify';
+
 import Blog from './Blog';
 import MongoEntity from './MongoEntity';
 

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { signin, authenticate, isAuth } from '../../actions/auth';
-import Link from 'next/link';
 import classNames from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { authenticate, isAuth,signin } from '../../actions/auth';
 
 const SigninComponent = () => {
   const router = useRouter();

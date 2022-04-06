@@ -1,14 +1,15 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
-import User from '../entities/User';
-import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
-import { preRegisterTemplate } from '../utils/sendgridTemplate';
 import { AuthenticationError } from 'apollo-server-errors';
-import { v4 as uuidv4 } from 'uuid';
-import { isEmail, isEmpty, validate } from 'class-validator';
 import bcrypt from 'bcrypt';
+import { isEmail, isEmpty, validate } from 'class-validator';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 import path from 'path';
+import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { v4 as uuidv4 } from 'uuid';
+
+import User from '../entities/User';
+import { preRegisterTemplate } from '../utils/sendgridTemplate';
 
 dotenv.config({ path: path.join(__dirname, '../../.env.local') });
 

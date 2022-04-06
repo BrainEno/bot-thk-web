@@ -1,16 +1,17 @@
+import { Dispatch } from 'redux';
+
+import { isAuth } from '../actions/auth';
+import { listCategories } from '../actions/category';
+import { listTags } from '../actions/tag';
+import { userPublicProfile } from '../actions/user';
+
 import {
+  CLEAR_TAGS_CATS,
+  LOAD_CATS,
+  LOAD_TAGS,
   LOAD_USER,
   LOAD_USER_PROFILE,
-  LOGOUT_USER,
-  LOAD_TAGS,
-  LOAD_CATS,
-  CLEAR_TAGS_CATS
-} from './types';
-import { isAuth } from '../actions/auth';
-import { userPublicProfile } from '../actions/user';
-import { Dispatch } from 'redux';
-import { listTags } from '../actions/tag';
-import { listCategories } from '../actions/category';
+  LOGOUT_USER} from './types';
 
 export const loadUser = () => async (dispatch: Dispatch) => {
   const user = await isAuth();

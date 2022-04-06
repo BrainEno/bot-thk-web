@@ -1,16 +1,19 @@
-import React, { useState, useEffect, CSSProperties } from 'react';
-import { NextRouter, withRouter } from 'next/router';
+import React, { CSSProperties,useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { NextRouter, withRouter } from 'next/router';
+
 import { getCookie } from '../../actions/auth';
 import { createBlog } from '../../actions/blog';
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false
 });
-import { QuillModules, QuillFormats } from '../../helpers/quillConfig';
-import { UploadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadTags, loadCats, clearTagCats } from '../../redux/actions';
+import { UploadOutlined } from '@ant-design/icons';
+
+import { QuillFormats,QuillModules } from '../../helpers/quillConfig';
+import { clearTagCats,loadCats, loadTags } from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
+import ImgUploader from '../ImgUploader';
 
 const CreateBlog = ({ router }: { router: NextRouter }) => {
   const token = getCookie('token');
@@ -19,8 +22,6 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
   const tags = useSelector(selectTags);
   const cats = useSelector(selectCats);
   const dispatch = useDispatch();
-
-  if (cats.length > 0) console.log(cats);
 
   const blogFromLS = () => {
     if (typeof window === 'undefined') {
@@ -81,12 +82,22 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
     });
   };
 
-  const handleChange =
-    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = name === 'image' ? e.target.files![0] : e.target.value;
-      formData!.set(name, value);
-      setValues({ ...values, [name]: value, formData, error: '' });
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value, formData, error: '' });
+  };
+
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const imgForm = new FormData();
+    if (e.target.files) {
+      const url = process.env.CLOUDINARY_URL!;
+      console.log('url:', url);
+      const image = e.target.files[0];
+      imgForm.append('image', image);
+      console.log(image.name);
+      // fetch(`https://api.cloudinary.com/v1_1/${process.env.}`)
+    }
+  };
 
   const handleBody = (e: string) => {
     setBody(e);
@@ -173,7 +184,8 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
             type="text"
             className="form-control"
             value={title}
-            onChange={handleChange('title')}
+            name="title"
+            onChange={handleChange}
             placeholder="输入题目..."
           />
         </div>
@@ -187,7 +199,7 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
           />
         </div>
         <div className="btn-container">
-          <button type="submit" className="form-btn my-3 right">
+          <button type="submit" className="my-3 form-btn right">
             发布文章
           </button>
         </div>
@@ -208,13 +220,14 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
             <h5>
               配图 <small className="text-muted">{`(<1MB)`}</small>
             </h5>
+            <ImgUploader />
             <hr />
             <label className="upload-btn">
               <UploadOutlined />
               上传图片
               <input
                 type="file"
-                onChange={handleChange('image')}
+                onChange={uploadImage}
                 accept="image/*"
                 hidden
               />

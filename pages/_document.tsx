@@ -1,7 +1,8 @@
 import React from 'react';
 //eslint-disable-next-line
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { GA_TRACKING_ID } from '../lib/gtag';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+
+import { GA_TRACKING_ID } from '../helpers/gtag';
 
 class MyDocument extends Document {
   render() {

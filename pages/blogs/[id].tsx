@@ -1,21 +1,22 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { BlogCategory, TagRow } from '../../components/blog';
 import React from 'react';
-import SlideImage from '../../components/SlideImage';
 import dayjs from 'dayjs';
-import { singleBlog, listRelated } from '../../actions/blog';
-import { singleCategory } from '../../actions/category';
-import { IBlog } from '../../types';
 import {
   GetStaticPaths,
   GetStaticPathsResult,
   GetStaticProps,
   GetStaticPropsContext
 } from 'next';
-import mergeStyles, { relatedConfig } from '../../hooks/mergeStyles';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import Link from 'next/link';
 import useSWR, { SWRResponse } from 'swr';
+
+import { listRelated,singleBlog } from '../../actions/blog';
+import { singleCategory } from '../../actions/category';
+import { BlogCategory, TagRow } from '../../components/blog';
+import SlideImage from '../../components/SlideImage';
+import mergeStyles, { relatedConfig } from '../../helpers/mergeStyles';
+import { IBlog } from '../../types';
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
   ssr: false
 });
@@ -236,7 +237,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   return {
     props: { initialBlog, relatedBlogs, id: params!.id! },
-    revalidate: 1
+    revalidate: 5
   };
 };
 

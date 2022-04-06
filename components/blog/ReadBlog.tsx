@@ -1,5 +1,6 @@
-import { CustomerServiceOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
+import { CustomerServiceOutlined } from '@ant-design/icons';
+
 import { IBlog } from '../../types';
 
 const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
@@ -11,6 +12,7 @@ const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
       if (typeof window !== 'undefined') {
         const synth = window.speechSynthesis;
         const allVoices: SpeechSynthesisVoice[] = synth.getVoices();
+
         resolve(allVoices);
       }
     });
@@ -77,6 +79,7 @@ const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
   const initVoice = useCallback(async () => {
     try {
       const allVoices = await getVoices();
+      console.log('voices:', allVoices);
       setVoices(allVoices);
     } catch (error) {
       console.log(error);

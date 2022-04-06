@@ -1,11 +1,13 @@
 import { DefaultRootState } from 'react-redux';
 import { combineReducers } from 'redux';
+
 import { IBlog, ICategory, ITag, IUser } from '../types';
+
 import {
-  LOAD_USER_PROFILE,
+  ActionTypes,
   LOAD_USER,
-  LOGOUT_USER,
-  ActionTypes
+  LOAD_USER_PROFILE,
+  LOGOUT_USER
 } from './types';
 
 export interface RootState extends DefaultRootState {
@@ -66,7 +68,12 @@ const userProfileReducer = (
   }
 };
 
-const initialTagsCats: {} = {
+type TagsCatsState = {
+  tags: ITag[];
+  cats: ICategory[];
+};
+
+const initialTagsCats: TagsCatsState = {
   tags: [],
   cats: []
 };

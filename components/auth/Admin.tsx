@@ -1,5 +1,6 @@
 import { ReactChild, useEffect } from 'react'
 import { useRouter } from 'next/router'
+
 import { isAuth } from '../../actions/auth'
 
 const Admin = ({ children }: { children: ReactChild }) => {

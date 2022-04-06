@@ -1,14 +1,16 @@
 import 'reflect-metadata';
-import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
-import { createSchema } from './utils/createSchema';
-import next from 'next';
-import { parse } from 'url';
-import http from 'http';
+
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import { createConnection } from 'typeorm';
+import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
+import express from 'express';
+import http from 'http';
+import next from 'next';
 import path from 'path';
+import { createConnection } from 'typeorm';
+import { parse } from 'url';
+
+import { createSchema } from './utils/createSchema';
 
 const dev = process.env.NODE_ENV !== 'production';
 const rootDir = process.env.NODE_ENV === 'development' ? 'server' : 'dist';

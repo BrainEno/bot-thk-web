@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import MyBrand from '../MyBrand';
-import Avatar from '../Avatar';
+import React, { useCallback,useEffect, useState } from 'react';
+import { UploadOutlined } from '@ant-design/icons';
+
 import { getCookie, isAuth, updateUser } from '../../actions/auth';
 import { getProfile, update } from '../../actions/user';
-import { UploadOutlined } from '@ant-design/icons';
+import Avatar from '../Avatar';
+import MyBrand from '../MyBrand';
 
 const ProfileUpdate = () => {
   const [values, setValues] = useState<{

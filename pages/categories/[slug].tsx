@@ -1,10 +1,11 @@
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import { ParsedUrlQuery } from 'querystring';
+
 import { singleCategory } from '../../actions/category';
 import { BlogCategory } from '../../components/blog';
-import { GetServerSidePropsContext } from 'next';
+import mergeStyles, { normalConfig } from '../../helpers/mergeStyles';
 import { IBlog, ICategory } from '../../types';
-import { ParsedUrlQuery } from 'querystring';
-import mergeStyles, { normalConfig } from '../../hooks/mergeStyles';
 
 interface ICategoryProps {
   category: ICategory;
