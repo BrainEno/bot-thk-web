@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LeftOutlined,RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 import { ICarouselItem } from '../../types';
 
@@ -8,7 +8,7 @@ import { CarouselItem } from './CarouselItem';
 const items: ICarouselItem[] = [
   {
     src: '/images/recent.jpg',
-    title: 'Reacent Post',
+    title: 'Recent Post',
     link: '/categories/recent-post',
     width: 2048,
     height: 1701

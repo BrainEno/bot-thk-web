@@ -21,6 +21,19 @@ const BtnWrp = styled.div`
     transform: translateX(-50%) translateY(-50%);
     line-height: ${({ size }: { size: number }) => size + 'px'};
   }
+
+  @media screen and (max-width: 900px) {
+    width: ${({ size }: { size: number }) => (size * 3) / 4 + 'px'};
+    height: ${({ size }: { size: number }) => (size * 3) / 4 + 'px'};
+    border-radius: ${({ size }: { size: number }) => (size * 3) / 4 + 'px'};
+    margin-bottom: 20px;
+    margin-right: 20px;
+
+    & a {
+      font-size: ${({ size }: { size: number }) => (size * 3) / 4 + 'px'};
+      line-height: ${({ size }: { size: number }) => (size * 3) / 4 + 'px'};
+    }
+  }
 `;
 
 const AddBtn: React.FC<AddBtnProps> = ({ href, size }) => {

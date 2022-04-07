@@ -95,7 +95,7 @@
   .dashboard-right-container {
     width: 100%;
     height: max-content;
-    padding: 20px;
+    padding: 20px 0;
     justify-content: center;
     align-items: center;
 
@@ -110,7 +110,7 @@
       }
 
       & .info-container {
-        width: 100%;
+        width: max-content;
         letter-spacing: 1px;
 
         h2 {
@@ -128,7 +128,7 @@
     }
 
     & .blog-card-container {
-      width: 100vw;
+
       height: max-content;
       display: flex;
       flex-direction: column;
@@ -137,11 +137,11 @@
       margin-bottom: 20px;
       padding: 15px 20px;
 
-      & a,
+
       .blog-card {
-        width: 300px;
-        height: 250px;
-        margin: 0 auto;
+        width: 250px;
+        height: 180px;
+        margin: 20px 0;
 
         & h5 {
           font-weight: 800;

@@ -107,7 +107,7 @@ const Index: React.FC<IndexPageProps> = ({
         <section className="bg-white">
           <div className="recent-container">
             <Link href="/categories/recent-post" passHref>
-              <h1>Reacent Post</h1>
+              <h1>Recent Post</h1>
             </Link>
             {error ? (
               <PostGrid posts={recent!} />

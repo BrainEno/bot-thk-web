@@ -11,6 +11,18 @@ interface MenuItemProps {
   renderIcon?: (color: string) => React.ReactNode;
 }
 
+const breakpoints: Record<string, number> = {
+  sm: 900,
+  xl: 1200
+};
+
+const mq = Object.keys(breakpoints)
+  .map((key) => [key, breakpoints[key]])
+  .reduce((prev, [key, breakpoints]) => {
+    prev[key] = `@media (max-width: ${breakpoints}px)`;
+    return prev;
+  }, {} as Record<string, string>);
+
 const hoveredStyle = `inset -10px -10px 25px #3B4451, inset 10px 10px 25px #000000`;
 const normalStyle = `-10px -10px 25px #3B4451, 10px 10px 25px rgba(0, 0, 0, 0.3)`;
 
@@ -46,7 +58,7 @@ const Li = styled.li`
     }
   }
 
-  @media screen and (max-width: 900px) {
+  ${mq.sm} {
     width: 50px;
     height: 30px;
     background: linear-gradient(
@@ -56,9 +68,9 @@ const Li = styled.li`
     );
     box-shadow: -4px -2px 10px rgba(53, 54, 54, 0.09),
       4px 2px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 12px;
-    margin: 10px 10px;
-    padding-right: 28px;
+    border-radius: 10px;
+    margin: 10px 12px;
+    padding: 2px 6px;
 
     a {
       justify-content: center;
