@@ -1,66 +1,61 @@
 /*eslint-disable*/
-const path = require('path');
-const {
-  PHASE_DEVELOPMENT_SERVER,
-  PHASE_PRODUCTION_BUILD
-} = require('next/constants');
-const withPlugins = require('next-compose-plugins');
+/** @type {import('next').NextConfig} */
+const path = require('path')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true'
-});
-const withTM = require('next-transpile-modules');
+    enabled: process.env.ANALYZE === 'true',
+})
 
-withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
-
-const headers = {
-  async headers() {
+const headers = async () => {
     return [
-      {
-        source: '/api/:path*',
-        headers: [
-          { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT'
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value:
-              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-          }
-        ]
-      }
-    ];
-  }
-};
+        {
+            source: '/api/:path*',
+            headers: [
+                { key: 'Access-Control-Allow-Credentials', value: 'true' },
+                { key: 'Access-Control-Allow-Origin', value: '*' },
+                {
+                    key: 'Access-Control-Allow-Methods',
+                    value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+                },
+                {
+                    key: 'Access-Control-Allow-Headers',
+                    value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+                },
+            ],
+        },
+    ]
+}
 
-module.exports = withPlugins([withBundleAnalyzer, withTM], {
-  sassOptions: {
-    inCludePaths: [path.join(__dirname, 'styles')]
+module.exports = withBundleAnalyzer({
+    compiler: {
+    styledComponents: true
   },
-  poweredByHeader: false,
-  webpack5: true,
-  images: {
-    hostname: ['http://[::1]:5000', process.env.API],
-    domains: [
-      'bot-thk.vercel.app',
-      process.env.API,
-      'res.cloudinary.com',
-      'localhost',
-      '[::1]'
-    ],
-    deviceSizes: [350, 640, 750, 828, 1080, 1200, 1920, 2048, 3840]
-  },
-  headers,
-  transpileModules: ['antd'],
-  pageDataCollectionTimeout: '120',
-  webpack: (config, { isServer, dev }) => {
-    if (isServer) {
-      () => import(path.join(__dirname, 'helpers/generate-sitemap'));
-    }
+    sassOptions: {
+        inCludePaths: [path.join(__dirname, 'styles')],
+    },
+    poweredByHeader: false,
+    images: {
+        domains: [
+            'bot-thk.vercel.app',
+            process.env.API,
+            'res.cloudinary.com',
+            'localhost',
+            '[::1]',
+        ],
+        // loader:'cloudinary',
+        // path:'https://res.cloudinary.com',
+        formats: ['image/avif', 'image/webp'],
+        contentSecurityPolicy:
+            "default-src 'self'; script-src 'none'; sandbox;",
+        deviceSizes: [350, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    },
+    swcMinify: true,
+    headers,
 
-    return config;
-  },
-  swcMinify: true
-});
+    webpack: (config, { isServer }) => {
+        if (isServer) {
+            ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))
+        }
+
+        return config
+    },
+})

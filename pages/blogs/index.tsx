@@ -4,7 +4,7 @@ import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
 import useSWRInfinite from 'swr/infinite'
 
-import PostCard from '../../components/blog/PostCard'
+import PostInfo from '../../components/blog/PostInfo'
 
 const Blogs = ({ router }: { router: NextRouter }) => {
     const getKey = (index: number) => {
@@ -93,10 +93,9 @@ const Blogs = ({ router }: { router: NextRouter }) => {
                         ) : (
                             <section className="post-grid">
                                 {posts?.map((post: any) => (
-                                    <PostCard
+                                    <PostInfo
                                         post={post}
                                         key={post._id}
-                                        id={post._id}
                                     />
                                 ))}
                                 {isValidating && posts.length > 0 && (

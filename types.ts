@@ -7,7 +7,8 @@ export interface IBlog {
   body: string;
   description: string;
   mtitle: string;
-  image?: string;
+  imageUri?: string;
+  image?:string;
   author: IUser;
   tags: ITag[];
   categories: ICategory[];

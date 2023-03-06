@@ -12,7 +12,7 @@ import { IncomingHttpHeaders } from 'http';
 import { isEqual } from 'lodash';
 import type { AppProps } from 'next/app';
 
-const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
+export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -46,7 +46,7 @@ const createApolloClient = (headers: IncomingHttpHeaders | null = null) => {
           );
       }) as any,
       createUploadLink({
-        uri: 'http://localhost:3000/api/graphql',
+        uri: '/api/graphql',
         //Make sure that CORS and cookies work
         fetchOptions: {
           mode: 'cors'
@@ -93,6 +93,7 @@ export function initializeApollo(
     // Restore the cache with the merged data
     _apolloClient.cache.restore(data);
   }
+
   // For SSG and SSR always create a new Apollo Client
   if (typeof window === 'undefined') return _apolloClient;
   // Create the Apollo Client once in the client
@@ -101,10 +102,12 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function addApolloState(
+export type APState={"__APOLLO_STATE__"?:NormalizedCacheObject}
+
+export const addApolloState=(
   client: ApolloClient<NormalizedCacheObject>,
-  pageProps: AppProps['pageProps']
-) {
+  pageProps: AppProps<{props?:APState}>['pageProps']
+) =>{
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
   }
@@ -112,8 +115,8 @@ export function addApolloState(
   return pageProps;
 }
 
-export function useApollo(pageProps: AppProps['pageProps']) {
+export function useApollo(pageProps: AppProps<APState>['pageProps']) {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
-  const store = useMemo(() => initializeApollo(state), [state]);
+  const store = useMemo(() => initializeApollo({initialState:state}), [state]);
   return store;
 }

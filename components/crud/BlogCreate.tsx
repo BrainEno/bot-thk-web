@@ -1,4 +1,4 @@
-import React, { CSSProperties,useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { NextRouter, withRouter } from 'next/router';
 
@@ -10,8 +10,8 @@ const ReactQuill = dynamic(() => import('react-quill'), {
 import { useDispatch, useSelector } from 'react-redux';
 import { UploadOutlined } from '@ant-design/icons';
 
-import { QuillFormats,QuillModules } from '../../helpers/quillConfig';
-import { clearTagCats,loadCats, loadTags } from '../../redux/actions';
+import { QuillFormats, QuillModules } from '../../helpers/quillConfig';
+import { clearTagCats, loadCats, loadTags } from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
 import ImgUploader from '../ImgUploader';
 
@@ -25,13 +25,13 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
 
   const blogFromLS = () => {
     if (typeof window === 'undefined') {
-      return false;
+      return '';
     }
 
     if (localStorage.getItem('blog')) {
       return JSON.parse(localStorage.getItem('blog')!);
     } else {
-      return false;
+      return '';
     }
   };
 
@@ -84,7 +84,7 @@ const CreateBlog = ({ router }: { router: NextRouter }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value, formData, error: '' });
+    setValues((values)=>({ ...values, [name]: value, formData, error: '' }));
   };
 
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {

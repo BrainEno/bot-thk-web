@@ -1,0 +1,11 @@
+overwrite: true
+schema: http://localhost:4001/graphql
+documents: '../gql-server/src/schemas/**'
+generates:
+  ./gql/sdk.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+         
+          

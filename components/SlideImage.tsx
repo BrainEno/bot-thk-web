@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import myLoader from '../helpers/myloader';
 import useWindowSize from '../hooks/useWindowSize';
 
 const SlideImage = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
@@ -24,7 +23,6 @@ const SlideImage = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
           alt={alt || 'banner'}
           objectFit="cover"
           objectPosition="50% 50%"
-          loader={myLoader}
           quality={windowWidth! > 900 ? 75 : 45}
         />
       )}

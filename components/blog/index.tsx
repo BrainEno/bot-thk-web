@@ -1,6 +1,6 @@
 import BlogCategory from "./BlogCategory";
-import BlogPost from "./BlogPost";
+import PostCard from "./PostCard";
 import PostGrid from "./PostGrid";
 import TagRow from "./TagRow";
 
-export { BlogCategory, BlogPost, PostGrid,TagRow };
+export { BlogCategory, PostCard, PostGrid,TagRow };

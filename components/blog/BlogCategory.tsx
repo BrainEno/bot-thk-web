@@ -1,6 +1,6 @@
 import { IBlog } from '../../types'
 
-import BlogPost from './BlogPost'
+import PostCard from './PostCard'
 
 interface IBlogCategoryProps {
     posts: IBlog[]
@@ -20,7 +20,7 @@ const BlogCategory: React.FC<IBlogCategoryProps> = ({
             }}
         >
             {posts.map((post, index) => (
-                <BlogPost {...{ post, index, tagsOnTop }} key={post._id} />
+                <PostCard {...{ post, index, tagsOnTop }} key={post._id} />
             ))}
         </section>
     )

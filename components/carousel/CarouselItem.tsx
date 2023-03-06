@@ -16,8 +16,6 @@ export const CarouselItem: React.FC<ICarouselItemProps> = ({
   item,
   items,
   goToIndex
-  // onExiting,
-  // onExited,
 }) => {
   const { windowWidth } = useWindowSize();
 
@@ -49,6 +47,7 @@ export const CarouselItem: React.FC<ICarouselItemProps> = ({
             <Image
               src={item.src}
               priority={true}
+              loading="eager"
               alt="banner"
               layout="fill"
               objectFit="cover"
