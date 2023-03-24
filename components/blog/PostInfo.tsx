@@ -1,40 +1,39 @@
 import React from 'react'
 import dayjs from 'dayjs'
+import Image from 'next/image'
 import Link from 'next/link'
 
-import useWindowSize from '../../hooks/useWindowSize'
 import { IBlog } from '../../types'
 
 import { TagRow } from './index'
-import PostImg from './PostImg'
 
 interface IPostCardProps {
     post: IBlog
 }
 
-const PostInfo: React.FC<IPostCardProps> = ({ post}) => {
-    const { windowWidth } = useWindowSize()
-
+const PostInfo: React.FC<IPostCardProps> = ({ post }) => {
     return (
         <div className="post-container">
-            <Link href={`/blogs/${post.slug}`} passHref>
-                <a>
-                    <PostImg
-                        width={windowWidth! > 900 ? '350px' : '305px'}
-                        height={windowWidth! > 900 ? '350px' : '300px'}
+            <Link href={`/blogs/${post.slug}`}>
+                <div className="post-img-wrapper skeleton">
+                    <Image
                         src={post.imageUri!}
-                        radius={5}
+                        alt={post.slug}
+                        fill
+                        loading="lazy"
+                        className="post-img"
+                        quality={70}
                     />
-                </a>
+                </div>
             </Link>
             <TagRow tags={post.tags} />
             <section>
-                <h2>{post.title}</h2>
+                <p className="post-title">{post.title}</p>
                 <p className="author-text">
                     <span>
                         By:
                         <Link href={post.author.profile!} passHref>
-                            <a href="">{' ' + post.author.name + '  '}</a>
+                            {' ' + post.author.name + '  '}
                         </Link>
                     </span>
                     <span>
@@ -52,9 +51,7 @@ const PostInfo: React.FC<IPostCardProps> = ({ post}) => {
                 </div>
             </section>
             <p className="author-text">
-                <Link href={`/blogs/${post.slug}`} passHref>
-                    <a>Read More...</a>
-                </Link>
+                <Link href={`/blogs/${post.slug}`}>Read More...</Link>
             </p>
         </div>
     )

@@ -1,14 +1,13 @@
 import Image from 'next/image'
-import Link from 'next/link'
 
-interface IMyBrand {
+interface BrandProps {
     width: number
     height: number
     fontSize?: string
     cursor?: string
 }
 
-const MyBrand: React.FC<IMyBrand> = ({
+const MyBrand: React.FC<BrandProps> = ({
     width,
     height,
     fontSize,
@@ -22,19 +21,17 @@ const MyBrand: React.FC<IMyBrand> = ({
             alignItems: 'center',
         }}
     >
-        <Link href="/" passHref>
-            <span
-                style={{
-                    fontSize: fontSize ?? '28px',
-                    fontWeight: 700,
-                    fontFamily: '-apple-system',
-                    marginRight: '10px',
-                    cursor: 'default',
-                }}
-            >
-                BOT THK
-            </span>
-        </Link>
+        <span
+            style={{
+                fontSize: fontSize ?? '28px',
+                fontWeight: 700,
+                fontFamily: '-apple-system',
+                marginRight: '10px',
+                cursor: 'default',
+            }}
+        >
+            BOT THK
+        </span>
         <div style={{ cursor }}>
             <Image
                 src="/moshIcon.svg"

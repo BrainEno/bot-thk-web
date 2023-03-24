@@ -111,9 +111,9 @@ const BlogList = ({ username }: { username?: string }) => {
         >
           <h3 style={{ marginTop: '50px', cursor: 'pointer' }}>
             还没有发布过文章，
-            <a href={isAuth() && isAuth().role === 1 ? 'admin' : '/user'}>
+            <Link href={isAuth() && isAuth().role === 1 ? 'admin' : '/user'}>
               返回上一页
-            </a>
+            </Link>
           </h3>
         </Link>
       )}

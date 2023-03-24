@@ -1,24 +1,33 @@
-import { useCallback, useEffect, useMemo,useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
-import useSWRInfinite from 'swr/infinite'
 
 import PostInfo from '../../components/blog/PostInfo'
+import { getSdkWithHooks, ListBlogsWithCatTagQuery } from '../../gql/sdk'
+import { gqlClient } from '../../graphql/gqlClient'
 
-const Blogs = ({ router }: { router: NextRouter }) => {
-    const getKey = (index: number) => {
-        return `${process.env.NEXT_PUBLIC_API}/blogs-tags?page=${index}&count=9`
-    }
+const sdk = getSdkWithHooks(gqlClient)
+
+type BlogsProps = {
+    router: NextRouter
+    posts: ListBlogsWithCatTagQuery['listBlogsWithCatTag']
+    count: number
+}
+
+const Blogs = ({ router, posts, count }: BlogsProps) => {
     const [observedPost, setObservedPost] = useState('')
-    const { data, error, size, setSize, isValidating } = useSWRInfinite(
-        getKey,
-        (url: string) => fetch(url).then((r) => r.json())
+    const [pageIndex, setPageIndex] = useState(0)
+
+    const { data, error, isValidating } = sdk.useListBlogsWithCatTag(
+        '/blogs/all',
+        {},
+        { refreshInterval: 60 }
     )
 
-    const isInitialLoading = !data && !error
+    console.log('data', data)
 
-    const posts: any = useMemo(() => (data ? [].concat(...data) : []), [data])
+    const isInitialLoading = !data && !error
 
     const observeElement = useCallback(
         (element: HTMLElement | null) => {
@@ -26,7 +35,7 @@ const Blogs = ({ router }: { router: NextRouter }) => {
             const observer = new IntersectionObserver(
                 (entries) => {
                     if (entries[0].isIntersecting === true) {
-                        setSize(size + 1)
+                        setPageIndex(pageIndex + 1)
                         observer.unobserve(element)
                     }
                 },
@@ -34,19 +43,19 @@ const Blogs = ({ router }: { router: NextRouter }) => {
             )
             observer.observe(element)
         },
-        [size, setSize]
+        [pageIndex, setPageIndex]
     )
 
     useEffect(() => {
-        if (!posts || posts.length === 0) return
+        if (!posts) return
 
-        const id = posts[posts.length - 1]._id
+        const id = (posts as { [key: number]: any })[count - 1]._id
 
         if (id !== observedPost) {
             setObservedPost(id)
             observeElement(document.getElementById(id))
         }
-    }, [posts, observedPost, observeElement])
+    }, [posts, observedPost, observeElement, count])
 
     const head = () => (
         <Head>
@@ -81,7 +90,7 @@ const Blogs = ({ router }: { router: NextRouter }) => {
 
     return (
         <>
-            {head()}
+            {/* {head()} */}
             <main className="allBlogs">
                 <section className="all-blogs-container">
                     <h1>All Blogs</h1>
@@ -93,10 +102,7 @@ const Blogs = ({ router }: { router: NextRouter }) => {
                         ) : (
                             <section className="post-grid">
                                 {posts?.map((post: any) => (
-                                    <PostInfo
-                                        post={post}
-                                        key={post._id}
-                                    />
+                                    <PostInfo post={post} key={post._id} />
                                 ))}
                                 {isValidating && posts.length > 0 && (
                                     <p className="loading-text">正在加载</p>
@@ -111,3 +117,12 @@ const Blogs = ({ router }: { router: NextRouter }) => {
 }
 
 export default withRouter(Blogs)
+
+export const getServerSideProps = async () => {
+    const { listBlogsWithCatTag:posts } = await sdk.ListBlogsWithCatTag()
+  
+    const count = posts.length
+    return {
+        props: { posts, count },
+    }
+}

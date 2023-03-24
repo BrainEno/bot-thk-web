@@ -1,5 +1,6 @@
 /*eslint-disable*/
 /** @type {import('next').NextConfig} */
+
 const path = require('path')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
@@ -36,7 +37,6 @@ module.exports = withBundleAnalyzer({
     images: {
         domains: [
             'bot-thk.vercel.app',
-            process.env.API,
             'res.cloudinary.com',
             'localhost',
             '[::1]',
@@ -50,7 +50,6 @@ module.exports = withBundleAnalyzer({
     },
     swcMinify: true,
     headers,
-
     webpack: (config, { isServer }) => {
         if (isServer) {
             ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))

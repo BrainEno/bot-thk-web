@@ -14,7 +14,7 @@ import { QuillFormats,QuillModules } from '../../helpers/quillConfig';
 import { loadCats,loadTags } from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
 import { ICategory, ITag } from '../../types';
-import SlideImage from '../SlideImage';
+import BannerImg from '../BannerImg';
 
 const BlogUpdate = ({ router }: { router: NextRouter }) => {
   const myRouter = useRouter();
@@ -250,7 +250,7 @@ const BlogUpdate = ({ router }: { router: NextRouter }) => {
       <div className="blogUpdate-form">
         {body && (
           <div style={{ marginBottom: '20px' }}>
-            <SlideImage imgSrc={`/blog/image/${router.query.id}`} />
+            <BannerImg imgSrc={`/blog/image/${router.query.id}`} />
           </div>
         )}
         {error && showError()}

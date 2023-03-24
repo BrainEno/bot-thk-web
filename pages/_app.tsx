@@ -1,30 +1,21 @@
-// import '@fontsource/noto-sans-sc/400.css';
-// import '@fontsource/noto-sans-sc/500.css';
-// import '@fontsource/noto-sans-sc/700.css';
 import '../public/noto-sans-sc/index.css'
 import '../styles/main.scss'
 import '../node_modules/react-quill/dist/quill.snow.css'
 
 import { useEffect } from 'react'
-// import { Provider } from 'react-redux'
-import { ApolloProvider } from '@apollo/client'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import { SWRConfig } from 'swr'
 
-import { APState, useApollo } from '../apollo/apolloClient'
-import { fetcher } from '../apollo/gqlClient'
 import Header from '../components/header/Header'
+import { fetcher } from '../graphql/gqlClient'
 import * as gtag from '../helpers/gtag'
-import { useStore } from '../redux/store'
 
 function MyApp({
     Component,
     pageProps,
-}: AppProps<{ initialReduxState: any } & APState>) {
-    const store = useStore(pageProps.initialReduxState)
-    const apolloClient = useApollo(pageProps)
+}: AppProps<{ initialReduxState: any }>) {
     const router = useRouter()
 
     useEffect(() => {
@@ -60,12 +51,10 @@ function MyApp({
                 }}
             />
             <SWRConfig value={{ fetcher }}>
-                <ApolloProvider client={apolloClient}>
                     {/* <Provider store={store}> */}
                         <Header />
                         <Component {...pageProps} />
                     {/* </Provider> */}
-                </ApolloProvider>
             </SWRConfig>
         </>
     )

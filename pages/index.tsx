@@ -1,13 +1,14 @@
+import { useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
 import { IBlog } from 'types'
 
-import { gqlClient } from '../apollo/gqlClient'
 import { BlogCategory, PostGrid } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
 import { getSdk } from '../gql/sdk'
+import { gqlClient } from '../graphql/gqlClient'
 import mergeStyles, {
     featuredConfig,
     trendingConfig,
@@ -26,13 +27,13 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
-    trending && mergeStyles(trending, trendingConfig)
-    featured && mergeStyles(featured, featuredConfig)
+    // trending && mergeStyles(trending, trendingConfig)
+    // featured && mergeStyles(featured, featuredConfig)
 
-    const head = () => {
+    const head = useCallback(() => {
         return (
             <Head>
-                <title>Home | BOT THK</title>
+                <title>{`Home | ${process.env.NEXT_PUBLIC_APP_NAME}`}</title>
                 <meta
                     name="description"
                     content="Cruel Literature,novels,poemes,and else"
@@ -71,7 +72,7 @@ const Index: React.FC<IndexPageProps> = ({
                 <meta name="theme-color" content="#eff3f8" />
             </Head>
         )
-    }
+    }, [router.pathname])
 
     return (
         <>
@@ -80,10 +81,8 @@ const Index: React.FC<IndexPageProps> = ({
                 <Carousel />
                 <section className="featured-posts-container">
                     <div>
-                        <Link href="/categories/featured" passHref>
-                            <a>
-                                <h1>Featured</h1>
-                            </a>
+                        <Link href="/categories/featured">
+                            <h1>Featured</h1>
                         </Link>
                         <BlogCategory
                             posts={featured.slice(0, 5)}
@@ -95,10 +94,8 @@ const Index: React.FC<IndexPageProps> = ({
 
                 <section className="bg-white">
                     <div className="recent-container">
-                        <Link href="/categories/recent-post" passHref>
-                            <a>
-                                <h1>Recent Post</h1>
-                            </a>
+                        <Link href="/categories/recent-post">
+                            <h1>Recent Post</h1>
                         </Link>
                         {<PostGrid posts={recent!} />}
                     </div>
@@ -106,10 +103,8 @@ const Index: React.FC<IndexPageProps> = ({
 
                 <section className="trending-posts-container">
                     <div>
-                        <Link href="/categories/trending" passHref>
-                            <a>
-                                <h1>Trending</h1>
-                            </a>
+                        <Link href="/categories/trending">
+                            <h1>Trending</h1>
                         </Link>
                         <BlogCategory
                             posts={trending.slice(0, 5)}
@@ -124,7 +119,7 @@ const Index: React.FC<IndexPageProps> = ({
     )
 }
 
-export async function getStaticProps() {
+export const getStaticProps = async () => {
     const sdk = getSdk(gqlClient)
 
     const { getCatBlogs: recent } = await sdk.GetCatBlogs({
@@ -137,7 +132,6 @@ export async function getStaticProps() {
         getCatBlogsSlug: 'featured',
     })
 
-    console.log(featured.length)
     return {
         props: { recent, trending, featured },
         revalidate: 1,

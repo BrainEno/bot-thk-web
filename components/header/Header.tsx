@@ -110,7 +110,7 @@ const Header = () => {
                 {isAuth() ? (
                     <ul className="log-ul">
                         <li>
-                            <a
+                            <div
                                 onClick={() =>
                                     signout(() => {
                                         router.replace('/signin')
@@ -118,9 +118,11 @@ const Header = () => {
                                 }
                             >
                                 退出
-                            </a>
+                            </div>
 
-                            <a className="nav-link">登录</a>
+                            <ActiveLink activeClassName="active" href="/signin">
+                                <a className="nav-link">登录</a>
+                            </ActiveLink>
                         </li>{' '}
                     </ul>
                 ) : (

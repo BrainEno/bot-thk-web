@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import dayjs from 'dayjs'
 import {
     GetStaticPaths,
@@ -10,10 +10,10 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { gqlClient } from '../../apollo/gqlClient'
+import BannerImg from '../../components/BannerImg'
 import { BlogCategory, TagRow } from '../../components/blog'
-import SlideImage from '../../components/SlideImage'
 import { getSdk } from '../../gql/sdk'
+import { gqlClient } from '../../graphql/gqlClient'
 import mergeStyles, { relatedConfig } from '../../helpers/mergeStyles'
 import { IBlog } from '../../types'
 
@@ -35,7 +35,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     slug,
     relatedBlogs,
 }) => {
-    const showComents = () => {
+    const blogComents = useMemo(() => {
         return (
             <DisqusThread
                 id={blog!._id}
@@ -43,7 +43,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                 path={`blog/${blog!.slug}`}
             />
         )
-    }
+    }, [blog])
 
     const head = () => (
         <>
@@ -55,9 +55,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                     <meta name="description" content={blog!.description} />
                     <link
                         rel="canonical"
-                        href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${
-                            blog!._id
-                        }`}
+                        href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
                     />
                     <meta
                         property="og:title"
@@ -72,9 +70,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                     <meta property="og:type" content="webiste" />
                     <meta
                         property="og:url"
-                        content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${
-                            blog!._id
-                        }`}
+                        content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
                     />
                     <meta
                         property="og:site_name"
@@ -88,9 +84,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                     />
                     <meta
                         property="og:image:secure_url"
-                        content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
-                            blog!._id
-                        }`}
+                        content={`${blog.imageUri}`}
                     />
                     <meta property="og:image:type" content="image/jpg" />
                     <meta name="theme-color" content="#eff3f8" />
@@ -99,9 +93,9 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         </>
     )
 
-    // relatedBlogs && mergeStyles(relatedBlogs, relatedConfig)
+    relatedBlogs && mergeStyles(relatedBlogs, relatedConfig)
 
-    const showRelatedBlog = () => {
+    const blogRelates = useMemo(() => {
         return (
             <>
                 {relatedBlogs && (
@@ -113,12 +107,12 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                 )}
             </>
         )
-    }
+    }, [relatedBlogs])
 
     return (
         <>
             {blog && head()}
-            {blog && <SlideImage imgSrc={blog.imageUri!} alt={blog!.title} />}
+            {blog && <BannerImg imgSrc={blog.imageUri!} alt={blog!.title} />}
             <main className="blog-article">
                 <article className="article-header-container">
                     <section className="article-header">
@@ -161,12 +155,12 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                     )}
                 </article>
                 <div className="contaienr" style={{ padding: '35px' }}>
-                    {blog! && showComents()}
+                    {blog! && blogComents}
                 </div>
                 <div className="container">
                     <h4 className="text-center">相关推荐</h4>
                     <div className="related-blogs">
-                        {/* {relatedBlogs && showRelatedBlog()} */}
+                        {relatedBlogs && blogRelates}
                     </div>
                 </div>
             </main>
@@ -187,7 +181,6 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<
 
     return {
         paths,
-        // fallback: true
         fallback: false,
     }
 }
@@ -197,7 +190,7 @@ export const getStaticProps: GetStaticProps = async ({
 }: GetStaticPropsContext) => {
     const slug = params!.slug as string
     const sdk = getSdk(gqlClient)
-    // const blog = await singleBlog(params!.id as any)
+
     const { getBlogBySlug: blog } = await sdk.GetBlogBySlug({
         slug,
     })
@@ -205,7 +198,7 @@ export const getStaticProps: GetStaticProps = async ({
     const catIds = blog.categories.map((cat) => cat._id)
     const tagIds = blog.tags.map((tag) => tag._id)
 
-    const relatedBlogs = await sdk.GetRelatedBlogs({
+    const { getRelatedBlogs: relatedBlogs } = await sdk.GetRelatedBlogs({
         getRelatedBlogsSlug: blog.slug,
         tagIds,
         catIds,

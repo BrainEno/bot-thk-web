@@ -1,11 +1,16 @@
 overwrite: true
 schema: http://localhost:4001/graphql
-documents: '../gql-server/src/schemas/**'
+documents: '../gqlserver/src/schemas/**'
 generates:
   ./gql/sdk.ts:
     plugins:
       - typescript
       - typescript-operations
       - typescript-graphql-request
+      - plugin-typescript-swr  
+config:
+  scalars:
+    DateTime: string
+    Date: string
          
           

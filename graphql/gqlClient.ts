@@ -2,10 +2,10 @@ import { GraphQLClient, RequestDocument } from 'graphql-request'
 
 export const gqlClient = new GraphQLClient(
     process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT!,
-    {
-        credentials: 'include',
-        mode: 'cors',
-    }
+    // {
+    //     credentials: 'include',
+    //     mode: 'cors',
+    // }
 )
 
 export const fetcher = (query: RequestDocument, ...args: any[]) => {

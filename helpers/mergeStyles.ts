@@ -1,8 +1,11 @@
+import { CSSProperties } from 'react';
+
 import { IBlogWithStyle } from '../types';
 
 const mergeStyles = (
   posts: IBlogWithStyle[],
-  config: { [key: number]: any }
+  config: { [key: number]: CSSProperties }
+
 ) => {
   posts.forEach((post, index) => {
     post.style = config[index];

@@ -18,38 +18,38 @@ const PostCard: React.FC<IBlogPostProps> = ({ post, tagsOnTop }) => {
     const style = windowWidth! > 900 ? { ...post.style } : {}
 
     return (
-        <Link href="/blogs/[slug]" as={`/blogs/${post.slug}`} passHref>
-            <a>
-                <div className="post skeleton" style={style}>
-                    <Image
-                        src={post.imageUri!}
-                        layout="fill"
-                        objectFit="cover"
-                        alt="post image"
-                    />
-                    <div
-                        className="image-text"
-                        style={{
-                            justifyContent: tagsOnTop
-                                ? 'space-between'
-                                : 'flex-end',
-                        }}
-                    >
-                        <TagRow tags={post.tags} />
-                        <div>
-                            <h2 className="image-title">{post.title}</h2>
-                            <span className="image-date">
-                                {dayjs(
-                                    post.createdAt,
-                                    'MMM,DD,YYYY',
-                                    'zh',
-                                    true
-                                ).format('MMMM,DD,YYYY')}
-                            </span>
-                        </div>
+        <Link href="/blogs/[slug]" as={`/blogs/${post.slug}`}>
+            <div className="post skeleton" style={style}>
+                <Image
+                    src={post.imageUri!}
+                    fill
+                    style={{
+                        objectFit: 'cover',
+                    }}
+                    alt="post image"
+                />
+                <div
+                    className="image-text"
+                    style={{
+                        justifyContent: tagsOnTop
+                            ? 'space-between'
+                            : 'flex-end',
+                    }}
+                >
+                    <TagRow tags={post.tags} />
+                    <div>
+                        <h2 className="image-title">{post.title}</h2>
+                        <span className="image-date">
+                            {dayjs(
+                                post.createdAt,
+                                'MMM,DD,YYYY',
+                                'zh',
+                                true
+                            ).format('MMMM,DD,YYYY')}
+                        </span>
                     </div>
                 </div>
-            </a>
+            </div>
         </Link>
     )
 }

@@ -1,6 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
+import { ClientError } from 'graphql-request/dist/types';
+import useSWR, { SWRConfiguration as SWRConfigInterface, Key as SWRKeyInterface } from 'swr';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -13,7 +15,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  DateTime: string;
   ObjectId: any;
 };
 
@@ -99,8 +101,10 @@ export type Query = {
   getBlogBySlug: Blog;
   getCatBlogs: Array<Blog>;
   getRelatedBlogs: Array<Blog>;
+  getTagBlogs: Array<Blog>;
   hello: Scalars['String'];
   listBlogsWithCatTag: Array<Blog>;
+  searchBlogs: Array<Blog>;
 };
 
 
@@ -119,6 +123,16 @@ export type QueryGetRelatedBlogsArgs = {
   limit?: InputMaybe<Scalars['Float']>;
   slug: Scalars['String'];
   tagIds: Array<Scalars['String']>;
+};
+
+
+export type QueryGetTagBlogsArgs = {
+  slug: Scalars['String'];
+};
+
+
+export type QuerySearchBlogsArgs = {
+  query: Scalars['String'];
 };
 
 export type Tag = {
@@ -169,19 +183,26 @@ export type GetCatBlogsQueryVariables = Exact<{
 }>;
 
 
-export type GetCatBlogsQuery = { __typename?: 'Query', getCatBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: any, updatedAt: any, imageUri?: string | null, mtitle: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
+export type GetCatBlogsQuery = { __typename?: 'Query', getCatBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
+
+export type GetTagBlogsQueryVariables = Exact<{
+  getTagBlogsSlug: Scalars['String'];
+}>;
+
+
+export type GetTagBlogsQuery = { __typename?: 'Query', getTagBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
 
 export type GetBlogBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type GetBlogBySlugQuery = { __typename?: 'Query', getBlogBySlug: { __typename?: 'Blog', title: string, slug: string, description?: string | null, body: string, mtitle: string, image?: string | null, imageUri?: string | null, active?: boolean | null, _id: any, createdAt: any, updatedAt: any, likedBy?: Array<{ __typename?: 'User', username: string, name: string }> | null, comments?: Array<{ __typename?: 'Comment', content: string, by: { __typename?: 'User', name: string, username: string }, atBlog: { __typename?: 'Blog', slug: string, title: string } }> | null, author: { __typename?: 'User', name: string, username: string }, tags: Array<{ __typename?: 'Tag', _id: any, slug: string, name: string }>, categories: Array<{ __typename?: 'Category', _id: any, slug: string, name: string }> } };
+export type GetBlogBySlugQuery = { __typename?: 'Query', getBlogBySlug: { __typename?: 'Blog', title: string, slug: string, description?: string | null, body: string, mtitle: string, image?: string | null, imageUri?: string | null, active?: boolean | null, _id: any, createdAt: string, updatedAt: string, likedBy?: Array<{ __typename?: 'User', username: string, name: string }> | null, comments?: Array<{ __typename?: 'Comment', content: string, by: { __typename?: 'User', name: string, username: string }, atBlog: { __typename?: 'Blog', slug: string, title: string } }> | null, author: { __typename?: 'User', name: string, username: string }, tags: Array<{ __typename?: 'Tag', _id: any, slug: string, name: string }>, categories: Array<{ __typename?: 'Category', _id: any, slug: string, name: string }> } };
 
 export type ListBlogsWithCatTagQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListBlogsWithCatTagQuery = { __typename?: 'Query', listBlogsWithCatTag: Array<{ __typename?: 'Blog', title: string, description?: string | null, body: string, slug: string, _id: any, mtitle: string, image?: string | null, imageUri?: string | null, active?: boolean | null, createdAt: any, updatedAt: any, author: { __typename?: 'User', name: string }, categories: Array<{ __typename?: 'Category', slug: string, name: string }>, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
+export type ListBlogsWithCatTagQuery = { __typename?: 'Query', listBlogsWithCatTag: Array<{ __typename?: 'Blog', title: string, description?: string | null, body: string, slug: string, _id: any, mtitle: string, image?: string | null, imageUri?: string | null, active?: boolean | null, createdAt: string, updatedAt: string, author: { __typename?: 'User', name: string, profile: string }, categories: Array<{ __typename?: 'Category', slug: string, name: string }>, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
 
 export type GetRelatedBlogsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -192,6 +213,13 @@ export type GetRelatedBlogsQueryVariables = Exact<{
 
 
 export type GetRelatedBlogsQuery = { __typename?: 'Query', getRelatedBlogs: Array<{ __typename?: 'Blog', imageUri?: string | null, _id: any, slug: string, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
+
+export type SearchBlogsQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'Blog', slug: string, title: string, author: { __typename?: 'User', name: string } }> };
 
 
 export const RegisterDocument = gql`
@@ -226,6 +254,33 @@ export const CurrentUserDocument = gql`
 export const GetCatBlogsDocument = gql`
     query GetCatBlogs($getCatBlogsSlug: String!) {
   getCatBlogs(slug: $getCatBlogsSlug) {
+    _id
+    createdAt
+    updatedAt
+    author {
+      username
+      name
+      profile
+    }
+    tags {
+      name
+      slug
+    }
+    categories {
+      name
+      slug
+    }
+    imageUri
+    mtitle
+    description
+    slug
+    title
+  }
+}
+    `;
+export const GetTagBlogsDocument = gql`
+    query GetTagBlogs($getTagBlogsSlug: String!) {
+  getTagBlogs(slug: $getTagBlogsSlug) {
     _id
     createdAt
     updatedAt
@@ -312,6 +367,7 @@ export const ListBlogsWithCatTagDocument = gql`
     updatedAt
     author {
       name
+      profile
     }
     categories {
       slug
@@ -342,6 +398,17 @@ export const GetRelatedBlogsDocument = gql`
   }
 }
     `;
+export const SearchBlogsDocument = gql`
+    query SearchBlogs($query: String!) {
+  searchBlogs(query: $query) {
+    slug
+    title
+    author {
+      name
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -362,6 +429,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetCatBlogs(variables: GetCatBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetCatBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCatBlogsQuery>(GetCatBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCatBlogs', 'query');
     },
+    GetTagBlogs(variables: GetTagBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTagBlogsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTagBlogsQuery>(GetTagBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTagBlogs', 'query');
+    },
     GetBlogBySlug(variables: GetBlogBySlugQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBlogBySlugQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBlogBySlugQuery>(GetBlogBySlugDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBlogBySlug', 'query');
     },
@@ -370,7 +440,38 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetRelatedBlogs(variables: GetRelatedBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRelatedBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRelatedBlogsQuery>(GetRelatedBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRelatedBlogs', 'query');
+    },
+    SearchBlogs(variables: SearchBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchBlogsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchBlogsQuery>(SearchBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SearchBlogs', 'query');
     }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export function getSdkWithHooks(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+  const sdk = getSdk(client, withWrapper);
+  return {
+    ...sdk,
+    useCurrentUser(key: SWRKeyInterface, variables?: CurrentUserQueryVariables, config?: SWRConfigInterface<CurrentUserQuery, ClientError>) {
+      return useSWR<CurrentUserQuery, ClientError>(key, () => sdk.CurrentUser(variables), config);
+    },
+    useGetCatBlogs(key: SWRKeyInterface, variables: GetCatBlogsQueryVariables, config?: SWRConfigInterface<GetCatBlogsQuery, ClientError>) {
+      return useSWR<GetCatBlogsQuery, ClientError>(key, () => sdk.GetCatBlogs(variables), config);
+    },
+    useGetTagBlogs(key: SWRKeyInterface, variables: GetTagBlogsQueryVariables, config?: SWRConfigInterface<GetTagBlogsQuery, ClientError>) {
+      return useSWR<GetTagBlogsQuery, ClientError>(key, () => sdk.GetTagBlogs(variables), config);
+    },
+    useGetBlogBySlug(key: SWRKeyInterface, variables: GetBlogBySlugQueryVariables, config?: SWRConfigInterface<GetBlogBySlugQuery, ClientError>) {
+      return useSWR<GetBlogBySlugQuery, ClientError>(key, () => sdk.GetBlogBySlug(variables), config);
+    },
+    useListBlogsWithCatTag(key: SWRKeyInterface, variables?: ListBlogsWithCatTagQueryVariables, config?: SWRConfigInterface<ListBlogsWithCatTagQuery, ClientError>) {
+      return useSWR<ListBlogsWithCatTagQuery, ClientError>(key, () => sdk.ListBlogsWithCatTag(variables), config);
+    },
+    useGetRelatedBlogs(key: SWRKeyInterface, variables: GetRelatedBlogsQueryVariables, config?: SWRConfigInterface<GetRelatedBlogsQuery, ClientError>) {
+      return useSWR<GetRelatedBlogsQuery, ClientError>(key, () => sdk.GetRelatedBlogs(variables), config);
+    },
+    useSearchBlogs(key: SWRKeyInterface, variables: SearchBlogsQueryVariables, config?: SWRConfigInterface<SearchBlogsQuery, ClientError>) {
+      return useSWR<SearchBlogsQuery, ClientError>(key, () => sdk.SearchBlogs(variables), config);
+    }
+  };
+}
+export type SdkWithHooks = ReturnType<typeof getSdkWithHooks>;
