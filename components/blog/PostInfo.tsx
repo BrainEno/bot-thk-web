@@ -20,6 +20,9 @@ const PostInfo: React.FC<IPostCardProps> = ({ post }) => {
                         src={post.imageUri!}
                         alt={post.slug}
                         fill
+                        style={{
+                            objectFit: 'cover',
+                        }}
                         loading="lazy"
                         className="post-img"
                         quality={70}

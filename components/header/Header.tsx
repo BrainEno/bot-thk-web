@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { MenuOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { isAuth, signout } from '../../actions/auth'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
 import useScrollDown from '../../hooks/useScrollDown'
 import Avatar from '../Avatar'
 import Search from '../blog/Search'
@@ -12,6 +12,8 @@ import MyBrand from '../MyBrand'
 import ActiveLink from './ActiveLink'
 
 const Header = () => {
+    const { user, logOut } = useAuthStore()
+    const isAuth = useMemo(() => !!user, [user])
     const router = useRouter()
     const scrollDown = useScrollDown()
     const [menuActive, setMenuActive] = useState(false)
@@ -34,16 +36,17 @@ const Header = () => {
         }
     }
 
+    const handleLogOut = () => {
+        logOut()
+        router.push('/accout/login')
+    }
+
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)
         return () => {
             document.removeEventListener('click', handleClickOutside)
         }
     }, [menuRef, menuActive])
-
-    useEffect(() => {
-        isAuth()
-    }, [])
 
     return (
         <nav
@@ -107,23 +110,11 @@ const Header = () => {
                 </ul>
                 <Search />
 
-                {isAuth() ? (
+                {isAuth ? (
                     <ul className="log-ul">
                         <li>
-                            <div
-                                onClick={() =>
-                                    signout(() => {
-                                        router.replace('/signin')
-                                    })
-                                }
-                            >
-                                退出
-                            </div>
-
-                            <ActiveLink activeClassName="active" href="/signin">
-                                <a className="nav-link">登录</a>
-                            </ActiveLink>
-                        </li>{' '}
+                            <div onClick={handleLogOut}>退出</div>
+                        </li>
                     </ul>
                 ) : (
                     <ul className="log-ul">
@@ -141,32 +132,27 @@ const Header = () => {
                 )}
 
                 <div className="menu-avtar-container">
-                    {isAuth() && (
+                    {isAuth && (
                         <Link
-                            href={
-                                isAuth() && isAuth().role === 1
-                                    ? `/admin/`
-                                    : `/user/`
-                            }
+                            href={user!.role === '1' ? `/admin/` : `/user/`}
                             passHref
                         >
                             <div className="my-avatar">
-                                {!!isAuth().username && (
+                                {!!user && (
                                     <Avatar
+                                        char={user.name
+                                            .slice(0, 1)
+                                            .toUpperCase()}
                                         title="个人主页"
                                         size={38}
                                         radius={38}
-                                        src={`${
-                                            process.env.NEXT_PUBLIC_API
-                                        }/user/photo/${isAuth().username}`}
+                                        src={`${user?.photo ?? ''}`}
                                     />
                                 )}
                             </div>
                         </Link>
                     )}
-                    {isAuth() && (
-                        <p className="menu-avtar-name">{isAuth().name}</p>
-                    )}
+                    {!!user && <p className="menu-avtar-name">{user.name}</p>}
                 </div>
             </div>
 

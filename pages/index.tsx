@@ -27,8 +27,8 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
-    // trending && mergeStyles(trending, trendingConfig)
-    // featured && mergeStyles(featured, featuredConfig)
+    trending && mergeStyles(trending, trendingConfig)
+    featured && mergeStyles(featured, featuredConfig)
 
     const head = useCallback(() => {
         return (
