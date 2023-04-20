@@ -1,15 +1,12 @@
-import { isAuth } from '../../../actions/auth'
-import Private from '../../../components/auth/Private'
 import BlogList from '../../../components/crud/BlogList'
+import { useAuthStore } from '../../../hooks/store/useAuthStore'
 
 const Blog = () => {
-    const username = isAuth() && isAuth().username
+    const { user } = useAuthStore()
     return (
-        <Private>
-            <div className="manageBlog-container">
-                <BlogList username={username} />
-            </div>
-        </Private>
+        <div className="manageBlog-container">
+            <BlogList username={user?.username} />
+        </div>
     )
 }
 

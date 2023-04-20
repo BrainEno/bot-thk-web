@@ -10,7 +10,6 @@
     "lint": "next lint",
     "lint:fix": "eslint . --ext .ts,.tsx,.js --fix",
     "serve:dev": "concurrently \"ts-node-dev --project tsconfig.server.json server/index.ts\" \"yarn generate --watch\"",
-    "prepare": "husky install",
     "analyze": "cross-env ANALYZE=true  yarn build",
     "generate": "graphql-codegen",
     "cypress": "cypress open"
@@ -84,7 +83,6 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "globby": "^13.1.3",
     "graphql-codegen-plugin-typescript-swr": "^0.8.3",
-    "husky": "^8.0.3",
     "prettier": "^2.8.4",
     "typescript": "^4.9.5"
   }

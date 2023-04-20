@@ -31,7 +31,7 @@ const Search = () => {
     const { search, results, searched, message } = values
 
     const { data, error, mutate } = sdk.useSearchBlogs(
-        `blogs/search`,
+        search ? `blogs/search` : null,
         {
             query: search,
         },

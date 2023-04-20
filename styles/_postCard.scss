@@ -1,5 +1,5 @@
 .post {
-    display: block;
+    display: grid;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
@@ -44,7 +44,50 @@
         color: $text-light;
     }
 }
+.masonry {
+    .post{
+        height: auto;
+    }
+    .post.default {
+        grid-area: 1/1/2/2;
+    }
 
+    .post.trending_0 {
+        display: grid;
+        grid-area: 1/2/3/3;
+        height: auto;
+    }
+
+    .post.trending_1,
+    .post.trending_2,
+    .post.trending_3,
+    .post.trending_4 {
+        height: 180px;
+    }
+
+    .post.featured_2,
+    .post.featured_3,
+    .post.featured_4 {
+        height: 300px;
+    }
+    .post.featured_0 {
+        grid-area: 2/3/5/5;
+        height: 635px;
+    }
+    .post.featured_1 {
+        grid-area: 1/1/2/5;
+        height: 400px;
+    }
+    .post.featured_4 {
+        grid-area: 3/1/4/3;
+    }
+
+    .post.related_0,
+    .post.related_1,
+    .post.related_2 {
+        height: 275px;
+    }
+}
 @media screen and (max-width: 900px) {
     .post {
         width: 100%;

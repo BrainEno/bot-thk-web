@@ -4,15 +4,11 @@ import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
 import { IBlog } from 'types'
 
-import { BlogCategory, PostGrid } from '../components/blog'
+import { PostGrid,PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
 import { getSdk } from '../gql/sdk'
 import { gqlClient } from '../graphql/gqlClient'
-import mergeStyles, {
-    featuredConfig,
-    trendingConfig,
-} from '../helpers/mergeStyles'
 
 interface IndexPageProps {
     router: NextRouter
@@ -27,9 +23,6 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
-    trending && mergeStyles(trending, trendingConfig)
-    featured && mergeStyles(featured, featuredConfig)
-
     const head = useCallback(() => {
         return (
             <Head>
@@ -84,7 +77,8 @@ const Index: React.FC<IndexPageProps> = ({
                         <Link href="/categories/featured">
                             <h1>Featured</h1>
                         </Link>
-                        <BlogCategory
+                        <PostMasonry
+                            imgFor="featured"
                             posts={featured.slice(0, 5)}
                             columns={4}
                             tagsOnTop={true}
@@ -106,7 +100,8 @@ const Index: React.FC<IndexPageProps> = ({
                         <Link href="/categories/trending">
                             <h1>Trending</h1>
                         </Link>
-                        <BlogCategory
+                        <PostMasonry
+                            imgFor="trending"
                             posts={trending.slice(0, 5)}
                             columns={3}
                             tagsOnTop={true}

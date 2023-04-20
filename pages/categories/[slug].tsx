@@ -1,10 +1,9 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 
-import { BlogCategory } from '../../components/blog'
+import { PostMasonry } from '../../components/blog'
 import { getSdk } from '../../gql/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
-import mergeStyles, { normalConfig } from '../../helpers/mergeStyles'
 import { IBlog } from '../../types'
 
 interface ICategoryProps {
@@ -13,8 +12,6 @@ interface ICategoryProps {
     catSlug: string
 }
 const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
-    catBlogs && mergeStyles(catBlogs, normalConfig)
-
     const head = () => (
         <Head>
             <title>
@@ -58,7 +55,8 @@ const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
             <main className="category-blogs">
                 <section className="category-blogs-container">
                     <h1>{catName}</h1>
-                    <BlogCategory
+                    <PostMasonry
+                        imgFor="default"
                         posts={catBlogs}
                         columns={3}
                         tagsOnTop={true}
@@ -74,8 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     // eslint-disable-next-line no-useless-escape
     const matchFirst = /(?<=[\.!?]\s)([a-z])|^([a-z])/g
     const catName = catSlug
-
-    .replace(matchFirst, (match) => match.toUpperCase())
+        .replace(matchFirst, (match) => match.toUpperCase())
         .replace(/-/g, ' ')
 
     const sdk = getSdk(gqlClient)

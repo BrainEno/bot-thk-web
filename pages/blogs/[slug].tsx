@@ -11,10 +11,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import BannerImg from '../../components/BannerImg'
-import { BlogCategory, TagRow } from '../../components/blog'
+import { PostMasonry, TagRow } from '../../components/blog'
 import { getSdk } from '../../gql/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
-import mergeStyles, { relatedConfig } from '../../helpers/mergeStyles'
 import { IBlog } from '../../types'
 
 const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
@@ -93,13 +92,12 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         </>
     )
 
-    relatedBlogs && mergeStyles(relatedBlogs, relatedConfig)
-
     const blogRelates = useMemo(() => {
         return (
             <>
                 {relatedBlogs && (
-                    <BlogCategory
+                    <PostMasonry
+                        imgFor="related"
                         posts={relatedBlogs}
                         columns={3}
                         tagsOnTop={true}
@@ -154,14 +152,14 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                         ></section>
                     )}
                 </article>
-                <div className="contaienr" style={{ padding: '35px' }}>
-                    {blog! && blogComents}
-                </div>
                 <div className="container">
                     <h4 className="text-center">相关推荐</h4>
                     <div className="related-blogs">
                         {relatedBlogs && blogRelates}
                     </div>
+                </div>
+                <div className="contaienr" style={{ padding: '35px' }}>
+                    {blog! && blogComents}
                 </div>
             </main>
         </>

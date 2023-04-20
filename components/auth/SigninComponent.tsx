@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 
 import { getSdkWithHooks } from '../../gql/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
-import { getErrorMsg } from '../../helpers/getErrorMsg'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 const sdk = getSdkWithHooks(gqlClient)
@@ -19,70 +18,89 @@ const SigninComponent = () => {
         email: '',
         password: '',
         loading: false,
-        error: '',
+        message: '',
         showForm: true,
     })
+    const [errors, setErrors] = useState<{
+        email: string
+        password: string
+    }>({
+        email: '',
+        password: '',
+    })
 
-    const { email, password, error, loading, showForm } = values
+    const { email, password, message, loading, showForm } = values
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name
         const value = e.target.value
-        setValues({ ...values, [name]: value, error: '' })
+        setValues({ ...values, [name]: value, message: '' })
     }
 
     const handleSubmit: React.FormEventHandler = (
         e: React.FormEvent<HTMLInputElement>
     ) => {
         e.preventDefault()
+        setErrors({ email: '', password: '' })
+        console.log(errors)
         if (values.email.trim() === '') {
+            setErrors({
+                ...errors,
+                password: '',
+                email: '邮箱地址不得为空，请重新输入',
+            })
             setValues({
                 ...values,
                 loading: false,
-                error: '邮箱地址不得为空，请重新输入',
             })
         } else if (values.password.trim() === '') {
+            setErrors({
+                ...errors,
+                email: '',
+                password: '密码不得为空，请重新输入',
+            })
             setValues({
                 ...values,
                 loading: false,
-                error: '密码不得为空，请重新输入',
             })
         } else {
-            setValues({ ...values, loading: true, error: '' })
+            setValues({ ...values, loading: true, message: '' })
 
             sdk.Login({ email, password })
                 .then(() => {
                     auth()
                     router.push('/')
                 })
-                .catch((err) => {
-                    getErrorMsg(err)
-                    setValues({ ...values, loading: false, error: err })
+                .catch((err: any) => {
+                    if (err.response && err.response.errors) {
+                        console.log(Object.keys(err.response))
+
+                        const errs = err.response.errors
+                        errs.forEach((err: any) => {
+                            console.log('trace', err)
+                            const { code } = err.extensions
+                            if (code === 'INVALID_EMAIL') {
+                                setErrors({ ...errors, email: err.message })
+                            } else if (code === 'INVALID_PASSWORD') {
+                                setErrors({ ...errors, password: err.message })
+                            }
+                        })
+                        setValues({ ...values, loading: false, message: '' })
+                    }
+                    setValues({
+                        ...values,
+                        loading: false,
+                        message: '请求超时，请稍后重试',
+                    })
                 })
         }
     }
 
-    const errorType = {
-        email: false,
-        password: false,
-    }
-
-    if (error)
-        errorType.email =
-            error !== '' &&
-            (error === '邮箱地址不得为空，请重新输入' ||
-                error === '请输入有效的邮箱地址' ||
-                error === '此邮箱账户的尚未注册，请先注册')
-
-    if (error)
-        errorType.password =
-            error !== '' &&
-            (error === '密码不得为空，请重新输入' ||
-                error === '您的邮箱和密码不匹配，请重新输入' ||
-                error === '密码长度不得小于6个字符')
-
     const showLoading = () =>
         loading ? <div className="alert">正在加载...</div> : ''
+
+    const showMessage = () =>
+        message ? <div className="alert">{message}</div> : ''
 
     const signinForm = () => {
         return (
@@ -90,15 +108,15 @@ const SigninComponent = () => {
                 <div className="form-group">
                     <label
                         htmlFor="inputEmail"
-                        className={classNames({ error: errorType.email })}
+                        className={classNames({ error: !!errors.email })}
                     >
-                        {(errorType.email && error) || '邮箱'}
+                        {errors.email || '邮箱'}
                     </label>
                     <input
                         id="inputEmail"
                         className={classNames('form-input', {
-                            isInvalid: errorType.email,
-                            error: errorType.email,
+                            isInvalid: !!errors.email,
+                            error: !!errors.email,
                         })}
                         type="email"
                         name="email"
@@ -110,15 +128,15 @@ const SigninComponent = () => {
                 <div className="form-group">
                     <label
                         htmlFor="inputEmail"
-                        className={classNames({ error: errorType.password })}
+                        className={classNames({ error: !!errors.password })}
                     >
-                        {(errorType.password && error) || '密码'}
+                        {errors.password || '密码'}
                     </label>
                     <input
                         type="password"
                         className={classNames('form-input', {
-                            isInvalid: errorType.password,
-                            error: errorType.password,
+                            isInvalid: !!errors.password,
+                            error: !!errors.password,
                         })}
                         name="password"
                         value={password}
@@ -136,6 +154,7 @@ const SigninComponent = () => {
     return (
         <>
             {loading && showLoading()}
+            {message && showMessage()}
             {showForm && signinForm()}
             <Link href="/auth/password/forgot" passHref>
                 <span

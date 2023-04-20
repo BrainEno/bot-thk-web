@@ -17,8 +17,9 @@ export interface IBlog {
   __v: number;
 }
 
-export interface IBlogWithStyle extends IBlog {
-  style?: CSSProperties;
+export interface BlogWithClassName extends IBlog {
+  index:number;
+  extendClassName:string;
 }
 
 export interface IUser {
@@ -28,7 +29,7 @@ export interface IUser {
   email: string;
   profile?: string;
   role: number;
-  photo?: Buffer;
+  photo?: string;
   about: string;
   createdAt: string;
   updatedAt: string;

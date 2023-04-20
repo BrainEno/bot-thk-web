@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
+import { ClientError } from 'graphql-request/dist/types';
 import * as Dom from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
-import { ClientError } from 'graphql-request/dist/types';
-import useSWR, { SWRConfiguration as SWRConfigInterface, Key as SWRKeyInterface } from 'swr';
+import useSWR, { Key as SWRKeyInterface,SWRConfiguration as SWRConfigInterface } from 'swr';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -74,7 +74,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
   login: LoginResponse;
-  register: Scalars['Boolean'];
+  register: Scalars['String'];
 };
 
 
@@ -99,17 +99,25 @@ export type Query = {
   __typename?: 'Query';
   currentUser?: Maybe<User>;
   getBlogBySlug: Blog;
+  getBlogsByUsername: Array<Blog>;
   getCatBlogs: Array<Blog>;
   getRelatedBlogs: Array<Blog>;
   getTagBlogs: Array<Blog>;
+  getUserBlogs: Array<Blog>;
   hello: Scalars['String'];
   listBlogsWithCatTag: Array<Blog>;
+  listTags: Array<Tag>;
   searchBlogs: Array<Blog>;
 };
 
 
 export type QueryGetBlogBySlugArgs = {
   slug: Scalars['String'];
+};
+
+
+export type QueryGetBlogsByUsernameArgs = {
+  username: Scalars['String'];
 };
 
 
@@ -131,6 +139,11 @@ export type QueryGetTagBlogsArgs = {
 };
 
 
+export type QueryGetUserBlogsArgs = {
+  userId: Scalars['String'];
+};
+
+
 export type QuerySearchBlogsArgs = {
   query: Scalars['String'];
 };
@@ -147,12 +160,14 @@ export type User = {
   _id: Scalars['ObjectId'];
   about?: Maybe<Scalars['String']>;
   commented: Array<Comment>;
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   name: Scalars['String'];
   photo?: Maybe<Scalars['String']>;
   profile: Scalars['String'];
   resetPasswordLink?: Maybe<Scalars['String']>;
   role: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
 
@@ -163,7 +178,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
+export type RegisterMutation = { __typename?: 'Mutation', register: string };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -176,7 +191,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Lo
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', username: string, name: string, email: string, profile: string, about?: string | null, role: string, photo?: string | null } | null };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', _id: any, username: string, name: string, email: string, profile: string, about?: string | null, role: string, photo?: string | null, createdAt: string, updatedAt: string } | null };
 
 export type GetCatBlogsQueryVariables = Exact<{
   getCatBlogsSlug: Scalars['String'];
@@ -221,6 +236,18 @@ export type SearchBlogsQueryVariables = Exact<{
 
 export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'Blog', slug: string, title: string, author: { __typename?: 'User', name: string } }> };
 
+export type GetUserBlogsQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type GetUserBlogsQuery = { __typename?: 'Query', getUserBlogs: Array<{ __typename?: 'Blog', _id: any, active?: boolean | null, createdAt: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', name: string } }> };
+
+export type ListTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListTagsQuery = { __typename?: 'Query', listTags: Array<{ __typename?: 'Tag', name: string, slug: string, _id: any }> };
+
 
 export const RegisterDocument = gql`
     mutation Register($registerPassword: String!, $registerEmail: String!, $registerName: String!) {
@@ -241,6 +268,7 @@ export const LoginDocument = gql`
 export const CurrentUserDocument = gql`
     query CurrentUser {
   currentUser {
+    _id
     username
     name
     email
@@ -248,6 +276,8 @@ export const CurrentUserDocument = gql`
     about
     role
     photo
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -409,6 +439,30 @@ export const SearchBlogsDocument = gql`
   }
 }
     `;
+export const GetUserBlogsDocument = gql`
+    query GetUserBlogs($userId: String!) {
+  getUserBlogs(userId: $userId) {
+    _id
+    active
+    author {
+      name
+    }
+    createdAt
+    description
+    slug
+    title
+  }
+}
+    `;
+export const ListTagsDocument = gql`
+    query ListTags {
+  listTags {
+    name
+    slug
+    _id
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -443,6 +497,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SearchBlogs(variables: SearchBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SearchBlogsQuery>(SearchBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SearchBlogs', 'query');
+    },
+    GetUserBlogs(variables: GetUserBlogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserBlogsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserBlogsQuery>(GetUserBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserBlogs', 'query');
+    },
+    ListTags(variables?: ListTagsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListTagsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListTagsQuery>(ListTagsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListTags', 'query');
     }
   };
 }
@@ -471,6 +531,12 @@ export function getSdkWithHooks(client: GraphQLClient, withWrapper: SdkFunctionW
     },
     useSearchBlogs(key: SWRKeyInterface, variables: SearchBlogsQueryVariables, config?: SWRConfigInterface<SearchBlogsQuery, ClientError>) {
       return useSWR<SearchBlogsQuery, ClientError>(key, () => sdk.SearchBlogs(variables), config);
+    },
+    useGetUserBlogs(key: SWRKeyInterface, variables: GetUserBlogsQueryVariables, config?: SWRConfigInterface<GetUserBlogsQuery, ClientError>) {
+      return useSWR<GetUserBlogsQuery, ClientError>(key, () => sdk.GetUserBlogs(variables), config);
+    },
+    useListTags(key: SWRKeyInterface, variables?: ListTagsQueryVariables, config?: SWRConfigInterface<ListTagsQuery, ClientError>) {
+      return useSWR<ListTagsQuery, ClientError>(key, () => sdk.ListTags(variables), config);
     }
   };
 }

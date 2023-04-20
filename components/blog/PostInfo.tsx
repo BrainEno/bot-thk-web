@@ -19,6 +19,8 @@ const PostInfo: React.FC<IPostCardProps> = ({ post }) => {
                     <Image
                         src={post.imageUri!}
                         alt={post.slug}
+                        sizes="(max-width: 900px) 305px,
+                               350px"
                         fill
                         style={{
                             objectFit: 'cover',
