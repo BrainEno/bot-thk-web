@@ -1,61 +1,24 @@
-import { useCallback, useEffect, useState } from 'react'
-import { LoadingOutlined } from '@ant-design/icons'
 import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
+import { SWRConfig } from 'swr'
 
 import PostInfo from '../../components/blog/PostInfo'
-import { getSdkWithHooks, ListBlogsWithCatTagQuery } from '../../gql/sdk'
-import { gqlClient } from '../../graphql/gqlClient'
-
-const sdk = getSdkWithHooks(gqlClient)
+import { sdk } from '../../gqlSDK'
+import { ListBlogsWithCatTagQuery } from '../../gqlSDK/sdk'
 
 type BlogsProps = {
     router: NextRouter
     posts: ListBlogsWithCatTagQuery['listBlogsWithCatTag']
-    count: number
 }
 
-const Blogs = ({ router, posts, count }: BlogsProps) => {
-    const [observedPost, setObservedPost] = useState('')
-    const [pageIndex, setPageIndex] = useState(0)
-
-    const { data, error, isValidating } = sdk.useListBlogsWithCatTag(
+const Blogs = ({ router, posts }: BlogsProps) => {
+    const { data, error } = sdk.useListBlogsWithCatTag(
         '/blogs/all',
         {},
         { refreshInterval: 60 }
     )
 
-    console.log('data', data)
-
     const isInitialLoading = !data && !error
-
-    const observeElement = useCallback(
-        (element: HTMLElement | null) => {
-            if (!element) return
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    if (entries[0].isIntersecting === true) {
-                        setPageIndex(pageIndex + 1)
-                        observer.unobserve(element)
-                    }
-                },
-                { threshold: 1 }
-            )
-            observer.observe(element)
-        },
-        [pageIndex, setPageIndex]
-    )
-
-    useEffect(() => {
-        if (!posts) return
-
-        const id = (posts as { [key: number]: any })[count - 1]._id
-
-        if (id !== observedPost) {
-            setObservedPost(id)
-            observeElement(document.getElementById(id))
-        }
-    }, [posts, observedPost, observeElement, count])
 
     const head = () => (
         <Head>
@@ -89,40 +52,40 @@ const Blogs = ({ router, posts, count }: BlogsProps) => {
     )
 
     return (
-        <>
-            {/* {head()} */}
+        <SWRConfig value={{ fallback: posts }}>
+            {head()}
             <main className="allBlogs">
                 <section className="all-blogs-container">
                     <h1>All Blogs</h1>
                     <div className="all-blog-cards">
                         {isInitialLoading ? (
-                            <div className="loading-container">
-                                <LoadingOutlined />
-                            </div>
+                            <div className="loading-container">正在加载</div>
                         ) : (
                             <section className="post-grid">
-                                {posts?.map((post: any) => (
-                                    <PostInfo post={post} key={post._id} />
-                                ))}
-                                {isValidating && posts.length > 0 && (
-                                    <p className="loading-text">正在加载</p>
-                                )}
+                                {data &&
+                                    data.listBlogsWithCatTag.map(
+                                        (post: any) => (
+                                            <PostInfo
+                                                post={post}
+                                                key={post._id}
+                                            />
+                                        )
+                                    )}
                             </section>
                         )}
                     </div>
                 </section>
             </main>
-        </>
+        </SWRConfig>
     )
 }
 
 export default withRouter(Blogs)
 
 export const getServerSideProps = async () => {
-    const { listBlogsWithCatTag:posts } = await sdk.ListBlogsWithCatTag()
-  
-    const count = posts.length
+    const { listBlogsWithCatTag: posts } = await sdk.ListBlogsWithCatTag()
+
     return {
-        props: { posts, count },
+        props: { posts },
     }
 }

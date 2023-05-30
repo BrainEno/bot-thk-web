@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import { getSdk, ListTagsQuery } from '../../gql/sdk'
+import { getSdk, ListTagsQuery } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 
 interface TagState {

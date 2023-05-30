@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 import BannerImg from '../../components/BannerImg'
 import { PostMasonry, TagRow } from '../../components/blog'
-import { getSdk } from '../../gql/sdk'
+import { getSdk } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 import { IBlog } from '../../types'
 

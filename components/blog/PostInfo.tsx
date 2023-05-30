@@ -13,7 +13,7 @@ interface IPostCardProps {
 
 const PostInfo: React.FC<IPostCardProps> = ({ post }) => {
     return (
-        <div className="post-container">
+        <div className="post-container" id={post._id}>
             <Link href={`/blogs/${post.slug}`}>
                 <div className="post-img-wrapper skeleton">
                     <Image

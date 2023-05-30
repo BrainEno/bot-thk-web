@@ -3,7 +3,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import classNames from 'classnames'
 import Link from 'next/link'
 
-import { getSdkWithHooks } from '../../gql/sdk'
+import { getSdkWithHooks } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
 

@@ -2,8 +2,8 @@ import { useState } from 'react'
 import classNames from 'classnames'
 import { NextRouter, withRouter } from 'next/router'
 
-import { resetPassword } from '../../../../actions/auth'
 import MyBrand from '../../../../components/MyBrand'
+import { sdk } from '../../../../gqlSDK'
 
 const ResetPassword = ({ router }: { router: NextRouter }) => {
     const [values, setValues] = useState({
@@ -17,21 +17,21 @@ const ResetPassword = ({ router }: { router: NextRouter }) => {
 
     const handleSubmit: React.FormEventHandler = (e) => {
         e.preventDefault()
-        resetPassword({
-            newPassword,
-            resetPasswordLink: router.query.id,
-        }).then((data) => {
-            if (data.error) {
+        sdk.ResetPassword({
+            password: newPassword,
+            username: router.query.id as string,
+        }).then((success) => {
+            if (!success) {
                 setValues({
                     ...values,
-                    error: data.error,
+                    error: '重置密码失败，请重试',
                     showForm: false,
                     newPassword: '',
                 })
             } else {
                 setValues({
                     ...values,
-                    message: data.message,
+                    message: '密码已重置',
                     showForm: false,
                     newPassword: '',
                     error: '',

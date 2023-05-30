@@ -1,9 +1,10 @@
 import React from 'react'
 import { FiDelete, FiEdit } from 'react-icons/fi'
+import {MdOutlineArticle} from 'react-icons/md'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 
-import { GetUserBlogsQuery } from '../../gql/sdk'
+import { GetUserBlogsQuery } from '../../gqlSDK/sdk'
 
 interface UserBlogCardProps {
     isSelected: boolean
@@ -42,6 +43,7 @@ export const UserBlogCard = ({
                 <div className="blog-icon-container">
                     <FiEdit onClick={() => handleEdit(blog._id)} />
                     <FiDelete onClick={() => handleDelete(blog._id)} />
+                    <MdOutlineArticle/>
                 </div>
             )}
         </div>

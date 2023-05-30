@@ -7,7 +7,7 @@ import { IBlog } from 'types'
 import { PostGrid,PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
-import { getSdk } from '../gql/sdk'
+import { getSdk } from '../gqlSDK/sdk'
 import { gqlClient } from '../graphql/gqlClient'
 
 interface IndexPageProps {

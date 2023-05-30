@@ -1,55 +1,50 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { MenuOutlined } from '@ant-design/icons'
+import React, { useEffect, useRef, useState } from 'react'
+import { HiOutlineMenu } from 'react-icons/hi'
+import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+import { useClickOutside } from '../../hooks/useClickOutside'
 import useScrollDown from '../../hooks/useScrollDown'
 import Avatar from '../Avatar'
 import Search from '../blog/Search'
 import MyBrand from '../MyBrand'
 
-import ActiveLink from './ActiveLink'
-
 const Header = () => {
-    const { user, logOut } = useAuthStore()
-    const isAuth = useMemo(() => !!user, [user])
+    const { pathname, query } = useRouter()
+    const user = useAuthStore((state) => state.user)
+    const [isAuth, setIsAuth] = useState(false)
+    const { logOut } = useAuthStore()
     const router = useRouter()
     const scrollDown = useScrollDown()
     const [menuActive, setMenuActive] = useState(false)
 
     const menuRef = useRef<HTMLDivElement>(null)
-    const btnRef = useRef<HTMLSpanElement>(null)
+    const btnRef = useRef<HTMLButtonElement>(null)
+
+    useClickOutside(btnRef, () => setMenuActive(false), menuRef)
 
     const handleMenuClick = (e: MouseEvent) => {
         e.preventDefault()
         setMenuActive(!menuActive)
     }
 
-    const handleClickOutside = (e: MouseEvent) => {
-        if (
-            menuRef.current &&
-            !menuRef.current!.contains(e.target as any) &&
-            !btnRef.current!.contains(e.target as any)
-        ) {
-            setMenuActive(false)
-        }
-    }
-
     const handleLogOut = () => {
         logOut()
-        router.push('/accout/login')
+        router.push('/signin')
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true)
-        return () => {
-            document.removeEventListener('click', handleClickOutside)
+        if (user) {
+            setIsAuth(true)
+        } else {
+            setIsAuth(false)
         }
-    }, [menuRef, menuActive])
+    }, [user])
 
     return (
-        <nav
+        <div
             className="site-navigation"
             style={
                 scrollDown
@@ -72,71 +67,88 @@ const Header = () => {
             >
                 <ul className="nav">
                     <li>
-                        <ActiveLink activeClassName="active" href="/">
-                            <a className="nav-link">首页</a>
-                        </ActiveLink>
+                        <Link
+                            className={classNames('nav-link', {
+                                active: pathname === '/',
+                            })}
+                            href="/"
+                        >
+                            首页
+                        </Link>
                     </li>
                     <li>
-                        <ActiveLink activeClassName="active" href="/blogs/">
-                            <a className="nav-link">全部</a>
-                        </ActiveLink>
+                        <Link
+                            className={classNames('nav-link', {
+                                active: pathname === '/blogs',
+                            })}
+                            href="/blogs"
+                        >
+                            全部
+                        </Link>
                     </li>
                     <li>
-                        <ActiveLink activeClassName="active" href="/tags/novel">
-                            <a className="nav-link">小说</a>
-                        </ActiveLink>
+                        <Link
+                            className={classNames('nav-link', {
+                                active: query?.slug === 'novel',
+                            })}
+                            href="/tags/novel"
+                        >
+                            小说
+                        </Link>
                     </li>
                     <li>
-                        <ActiveLink
-                            activeClassName="active"
+                        <Link
+                            className={classNames('nav-link', {
+                                active: query.slug === 'poetry',
+                            })}
                             href="/tags/poetry"
                         >
-                            <a className="nav-link">诗歌</a>
-                        </ActiveLink>
+                            诗歌
+                        </Link>
                     </li>
                     <li>
-                        <ActiveLink
-                            activeClassName="active"
+                        <Link
+                            className={classNames('nav-link', {
+                                active: query.slug === 'original',
+                            })}
                             href="/tags/original"
                         >
-                            <a className="nav-link">原创</a>
-                        </ActiveLink>
+                            原创
+                        </Link>
                     </li>
                     <li>
-                        <ActiveLink activeClassName="active" href="/tags/else">
-                            <a className="nav-link">其他</a>
-                        </ActiveLink>
+                        <Link
+                            className={classNames('nav-link', {
+                                active: query.slug === 'else',
+                            })}
+                            href="/tags/else"
+                        >
+                            其他
+                        </Link>
                     </li>
                 </ul>
                 <Search />
-
-                {isAuth ? (
-                    <ul className="log-ul">
-                        <li>
+                <div>
+                    {isAuth ? (
+                        <div className="log-ul">
                             <div onClick={handleLogOut}>退出</div>
-                        </li>
-                    </ul>
-                ) : (
-                    <ul className="log-ul">
-                        <li>
-                            <ActiveLink activeClassName="active" href="/signin">
-                                <a className="nav-link">登录</a>
-                            </ActiveLink>
-                        </li>
-                        <li>
-                            <ActiveLink activeClassName="active" href="/signup">
-                                <a className="nav-link">注册</a>
-                            </ActiveLink>
-                        </li>
-                    </ul>
-                )}
-
-                <div className="menu-avtar-container">
-                    {isAuth && (
-                        <Link
-                            href={user!.role === '1' ? `/admin/` : `/user/`}
-                            passHref
-                        >
+                        </div>
+                    ) : (
+                        <div className="log-ul">
+                            <div>
+                                <Link className="nav-link" href="/signin">
+                                    登录
+                                </Link>
+                                <Link className="nav-link" href="/signup">
+                                    注册
+                                </Link>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                {isAuth && (
+                    <div className="menu-avtar-container">
+                        <Link href="/dashboard" passHref>
                             <div className="my-avatar">
                                 {!!user && (
                                     <Avatar
@@ -151,13 +163,21 @@ const Header = () => {
                                 )}
                             </div>
                         </Link>
-                    )}
-                    {!!user && <p className="menu-avtar-name">{user.name}</p>}
-                </div>
-            </div>
 
-            <MenuOutlined onClick={handleMenuClick as any} ref={btnRef} />
-        </nav>
+                        {!!user && (
+                            <p className="menu-avtar-name">{user.name}</p>
+                        )}
+                    </div>
+                )}
+            </div>
+            <button
+                className="menu-btn"
+                onClick={handleMenuClick as any}
+                ref={btnRef}
+            >
+                <HiOutlineMenu />
+            </button>
+        </div>
     )
 }
 

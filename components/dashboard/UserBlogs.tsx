@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 
-import { CurrentUserQuery, GetUserBlogsQuery } from '../../gql/sdk'
+import { CurrentUserQuery, GetUserBlogsQuery } from '../../gqlSDK/sdk'
 import AddBtn from '../Common/AddBtn'
 import { Pagination } from '../Common/Pagination'
 import MyBrand from '../MyBrand'
@@ -43,28 +43,12 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
                     )}
                 </div>
 
-                <AddBtn
-                    href={
-                        user && user.role === '1'
-                            ? '/admin/crud/blog'
-                            : '/user/crud/blog'
-                    }
-                    size={60}
-                />
+                <AddBtn href={'/dashboard/new-blog'} size={60} />
             </div>
 
             <div className="blog-card-container">
                 {blogs && blogs?.length
                     ? paginatedBlogs.map((b) => (
-                          //   <a
-                          //       key={i}
-                          //       href={
-                          //           user && user.role === '1'
-                          //               ? `/admin/crud/${b._id}`
-                          //               : `/user/crud/${b._id}`
-                          //       }
-                          //   >
-                          //   </a>
                           <UserBlogCard
                               setSelectedId={setSelectedId}
                               isSelected={b._id === selectedId}

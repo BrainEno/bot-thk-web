@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import { forgotPassword } from '../../../actions/auth'
 import MyBrand from '../../../components/MyBrand'
+import { sdk } from '../../../gqlSDK'
+import { getErrorMsg } from '../../../helpers/getErrorMsg'
 
 const ForgotPassword = () => {
     const [values, setValues] = useState({
@@ -34,18 +35,20 @@ const ForgotPassword = () => {
             })
         } else {
             setValues({ ...values, message: '', error: '' })
-            forgotPassword({ email }).then((data) => {
-                if (data.error) {
-                    setValues({ ...values, error: data.error })
-                } else {
+            sdk.ForgotPassword({ email })
+                .then((res) => {
+                    console.log(res)
                     setValues({
                         ...values,
-                        message: data.message,
+                        message: res.forgotPassword,
                         email: '',
                         showForm: false,
                     })
-                }
-            })
+                })
+                .catch((err) => {
+                    const errMsg = getErrorMsg(err)
+                    setValues({ ...values, error: errMsg })
+                })
         }
     }
 

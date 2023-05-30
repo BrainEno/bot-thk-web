@@ -4,27 +4,20 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ParsedUrlQuery } from 'node:querystring'
 
 import Avatar from '../../components/Avatar'
 import { Pagination } from '../../components/Common/Pagination'
 import MyBrand from '../../components/MyBrand'
-import { getSdk, getSdkWithHooks } from '../../gql/sdk'
-import { gqlClient } from '../../graphql/gqlClient'
+import { sdk } from '../../gqlSDK'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { IBlog, IUser } from '../../types'
 
 const pageSize = 6
 
 dayjs.extend(relativeTime)
 
 interface IUserProfileProps {
-    user: IUser
-    blogs: IBlog[]
-    query: ParsedUrlQuery
+    query: Record<string, string>
 }
-
-const sdk = getSdkWithHooks(gqlClient)
 
 const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
     const router = useRouter()
@@ -33,7 +26,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         user && user._id ? `/profile/${query}` : null,
         { userId: user?._id }
     )
-    const blogs = data.getUserBlogs
+    const blogs = data?.getUserBlogs
 
     useEffect(() => {
         if (error) router.push('/signin')
@@ -87,7 +80,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         const lastIndex = pageSize * current
         const firstIndex = lastIndex - pageSize
 
-        return blogs.slice(firstIndex, lastIndex)
+        return blogs?.slice(firstIndex, lastIndex)
     }, [current, blogs])
 
     return (
@@ -99,10 +92,10 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                         <div className="avatar-container">
                             <a href={`/user/update`}>
                                 <Avatar
-                                    title="编辑个人资料"
+                                    title="头像"
                                     size={100}
                                     radius={100}
-                                    src={`${process.env.NEXT_PUBLIC_API}/user/photo/${user.username}`}
+                                    src={`${user.photo}`}
                                 />
                             </a>
                         </div>
@@ -125,11 +118,13 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                                 <MyBrand width={45} height={45} />
                             </div>
                             <h4 className="blogs-number">
-                                {user && user.name}共发布了{blogs.length}篇文章
+                                {user && user.name}共发布了
+                                {blogs ? blogs?.length : 0}
+                                篇文章
                             </h4>
                         </div>
                         <div className="blogs-container">
-                            {blogs && blogs.length > 0
+                            {blogs && blogs.length > 0 && paginatedBlogs
                                 ? paginatedBlogs.map((b, i: number) => (
                                       <a href={`/blogs/${b._id}`} key={i}>
                                           <div className="blog-card">
@@ -155,12 +150,14 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                                 : ''}
                         </div>
                     </div>
-                    <Pagination
-                        pageSize={pageSize}
-                        total={blogs.length}
-                        defaultCurrent={current}
-                        onChange={setCurrent}
-                    />
+                    {blogs && (
+                        <Pagination
+                            pageSize={pageSize}
+                            total={blogs.length}
+                            defaultCurrent={current}
+                            onChange={setCurrent}
+                        />
+                    )}
                 </div>
             )}
         </>

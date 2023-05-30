@@ -28,10 +28,7 @@
         }
     }
 
-    .anticon,
-    .anticon-menu {
-        font-family: 'Noto Sans SC', sans-serif;
-        font-size: 30px !important;
+    .menu-btn {
         width: 50px;
         align-items: center;
         cursor: pointer;
@@ -113,14 +110,16 @@
         margin-left: 40px;
         padding: 0;
 
-        li {
-            margin-left: 8px;
-
-            a {
-                font-size: 18px;
-                padding: 0px;
-            }
+        & div {
+            cursor: pointer;
         }
+
+        .nav-link {
+            margin-left: 8px;
+            font-size: 18px;
+            padding: 0px;
+        }
+
     }
 }
 
@@ -145,7 +144,7 @@
             padding: 0;
             padding-left: 10px;
 
-            .ant-avatar {
+            .my-avatar {
                 margin-left: 0;
             }
 
@@ -183,9 +182,13 @@
             }
         }
 
-        .anticon,
-        .anticon-menu {
+
+        .menu-btn {
+            border: none;
+            background-color: transparent;
             display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .log-ul {

@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { getSdk } from '../../gql/sdk'
+import { getSdk } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 

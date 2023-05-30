@@ -1,17 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { getSdkWithHooks } from '../../gql/sdk'
+import { getSdkWithHooks } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 const sdk = getSdkWithHooks(gqlClient)
 
 const SigninComponent = () => {
-    const { auth } = useAuthStore()
+    const user = useAuthStore((state) => state.user)
+    const auth = useAuthStore((state) => state.auth)
 
     const router = useRouter()
     const [values, setValues] = useState({
@@ -95,6 +96,12 @@ const SigninComponent = () => {
                 })
         }
     }
+
+    useEffect(() => {
+        if (user && user._id) {
+            router.push('/dashboard')
+        }
+    }, [router, user])
 
     const showLoading = () =>
         loading ? <div className="alert">正在加载...</div> : ''

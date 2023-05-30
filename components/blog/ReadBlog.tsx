@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { CustomerServiceOutlined } from '@ant-design/icons';
+import {SlEarphones} from 'react-icons/sl'
 
 import { IBlog } from '../../types';
 
@@ -107,7 +107,7 @@ const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
                 ))}
             </select>
             <button type="submit">
-              <CustomerServiceOutlined />
+              <SlEarphones/>
             </button>
           </form>
         </div>

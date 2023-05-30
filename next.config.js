@@ -38,6 +38,7 @@ module.exports = withBundleAnalyzer({
         domains: [
             'bot-thk.vercel.app',
             'res.cloudinary.com',
+            'twitter.com',
             'localhost',
             '[::1]',
         ],
