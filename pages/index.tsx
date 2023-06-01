@@ -4,11 +4,10 @@ import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
 import { IBlog } from 'types'
 
-import { PostGrid,PostMasonry } from '../components/blog'
+import { PostGrid, PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/Footer'
-import { getSdk } from '../gqlSDK/sdk'
-import { gqlClient } from '../graphql/gqlClient'
+import { sdk } from '../gqlSDK'
 
 interface IndexPageProps {
     router: NextRouter
@@ -115,8 +114,6 @@ const Index: React.FC<IndexPageProps> = ({
 }
 
 export const getStaticProps = async () => {
-    const sdk = getSdk(gqlClient)
-
     const { getCatBlogs: recent } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'recent-post',
     })

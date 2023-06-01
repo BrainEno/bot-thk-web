@@ -4,6 +4,7 @@ import classNames from 'classnames'
 
 import { sdk } from '../../gqlSDK'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
 import { showAlert } from '../Common/Alert'
 
@@ -13,6 +14,7 @@ interface TagListProps {
 }
 
 export const TagList = ({ selectedTags, setSelectedTags }: TagListProps) => {
+    const user = useAuthStore((state) => state.user)
     const [tagName, setTagName] = useState('')
     const [showTagForm, setShowTagForm] = useState(false)
     const [error, setError] = useState('')
@@ -66,14 +68,16 @@ export const TagList = ({ selectedTags, setSelectedTags }: TagListProps) => {
                     </div>
                 ))}
             </div>
-            <button
-                type="button"
-                title="自定义标签"
-                className="tag-add-btn"
-                onClick={() => setShowTagForm(!showTagForm)}
-            >
-                {showTagForm ? 'x' : '+'}
-            </button>
+            {user?.role === '1' && (
+                <button
+                    type="button"
+                    title="自定义标签"
+                    className="tag-add-btn"
+                    onClick={() => setShowTagForm(!showTagForm)}
+                >
+                    {showTagForm ? 'x' : '+'}
+                </button>
+            )}
             {showTagForm && (
                 <div className="tag-input">
                     <input value={tagName} onChange={onTagChange} type="text" />

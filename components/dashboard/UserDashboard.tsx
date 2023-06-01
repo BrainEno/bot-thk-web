@@ -29,8 +29,8 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
 
     useEffect(() => {
         setTimeout(() => {
-            if (!user || !data || error) router.push('/signin')
-        }, 1100)
+            if (!user && !data && error) router.push('/signin')
+        }, 2000)
     }, [data, error, router, user])
 
     return (

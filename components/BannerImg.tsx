@@ -10,8 +10,6 @@ const BannerImg = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
             className="banner-container"
             style={{
                 height: windowWidth! > 900 ? '500px' : '300px',
-                width: '100%',
-                position: 'relative',
             }}
         >
             {windowWidth && (

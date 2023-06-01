@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { BiHide, BiShow } from 'react-icons/bi'
 import { BsTags } from 'react-icons/bs'
 import { GrImage } from 'react-icons/gr'
 import dynamic from 'next/dynamic'
@@ -30,27 +31,38 @@ interface BlogFormProps {
     draftBody?: string
     draftImg?: string
     draftActive?: boolean
+    draftTags?: string[]
+    blogId?: string
 }
 
 const sdk = getSdk(gqlClient)
 
-export const BlogForm = ({ formType }: BlogFormProps) => {
+export const BlogForm = ({
+    formType,
+    draftActive,
+    draftBody,
+    draftImg,
+    draftTitle,
+    draftTags,
+    blogId,
+}: BlogFormProps) => {
     const router = useRouter()
     const user = useAuthStore((state) => state.user)
     const imgInput = useRef<HTMLInputElement | null>(null)
     const [blog, setBlog] = useState<Omit<BlogInput, 'body'>>({
-        title: '',
-        active: false,
-        imageUri: '',
+        title: draftTitle || '',
+        active: draftActive || false,
+        imageUri: draftImg || '',
     })
 
     const listTags = useTagStore((state) => state.list)
 
-    const [body, setBody] = useState<string>('')
+    const [body, setBody] = useState<string>(draftBody || '')
     const [error, setError] = useState('')
 
-    const [showTags, setShowTags] = useState(false)
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [showBanner, setShowBanner] = useState(blog?.imageUri || false)
+    const [showTags, setShowTags] = useState(draftTags?.length || false)
+    const [selectedTags, setSelectedTags] = useState<string[]>(draftTags ?? [])
 
     const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
@@ -86,26 +98,44 @@ export const BlogForm = ({ formType }: BlogFormProps) => {
             })
     }
 
-    const saveBlog = () => {
-        console.log('save')
-        localStorage.setItem('draft-content', body)
-        localStorage.setItem('draft-title', title)
+    const handleCancel = () => {
+        if (formType === 'create') {
+            localStorage.setItem('draft-content', body)
+            localStorage.setItem('draft-title', title)
+        }
+
+        router.push('/dashboard')
     }
 
-    const publishBlog = async () => {
+    useEffect(() => {
+        const draftTitleLS = localStorage.getItem('draft-title')
+        const draftBodyLS = localStorage.getItem('draft-content')
         if (formType === 'create') {
-            const blogInput = Object.assign(blog, { body })
-            if (!blogInput.imageUri) {
-                blogInput.imageUri = defaultImgUri
-            }
-            blogInput.active = true
+            if (draftBodyLS) setBody(draftBodyLS)
+            if (draftTitleLS) setBlog({ ...blog, title: draftTitleLS })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
+    const publishBlog = async () => {
+        const blogInput = Object.assign(blog, { body })
+        if (!blogInput.imageUri) {
+            blogInput.imageUri = defaultImgUri
+        }
+        blogInput.active = true
+
+        if (formType === 'create') {
             await sdk.CreateBlog({ blogInput, tagIds: selectedTags })
         } else if (formType === 'edit') {
-            const blogInput = Object.assign(blog, { body })
-
-            console.log(blogInput)
+            if (blogId) {
+                await sdk.UpdateBlog({
+                    blogInput,
+                    blogId: blogId,
+                    tagIds: selectedTags,
+                })
+            }
         }
+
         setBlog({
             title: '',
             active: false,
@@ -113,6 +143,9 @@ export const BlogForm = ({ formType }: BlogFormProps) => {
         })
 
         setBody('')
+        router.push('/dashboard')
+        localStorage.removeItem('draft-title')
+        localStorage.removeItem('draft-content')
     }
 
     const handleTags = () => {
@@ -161,11 +194,35 @@ export const BlogForm = ({ formType }: BlogFormProps) => {
                             />
                             <GrImage />
                         </label>
+                        {showBanner ? (
+                            <button
+                                type="button"
+                                className="icon-btn"
+                                title="隐藏图片"
+                                onClick={() => setShowBanner(false)}
+                            >
+                                <BiHide />
+                            </button>
+                        ) : (
+                            blog.imageUri && (
+                                <button
+                                    type="button"
+                                    className="icon-btn"
+                                    onClick={() => setShowBanner(true)}
+                                    title="预览图片"
+                                >
+                                    <BiShow />
+                                </button>
+                            )
+                        )}
                     </div>
                 </div>
 
                 <div className="body-container">
-                    {blog.imageUri && <BannerImg imgSrc={blog.imageUri} />}
+                    {blog.imageUri && showBanner && (
+                        <BannerImg imgSrc={blog.imageUri} />
+                    )}
+
                     <ReactQuill
                         modules={QuillModules}
                         formats={QuillFormats}
@@ -191,11 +248,11 @@ export const BlogForm = ({ formType }: BlogFormProps) => {
                             />
                         )}
                     </div>
-                    <div>
+                    <div className="form-btns">
                         <button
                             className="form-btn"
                             type="button"
-                            onClick={saveBlog}
+                            onClick={handleCancel}
                         >
                             退出
                         </button>

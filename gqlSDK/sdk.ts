@@ -401,6 +401,10 @@ export type GetBlogBySlugQueryVariables = Exact<{
     slug: Scalars['String']
 }>
 
+export type GetBlogByIdQueryVariables = Exact<{
+    blogId: Scalars['String']
+}>
+
 export type GetBlogBySlugQuery = {
     __typename?: 'Query'
     getBlogBySlug: {
@@ -427,6 +431,37 @@ export type GetBlogBySlugQuery = {
             by: { __typename?: 'User'; name: string; username: string }
             atBlog: { __typename?: 'Blog'; slug: string; title: string }
         }> | null
+        author: { __typename?: 'User'; name: string; username: string }
+        tags: Array<{
+            __typename?: 'Tag'
+            _id: any
+            slug: string
+            name: string
+        }>
+        categories: Array<{
+            __typename?: 'Category'
+            _id: any
+            slug: string
+            name: string
+        }>
+    }
+}
+
+export type GetBlogByIdQuery = {
+    __typename?: 'Query'
+    getBlogById: {
+        __typename?: 'Blog'
+        title: string
+        slug: string
+        description?: string | null
+        body: string
+        mtitle: string
+        image?: string | null
+        imageUri?: string | null
+        active?: boolean | null
+        _id: any
+        createdAt: string
+        updatedAt: string
         author: { __typename?: 'User'; name: string; username: string }
         tags: Array<{
             __typename?: 'Tag'
@@ -738,6 +773,39 @@ export const GetBlogBySlugDocument = gql`
         }
     }
 `
+
+export const GetBlogByIdDocument = gql`
+    query GetBlogById($blogId: String!) {
+        getBlogById(blogId: $blogId) {
+            title
+            slug
+            description
+            body
+            mtitle
+            image
+            imageUri
+            active
+            _id
+            createdAt
+            updatedAt
+            author {
+                name
+                username
+            }
+            tags {
+                _id
+                slug
+                name
+            }
+            categories {
+                _id
+                slug
+                name
+            }
+        }
+    }
+`
+
 export const ListBlogsWithCatTagDocument = gql`
     query ListBlogsWithCatTag {
         listBlogsWithCatTag {
@@ -1074,6 +1142,21 @@ export function getSdk(
                 'query'
             )
         },
+        GetBlogById(
+            variables: GetBlogByIdQueryVariables,
+            requestHeaders?: Dom.RequestInit['headers']
+        ): Promise<GetBlogByIdQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetBlogByIdQuery>(
+                        GetBlogByIdDocument,
+                        variables,
+                        { ...requestHeaders, ...wrappedRequestHeaders }
+                    ),
+                'GetBlogById',
+                'query'
+            )
+        },
         ListBlogsWithCatTag(
             variables?: ListBlogsWithCatTagQueryVariables,
             requestHeaders?: Dom.RequestInit['headers']
@@ -1213,6 +1296,17 @@ export function getSdkWithHooks(
             return useSWR<GetBlogBySlugQuery, ClientError>(
                 key,
                 () => sdk.GetBlogBySlug(variables),
+                config
+            )
+        },
+        useGetBlogById(
+            key: SWRKeyInterface,
+            variables: GetBlogByIdQueryVariables,
+            config?: SWRConfigInterface<GetBlogByIdQuery, ClientError>
+        ) {
+            return useSWR<GetBlogByIdQuery, ClientError>(
+                key,
+                () => sdk.GetBlogById(variables),
                 config
             )
         },

@@ -78,7 +78,6 @@ const SigninComponent = () => {
 
                         const errs = err.response.errors
                         errs.forEach((err: any) => {
-                            console.log('trace', err)
                             const { code } = err.extensions
                             if (code === 'INVALID_EMAIL') {
                                 setErrors({ ...errors, email: err.message })
