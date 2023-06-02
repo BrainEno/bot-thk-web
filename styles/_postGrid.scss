@@ -1,105 +1,106 @@
 .grid-pagination-container {
-  width: 1300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .pagination-container {
+    width: 1300px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 220px;
-    height: 45px;
-    padding: 10px;
-    box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
-    border-radius: 50px;
-    margin: 30px auto;
+    flex-direction: column;
 
-    .ant-pagination {
-      text-align: center;
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 220px;
+        height: 45px;
+        padding: 10px;
+        box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
+        border-radius: 50px;
+        margin: 30px auto;
+
+        .ant-pagination {
+            text-align: center;
+        }
     }
-  }
 }
 
 .post-grid {
-  width: 100%;
-  display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(275px, 350px));
-  row-gap: 30px;
-  column-gap: 30px;
-  grid-auto-rows: 1fr;
-  padding-bottom: 50px;
-
-
-  img {
-    display: block;
-    position: relative;
-    border-radius: 5px;
-    overflow: hidden;
-    object-fit: cover;
-    object-position: center center;
-    height: 100%;
     width: 100%;
-    margin: 0 auto;
-    max-height: 300px;
-  }
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(275px, 350px));
+    row-gap: 30px;
+    column-gap: 30px;
+    grid-auto-rows: 1fr;
+    padding-bottom: 50px;
 
-  .post-container {
-    display: flex;
-    flex-direction: column;
-
-    h2 {
-      font-size: 1.3em;
+    img {
+        display: block;
+        position: relative;
+        border-radius: 5px;
+        overflow: hidden;
+        object-fit: cover;
+        object-position: center center;
+        height: 100%;
+        width: 100%;
+        margin: 0 auto;
+        max-height: 300px;
     }
 
-    .author-text {
-      color: $text-light;
-    }
+    .post-container {
+        display: flex;
+        flex-direction: column;
 
-    a {
-      font-weight: 500;
-      color: rgb(15, 136, 206) !important;
-    }
+        .post-title {
+          overflow: hidden;
+            font-size: 1.3em;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-    .description-text {
-      // width: 100%;
-      max-height: 85px;
-      font-size: 18px;
-      font-weight: 400;
-      color: #555;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: pre-wrap;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      line-clamp: 3;
-      display: -webkit-box;
+        .author-text {
+            color: $text-light;
+        }
+
+        a {
+            font-weight: 500;
+            color: rgb(15, 136, 206) !important;
+        }
+
+        .description-text {
+            max-height: 85px;
+            font-size: 18px;
+            font-weight: 400;
+            color: #555;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: pre-wrap;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            line-clamp: 3;
+            display: -webkit-box;
+        }
     }
-  }
 }
 
 @media screen and (max-width: 900px) {
-  .grid-pagination-container {
-    width: 100%;
+    .grid-pagination-container {
+        width: 100%;
 
-    .post-grid.container {
-      padding: 0;
+        .post-grid.container {
+            padding: 0;
+        }
+
+        .post-grid {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
-    .post-grid {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .description-text {
+        font-size: 16px;
+        font-weight: 400;
+        color: #555;
     }
-  }
-
-  .description-text {
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-  }
 }

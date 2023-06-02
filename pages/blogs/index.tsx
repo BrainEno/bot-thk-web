@@ -1,52 +1,24 @@
-import { useCallback, useEffect, useMemo,useState } from 'react'
-import { LoadingOutlined } from '@ant-design/icons'
 import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
-import useSWRInfinite from 'swr/infinite'
+import { SWRConfig } from 'swr'
 
-import PostCard from '../../components/blog/PostCard'
+import PostInfo from '../../components/blog/PostInfo'
+import { sdk } from '../../gqlSDK'
+import { ListBlogsWithCatTagQuery } from '../../gqlSDK/sdk'
 
-const Blogs = ({ router }: { router: NextRouter }) => {
-    const getKey = (index: number) => {
-        return `${process.env.NEXT_PUBLIC_API}/blogs-tags?page=${index}&count=9`
-    }
-    const [observedPost, setObservedPost] = useState('')
-    const { data, error, size, setSize, isValidating } = useSWRInfinite(
-        getKey,
-        (url: string) => fetch(url).then((r) => r.json())
+type BlogsProps = {
+    router: NextRouter
+    posts: ListBlogsWithCatTagQuery['listBlogsWithCatTag']
+}
+
+const Blogs = ({ router, posts }: BlogsProps) => {
+    const { data, error } = sdk.useListBlogsWithCatTag(
+        '/blogs/all',
+        {},
+        { refreshInterval: 60 }
     )
 
     const isInitialLoading = !data && !error
-
-    const posts: any = useMemo(() => (data ? [].concat(...data) : []), [data])
-
-    const observeElement = useCallback(
-        (element: HTMLElement | null) => {
-            if (!element) return
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    if (entries[0].isIntersecting === true) {
-                        setSize(size + 1)
-                        observer.unobserve(element)
-                    }
-                },
-                { threshold: 1 }
-            )
-            observer.observe(element)
-        },
-        [size, setSize]
-    )
-
-    useEffect(() => {
-        if (!posts || posts.length === 0) return
-
-        const id = posts[posts.length - 1]._id
-
-        if (id !== observedPost) {
-            setObservedPost(id)
-            observeElement(document.getElementById(id))
-        }
-    }, [posts, observedPost, observeElement])
 
     const head = () => (
         <Head>
@@ -80,35 +52,40 @@ const Blogs = ({ router }: { router: NextRouter }) => {
     )
 
     return (
-        <>
+        <SWRConfig value={{ fallback: posts }}>
             {head()}
             <main className="allBlogs">
                 <section className="all-blogs-container">
                     <h1>All Blogs</h1>
                     <div className="all-blog-cards">
                         {isInitialLoading ? (
-                            <div className="loading-container">
-                                <LoadingOutlined />
-                            </div>
+                            <div className="loading-container">正在加载</div>
                         ) : (
                             <section className="post-grid">
-                                {posts?.map((post: any) => (
-                                    <PostCard
-                                        post={post}
-                                        key={post._id}
-                                        id={post._id}
-                                    />
-                                ))}
-                                {isValidating && posts.length > 0 && (
-                                    <p className="loading-text">正在加载</p>
-                                )}
+                                {data &&
+                                    data.listBlogsWithCatTag.map(
+                                        (post: any) => (
+                                            <PostInfo
+                                                post={post}
+                                                key={post._id}
+                                            />
+                                        )
+                                    )}
                             </section>
                         )}
                     </div>
                 </section>
             </main>
-        </>
+        </SWRConfig>
     )
 }
 
 export default withRouter(Blogs)
+
+export const getServerSideProps = async () => {
+    const { listBlogsWithCatTag: posts } = await sdk.ListBlogsWithCatTag()
+
+    return {
+        props: { posts },
+    }
+}

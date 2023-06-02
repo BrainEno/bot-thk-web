@@ -1,6 +1,79 @@
+$white: #ffffff;
+$black: #000000;
+
 $text-link: #2997ff;
-$text-color: #444;
+$text-color: #444444;
 $background: #eff3f8;
-$border: #ccc;
-$text-light: #999;
+$border: #cccccc;
+$text-light: #999999;
 $primary: #401f7c;
+$scroll-bar: #000000;
+
+
+$bg-light:#eff3f8;
+$link-light:#444444;
+$link-hover-light:#999999;
+$link-active-light:#0071a4;
+
+$themes: (
+  dark: (
+//     backgroundColor: $bg-dark,
+//     loginBackgroundColor: $login-bg-dark,
+//     loginLabel: $login-dark-label,
+//     textColor: $font-light,
+//     formBody: $form-dark-body,
+//     formHeader: $form-dark-header,
+//     formHeaderText: $white,
+//     tableHeader: $table-dark-header,
+//     tableBody: $table-dark-body,
+//     tableBtns: $white,
+//     inputColor: $input-dark-bg,
+//     labelColor: $label-dark-color,
+//     inputTextColor: $font-light,
+//     buttonTextColor: #ffffff,
+//     buttonTextHoverColor: #cbd9eb,
+//     buttonColor: $primary-color,
+//     buttonHoverColor: lighten($primary-color, 10%),
+//     headerColor: $header-dark,
+//     headerBoxShadow: $header-border-bottom-dark,
+//     headerTextColor: $font-light,
+//     headerIconColor: $header-dark-icon,
+//     headerIconHoverColor: $header-dark-icon-hover,
+//     sideBarColor: $sidebar-dark,
+//     sideBarGradient: $sidebar-dark-gradient,
+//     sideBarBoxShadow: $sidebar-dark-box-shadow,
+//     sideBarTextColor: $font-light,
+//     sideBarTextHoverColor: $white,
+//     sideBarTextActiveColor: $primary-color,
+  ),
+  light: (
+//     backgroundColor: $bg-light,
+//     loginBackgroundColor: $login-bg-light,
+//     loginLabel: $login-light-label,
+//     textColor: $font-dark,
+//     formBody: $form-light-body,
+//     formHeader: $form-light-header,
+//     formHeaderText: $black,
+//     tableHeader: $table-light-header,
+//     tableBody: $table-light-body,
+//     tableBtns: $primary-color,
+//     inputColor: $input-light-bg,
+//     inputTextColor: $font-dark,
+//     labelColor: $label-light-color,
+//     buttonTextColor: #ffffff,
+//     buttonTextHoverColor: #cbd9eb,
+//     buttonColor: $primary-color,
+//     buttonHoverColor: lighten($primary-color, 10%),
+//     headerColor: $header-light,
+//     headerBoxShadow: $header-border-bottom-light,
+//     headerTextColor: $font-dark,
+//     headerIconColor: $header-light-icon,
+//     headerIconHoverColor: $header-light-icon-hover,
+//     sideBarColor: $sidebar-light,
+//     sideBarGradient: $sidebar-light-gradient,
+//     sideBarBoxShadow: $sidebar-light-box-shadow,
+//     sideBarTextColor: $font-dark,
+//     sideBarTextHoverColor: #202534,
+//     sideBarTextActiveColor: $primary-color,
+  ),
+);

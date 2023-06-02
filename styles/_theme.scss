@@ -1,0 +1,26 @@
+@use 'sass:map' as map;
+
+$scopedTheme: null;
+@mixin themify($allThemesMap: $themes) {
+  @each $themeName, $themeMap in $allThemesMap {
+    &.theme-#{$themeName},
+    .theme-#{$themeName} & {
+      $scopedTheme: () !global;
+      @each $variableName, $variableValue in $themeMap {
+        $scopedTheme: map-merge(
+          $scopedTheme,
+          (
+            $variableName: $variableValue,
+          )
+        ) !global;
+      }
+
+      @content;
+      $scopedTheme: null !global;
+    }
+  }
+}
+
+@function themed($themeVar) {
+  @return map.get($scopedTheme, $themeVar);
+}

@@ -1,11 +1,17 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { isAuth, preSignup } from '../../actions/auth'
+import { getSdk } from '../../gqlSDK/sdk'
+import { gqlClient } from '../../graphql/gqlClient'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
+
+const sdk = getSdk(gqlClient)
 
 const SignupComponent = () => {
+    const { user, auth } = useAuthStore()
+    const isAuth = useMemo(() => !!user, [user])
     const router = useRouter()
     const [values, setValues] = useState({
         name: '',
@@ -29,11 +35,12 @@ const SignupComponent = () => {
     const { name, email, password, loading, message, showForm } = values
 
     useEffect(() => {
-        isAuth() && router.push('/')
-    }, [router])
+        isAuth && router.push('/')
+    }, [isAuth, router])
 
     const handleSubmit: React.FormEventHandler = (e) => {
         e.preventDefault()
+        setErrors({ username: '', email: '', password: '' })
         if (values.name.trim() === '') {
             setErrors({ ...errors, username: '用户名不得为空，请重新输入' })
             setValues({
@@ -54,41 +61,53 @@ const SignupComponent = () => {
             })
         } else {
             setValues({ ...values, loading: true })
-            const user = { name, email, password }
 
-            preSignup(user).then((data) => {
-                if (data.error) {
-                    if (
-                        data.error === '用户名不得为空，请重新输入' ||
-                        data.error === '该昵称已被使用，换一个试试'
-                    ) {
-                        setErrors({ ...errors, username: data.error })
-                        setValues({ ...values, loading: false })
-                    } else if (
-                        data.error === '邮箱地址不得为空，请重新输入' ||
-                        data.error === '该邮箱已注册'
-                    ) {
-                        setErrors({ ...errors, email: data.error })
-                        setValues({ ...values, loading: false })
-                    } else if (
-                        data.error === '密码不得为空，请重新输入' ||
-                        data.error === '密码长度不得小于6个字符'
-                    ) {
-                        setErrors({ ...errors, password: data.error })
-                        setValues({ ...values, loading: false })
+            sdk.Register({
+                registerName: name,
+                registerEmail: email,
+                registerPassword: password,
+            })
+                .then((res) => {
+                    const { register: token } = res
+
+                    if (token && token !== '') {
+                        setValues({
+                            ...values,
+                            name: '',
+                            email: '',
+                            password: '',
+                            loading: false,
+                            message: '注册成功,即将跳转到首页',
+                            showForm: false,
+                        })
+                        console.log('token', token)
+                        gqlClient.setHeader('authorization', `Bearer ${token}`)
+
+                        auth()
                     }
-                } else {
+                })
+                .catch((err: any) => {
+                    if (err.response && err.response.errors) {
+                        console.log(Object.keys(err.response))
+
+                        const errs = err.response.errors
+                        errs.forEach((err: any) => {
+                            console.log('trace', err)
+                            const { code } = err.extensions
+                            if (code === 'INVALID_EMAIL') {
+                                setErrors({ ...errors, email: err.message })
+                            } else if (code === 'INVALID_USERNAME') {
+                                setErrors({ ...errors, username: err.message })
+                            }
+                        })
+                        setValues({ ...values, loading: false, message: '' })
+                    }
                     setValues({
                         ...values,
-                        name: '',
-                        email: '',
-                        password: '',
                         loading: false,
-                        message: data.message,
-                        showForm: false,
+                        message: '请求超时，请稍后重试',
                     })
-                }
-            })
+                })
         }
     }
 

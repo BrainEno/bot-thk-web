@@ -1,33 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
-const useScrollDown = () => {
-  const [scrollDown, setScrollDown] = useState(false);
-  const handleScrolling = useCallback(() => {
-    let currScrollPos;
-    let preScrollPos =
-      document.body.scrollTop || document.documentElement.scrollTop;
+const useScrollDown = (heightLimit = 1080) => {
+    const [scrollDown, setScrollDown] = useState(false)
 
-    window.addEventListener('scroll', () => {
-      currScrollPos =
-        document.body.scrollTop || document.documentElement.scrollTop;
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const checkScroll = () => {
+                window.scrollY > heightLimit
+                    ? setScrollDown(true)
+                    : setScrollDown(false)
+            }
+            window.addEventListener('scroll', checkScroll)
+            return () => {
+                window.removeEventListener('scroll', checkScroll)
+            }
+        }
+    }, [heightLimit])
 
-      if (currScrollPos - preScrollPos > 0) {
-        setScrollDown(true);
-      } else {
-        setScrollDown(false);
-      }
-      preScrollPos = currScrollPos;
-    });
-  }, []);
+    return scrollDown
+}
 
-  useEffect(() => {
-    handleScrolling();
-    return () => {
-      window.removeEventListener('scroll', handleScrolling);
-    };
-  }, [handleScrolling]);
-
-  return scrollDown;
-};
-
-export default useScrollDown;
+export default useScrollDown

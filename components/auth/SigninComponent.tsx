@@ -1,158 +1,181 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import classNames from 'classnames';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import React, { useEffect } from 'react'
+import { useState } from 'react'
+import classNames from 'classnames'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import { authenticate, isAuth,signin } from '../../actions/auth';
+import { getSdkWithHooks } from '../../gqlSDK/sdk'
+import { gqlClient } from '../../graphql/gqlClient'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
+
+const sdk = getSdkWithHooks(gqlClient)
 
 const SigninComponent = () => {
-  const router = useRouter();
-  const [values, setValues] = useState({
-    email: '',
-    password: '',
-    loading: false,
-    error: '',
-    showForm: true
-  });
+    const user = useAuthStore((state) => state.user)
+    const auth = useAuthStore((state) => state.auth)
 
-  const { email, password, error, loading, showForm } = values;
-
-  useEffect(() => {
-    isAuth() && router.push('/');
-  }, [router]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setValues({ ...values, [name]: value, error: '' });
-  };
-
-  const handleSubmit: React.FormEventHandler = (
-    e: React.FormEvent<HTMLInputElement>
-  ) => {
-    e.preventDefault();
-    if (values.email.trim() === '') {
-      setValues({
-        ...values,
+    const router = useRouter()
+    const [values, setValues] = useState({
+        email: '',
+        password: '',
         loading: false,
-        error: '邮箱地址不得为空，请重新输入'
-      });
-    } else if (values.password.trim() === '') {
-      setValues({
-        ...values,
-        loading: false,
-        error: '密码不得为空，请重新输入'
-      });
-    } else {
-      setValues({ ...values, loading: true, error: '' });
-      const user = { email, password };
+        message: '',
+        showForm: true,
+    })
+    const [errors, setErrors] = useState<{
+        email: string
+        password: string
+    }>({
+        email: '',
+        password: '',
+    })
 
-      signin(user).then((data) => {
-        if (data.error) {
-          setValues({ ...values, error: data.error, loading: false });
-        } else {
-          authenticate(data, () => {
-            if (isAuth() && isAuth().role === 1) {
-              router.push(`/admin`);
-            } else {
-              router.push('/user');
-            }
-          });
-        }
-      });
+    const { email, password, message, loading, showForm } = values
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.name
+        const value = e.target.value
+        setValues({ ...values, [name]: value, message: '' })
     }
-  };
 
-  const errorType = {
-    email: false,
-    password: false
-  };
+    const handleSubmit: React.FormEventHandler = (
+        e: React.FormEvent<HTMLInputElement>
+    ) => {
+        e.preventDefault()
+        setErrors({ email: '', password: '' })
+        console.log(errors)
+        if (values.email.trim() === '') {
+            setErrors({
+                ...errors,
+                password: '',
+                email: '邮箱地址不得为空，请重新输入',
+            })
+            setValues({
+                ...values,
+                loading: false,
+            })
+        } else if (values.password.trim() === '') {
+            setErrors({
+                ...errors,
+                email: '',
+                password: '密码不得为空，请重新输入',
+            })
+            setValues({
+                ...values,
+                loading: false,
+            })
+        } else {
+            setValues({ ...values, loading: true, message: '' })
 
-  if (error)
-    errorType.email =
-      error !== '' &&
-      (error === '邮箱地址不得为空，请重新输入' ||
-        error === '请输入有效的邮箱地址' ||
-        error === '此邮箱账户的尚未注册，请先注册');
+            sdk.Login({ email, password })
+                .then(() => {
+                    auth()
+                    router.push('/')
+                })
+                .catch((err: any) => {
+                    if (err.response && err.response.errors) {
+                        console.log(Object.keys(err.response))
 
-  if (error)
-    errorType.password =
-      error !== '' &&
-      (error === '密码不得为空，请重新输入' ||
-        error === '您的邮箱和密码不匹配，请重新输入' ||
-        error === '密码长度不得小于6个字符');
+                        const errs = err.response.errors
+                        errs.forEach((err: any) => {
+                            const { code } = err.extensions
+                            if (code === 'INVALID_EMAIL') {
+                                setErrors({ ...errors, email: err.message })
+                            } else if (code === 'INVALID_PASSWORD') {
+                                setErrors({ ...errors, password: err.message })
+                            }
+                        })
+                        setValues({ ...values, loading: false, message: '' })
+                    }
+                    setValues({
+                        ...values,
+                        loading: false,
+                        message: '请求超时，请稍后重试',
+                    })
+                })
+        }
+    }
 
-  const showLoading = () =>
-    loading ? <div className="alert">正在加载...</div> : '';
+    useEffect(() => {
+        if (user && user._id) {
+            router.push('/dashboard')
+        }
+    }, [router, user])
 
-  const signinForm = () => {
+    const showLoading = () =>
+        loading ? <div className="alert">正在加载...</div> : ''
+
+    const showMessage = () =>
+        message ? <div className="alert">{message}</div> : ''
+
+    const signinForm = () => {
+        return (
+            <form onSubmit={handleSubmit} className="sign-form">
+                <div className="form-group">
+                    <label
+                        htmlFor="inputEmail"
+                        className={classNames({ error: !!errors.email })}
+                    >
+                        {errors.email || '邮箱'}
+                    </label>
+                    <input
+                        id="inputEmail"
+                        className={classNames('form-input', {
+                            isInvalid: !!errors.email,
+                            error: !!errors.email,
+                        })}
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={handleChange}
+                        placeholder="请输入您的邮箱"
+                    />
+                </div>
+                <div className="form-group">
+                    <label
+                        htmlFor="inputEmail"
+                        className={classNames({ error: !!errors.password })}
+                    >
+                        {errors.password || '密码'}
+                    </label>
+                    <input
+                        type="password"
+                        className={classNames('form-input', {
+                            isInvalid: !!errors.password,
+                            error: !!errors.password,
+                        })}
+                        name="password"
+                        value={password}
+                        onChange={handleChange}
+                        placeholder="请输入您的密码"
+                    />
+                </div>
+                <button type="submit" className="form-btn">
+                    登 录
+                </button>
+            </form>
+        )
+    }
+
     return (
-      <form onSubmit={handleSubmit} className="sign-form">
-        <div className="form-group">
-          <label
-            htmlFor="inputEmail"
-            className={classNames({ error: errorType.email })}
-          >
-            {(errorType.email && error) || '邮箱'}
-          </label>
-          <input
-            id="inputEmail"
-            className={classNames('form-input', {
-              isInvalid: errorType.email,
-              error: errorType.email
-            })}
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-            placeholder="请输入您的邮箱"
-          />
-        </div>
-        <div className="form-group">
-          <label
-            htmlFor="inputEmail"
-            className={classNames({ error: errorType.password })}
-          >
-            {(errorType.password && error) || '密码'}
-          </label>
-          <input
-            type="password"
-            className={classNames('form-input', {
-              isInvalid: errorType.password,
-              error: errorType.password
-            })}
-            name="password"
-            value={password}
-            onChange={handleChange}
-            placeholder="请输入您的密码"
-          />
-        </div>
-        <button type="submit" className="form-btn">
-          登 录
-        </button>
-      </form>
-    );
-  };
+        <>
+            {loading && showLoading()}
+            {message && showMessage()}
+            {showForm && signinForm()}
+            <Link href="/auth/password/forgot" passHref>
+                <span
+                    style={{
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        color: '#0879bf !important',
+                        margin: '10px 0 25px',
+                    }}
+                >
+                    忘记密码
+                </span>
+            </Link>
+        </>
+    )
+}
 
-  return (
-    <>
-      {loading && showLoading()}
-      {showForm && signinForm()}
-      <Link href="/auth/password/forgot" passHref>
-        <span
-          style={{
-            textDecoration: 'underline',
-            cursor: 'pointer',
-            color: '#0879bf !important',
-            margin: '10px 0 25px'
-          }}
-        >
-          忘记密码
-        </span>
-      </Link>
-    </>
-  );
-};
-
-export default SigninComponent;
+export default SigninComponent

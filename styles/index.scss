@@ -1,65 +1,65 @@
 .home {
-  padding: 0 0 3rem 0;
+    padding: 0 0 3rem 0;
 
-  h1 {
-    width: 100%;
-    color: $text-color;
-    padding: 1.5rem 0;
-  }
+    h1 {
+        width: 100%;
+        color: $text-color;
+        padding: 1.5rem 0;
+    }
+}
 
-  .featured-posts-container {
+.featured-posts-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .bg-white {
+.bg-white {
     background: white;
     display: flex;
     justify-content: center;
 
     & .recent-container {
-      & .grid-pagination-container {
-        & .pagination-container {
-          background: white;
-          box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.48),
-            -3px -3px 7px rgba(255, 255, 255, 0.8);
+        & .grid-pagination-container {
+            & .pagination-container {
+                background: white;
+                box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.48),
+                    -3px -3px 7px rgba(255, 255, 255, 0.8);
 
-          .ant-pagination {
-            background-color: white;
-          }
+                .ant-pagination {
+                    background-color: white;
+                }
+            }
         }
-      }
     }
-  }
+}
 
-  .trending-posts-container {
+.trending-posts-container {
     display: flex;
     justify-content: center;
-  }
 }
 
 @media screen and (max-width: 900px) {
-  .home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    h1 {
-      margin-block-start: 1.5rem;
-      margin-block-end: 1.5rem;
+    .home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        h1 {
+            margin-block-start: 1.5rem;
+            margin-block-end: 1.5rem;
+        }
     }
-  }
 
-  .featured-posts-container,
-  .trending-posts-container,
-  .recent-container {
-    flex-direction: column;
-    align-items: center;
-    width: 305px;
-  }
+    .featured-posts-container,
+    .trending-posts-container,
+    .recent-container {
+        flex-direction: column;
+        align-items: center;
+        width: 305px;
+    }
 
-  .bg-white {
-    width: 100%;
-  }
+    .bg-white {
+        width: 100%;
+    }
 }

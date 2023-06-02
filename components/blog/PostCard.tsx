@@ -1,57 +1,68 @@
-import React from 'react';
-import dayjs from 'dayjs';
-import Link from 'next/link';
+import React, { useMemo } from 'react'
+import classNames from 'classnames'
+import dayjs from 'dayjs'
+import Image from 'next/image'
+import Link from 'next/link'
 
-import useWindowSize from '../../hooks/useWindowSize';
-import { IBlog } from '../../types';
+import { IBlog } from '../../types'
 
-import { TagRow } from './index';
-import PostImg from './PostImg';
+import { TagRow } from './index'
+import { ImgUseFor } from './PostMasonry'
 
-interface IPostCardProps {
-  post: IBlog;
-  id: string;
+interface PostCardProps {
+    post: IBlog
+    tagsOnTop: boolean
+    index?: number
+    imgFor?: ImgUseFor
 }
 
-const PostCard: React.FC<IPostCardProps> = ({ post, id }) => {
-  const { windowWidth } = useWindowSize();
+const PostCard: React.FC<PostCardProps> = ({
+    post,
+    tagsOnTop,
+    imgFor,
+    index,
+}) => {
+    const IsExtraCls = imgFor && index !== undefined
+    const extraClassName = useMemo(() => `${imgFor}_${index}`, [imgFor, index])
 
-  return (
-    <div className="post-container" id={id}>
-      <a href={`/blogs/${post._id}`}>
-        <PostImg
-          width={windowWidth! > 900 ? '350px' : '305px'}
-          height={windowWidth! > 900 ? '350px' : '300px'}
-          src={`/blog/image/${post._id}`}
-          radius={5}
-        />
-      </a>
-      <TagRow tags={post.tags} />
-      <section>
-        <h2>{post.title}</h2>
-        <p className="author-text">
-          <span>
-            By:
-            <Link href={post.author.profile!}>
-              {' ' + post.author.name + '  '}
-            </Link>
-          </span>
-          <span>
-            -
-            {dayjs(post.createdAt, 'MMM,DD,YYYY', 'zh', true).format(
-              'MMMM,DD,YYYY'
-            )}
-          </span>
-        </p>
-        <div className="description-text">
-          {post.description.replace(/<[^>]+>/g, '')}
-        </div>
-      </section>
-      <p className="author-text">
-        <Link href={`/blogs/${post._id}`}>Read More...</Link>
-      </p>
-    </div>
-  );
-};
+    return (
+        <Link
+            href="/blogs/[slug]"
+            as={`/blogs/${post.slug}`}
+            className={classNames('post skeleton overlay', {
+                [extraClassName]: IsExtraCls,
+            })}
+        >
+            <Image
+                src={post.imageUri!}
+                fill
+                style={{
+                    objectFit: 'cover',
+                }}
+                priority
+                alt="post image"
+            />
+            <div
+                className="image-text"
+                style={{
+                    justifyContent: tagsOnTop ? 'space-between' : 'flex-end',
+                }}
+            >
+                <TagRow tags={post.tags} />
+                <div>
+                    <h2 className="image-title">{post.title}</h2>
+                    <span className="image-date">
+                        {dayjs(
+                            post.createdAt,
+                            'MMM,DD,YYYY',
+                            'zh',
+                            true
+                        ).format('MMMM,DD,YYYY')}
+                    </span>
+                </div>
+            </div>
+        </Link>
+    )
+}
 
-export default PostCard;
+export default PostCard
