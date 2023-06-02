@@ -20,6 +20,7 @@ const EditBlog = () => {
             {blog && (
                 <BlogForm
                     formType="edit"
+                    blogId={query.id as string}
                     draftBody={blog?.body}
                     draftActive={blog?.active ?? false}
                     draftImg={blog?.imageUri ?? ''}

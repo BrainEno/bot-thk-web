@@ -126,6 +126,10 @@ export type MutationNewCatArgs = {
     catName: Scalars['String']
 }
 
+export type MutationDeleteBlogByIdArgs = {
+    blogId: Scalars['String']
+}
+
 export type MutationNewTagArgs = {
     tagName: Scalars['String']
 }
@@ -314,6 +318,11 @@ export type UpdateBlogMutationVariables = Exact<{
 export type UpdateBlogMutation = {
     __typename?: 'Mutation'
     updateBlog: { __typename?: 'NewBlogRes'; success: boolean }
+}
+
+export type DeleteBlogByIdMutation = {
+    __typename?: 'Mutation'
+    deleteBlogById: boolean
 }
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
@@ -631,6 +640,12 @@ export const DeleteTagDocument = gql`
         deleteTag(id: $deleteTagId)
     }
 `
+export const DeleteBlogByIdDocument = gql`
+    mutation DeleteBlogById($blogId: String!) {
+        deleteBlogById(blogId: $blogId)
+    }
+`
+
 export const NewTagDocument = gql`
     mutation NewTag($tagName: String!) {
         newTag(tagName: $tagName)
@@ -1064,6 +1079,21 @@ export function getSdk(
                         { ...requestHeaders, ...wrappedRequestHeaders }
                     ),
                 'DeleteCat',
+                'mutation'
+            )
+        },
+        DeleteBlogById(
+            variables: MutationDeleteBlogByIdArgs,
+            requestHeaders?: Dom.RequestInit['headers']
+        ): Promise<DeleteBlogByIdMutation> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<DeleteBlogByIdMutation>(
+                        DeleteBlogByIdDocument,
+                        variables,
+                        { ...requestHeaders, ...wrappedRequestHeaders }
+                    ),
+                'DeleteBlogById',
                 'mutation'
             )
         },

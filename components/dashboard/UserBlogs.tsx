@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react'
+import { useSWRConfig } from 'swr'
 
+import { sdk } from '../../gqlSDK'
 import { CurrentUserQuery, GetUserBlogsQuery } from '../../gqlSDK/sdk'
+import { getErrorMsg } from '../../helpers/getErrorMsg'
 import AddBtn from '../Common/AddBtn'
+import { showAlert } from '../Common/Alert'
 import Modal from '../Common/Modal'
 import { Pagination } from '../Common/Pagination'
 import MyBrand from '../MyBrand'
@@ -15,9 +19,11 @@ interface IUserBlogsProps {
     user: CurrentUserQuery['currentUser']
 }
 const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
+    const { mutate } = useSWRConfig()
     const [current, setCurrent] = useState(1)
     const [selectedId, setSelectedId] = useState('')
     const [showModal, setShowModal] = useState(false)
+    const [error, setError] = useState('')
 
     const paginatedBlogs = useMemo(() => {
         const lastIndex = PAGE_SIZE * current
@@ -28,12 +34,22 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
 
     const handleDeleteBlog = (id: string) => () => {
         console.log('delete', id)
-        // sdk.DeleteBlogById(id)
-        setShowModal(false)
+        sdk.DeleteBlogById({ blogId: id })
+            .then((res) => {
+                if (res.deleteBlogById) {
+                    setError('')
+                    mutate('profile/user-blogs')
+                    setShowModal(false)
+                }
+            })
+            .catch((err) => {
+                if (err) setError(getErrorMsg(err))
+            })
     }
 
     return (
         <div className="dashboard-right-container">
+            {showAlert(error, 'error')}
             {showModal && (
                 <Modal
                     onClose={() => setShowModal(false)}
