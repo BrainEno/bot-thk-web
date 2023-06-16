@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 module.exports = withBundleAnalyzer({
+    staticPageGenerationTimeout: 300,
     compiler: {
         styledComponents: true,
     },
