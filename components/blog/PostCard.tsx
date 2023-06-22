@@ -35,6 +35,8 @@ const PostCard: React.FC<PostCardProps> = ({
         >
             <Image
                 src={post.imageUri!}
+                sizes="(max-width:900px) 400px,
+                1350px"
                 fill
                 style={{
                     objectFit: 'cover',

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { BiLogIn, BiLogOut } from 'react-icons/bi'
 import { HiOutlineMenu } from 'react-icons/hi'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -6,7 +7,8 @@ import { useRouter } from 'next/router'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useClickOutside } from '../../hooks/useClickOutside'
-import useScrollDown from '../../hooks/useScrollDown'
+import useScrollDirection from '../../hooks/useScrollDirection'
+import useWindowSize from '../../hooks/useWindowSize'
 import Avatar from '../Avatar'
 import Search from '../blog/Search'
 import MyBrand from '../MyBrand'
@@ -17,13 +19,20 @@ const Header = () => {
     const [isAuth, setIsAuth] = useState(false)
     const { logOut } = useAuthStore()
     const router = useRouter()
-    const scrollDown = useScrollDown()
     const [menuActive, setMenuActive] = useState(false)
+    const { windowWidth } = useWindowSize()
+
+    const isDesktop = useMemo(
+        () => windowWidth && windowWidth > 900,
+        [windowWidth]
+    )
 
     const menuRef = useRef<HTMLDivElement>(null)
     const btnRef = useRef<HTMLButtonElement>(null)
 
     useClickOutside(btnRef, () => setMenuActive(false), menuRef)
+    const scrollDirection = useScrollDirection()
+    const showHeader = scrollDirection === 'down'
 
     const handleMenuClick = (e: MouseEvent) => {
         e.preventDefault()
@@ -47,19 +56,31 @@ const Header = () => {
         <div
             className="site-navigation"
             style={
-                scrollDown
-                    ? { opacity: '0', top: '-65px' }
-                    : { opacity: '1', top: '0px' }
+                !menuActive && showHeader
+                    ? {
+                          opacity: '0',
+                          transform: 'translate(0,-65px)',
+                      }
+                    : { opacity: '1', transform: 'translate(0,0px)' }
             }
         >
-            <span className="menu-title">
+            <div className="menu-title">
                 <MyBrand
                     width={45}
                     height={45}
                     fontSize={'24px'}
                     cursor="pointer"
                 />
-            </span>
+            </div>
+
+            <button
+                className="menu-btn"
+                onClick={handleMenuClick as any}
+                ref={btnRef}
+            >
+                <HiOutlineMenu />
+            </button>
+
             <div
                 className={`menu-content-container ${menuActive && 'active'}`}
                 onMouseLeave={() => setMenuActive(false)}
@@ -128,19 +149,18 @@ const Header = () => {
                     </li>
                 </ul>
                 <Search />
-                <div>
+                <div className="log-container">
                     {isAuth ? (
                         <div className="log-ul">
-                            <div onClick={handleLogOut}>退出</div>
+                            <div onClick={handleLogOut}>
+                                {isDesktop ? '退出' : <BiLogOut size={25} />}
+                            </div>
                         </div>
                     ) : (
                         <div className="log-ul">
                             <div>
                                 <Link className="nav-link" href="/signin">
-                                    登录
-                                </Link>
-                                <Link className="nav-link" href="/signup">
-                                    注册
+                                    {isDesktop ? '登录' : <BiLogIn size={25} />}
                                 </Link>
                             </div>
                         </div>
@@ -170,13 +190,6 @@ const Header = () => {
                     </div>
                 )}
             </div>
-            <button
-                className="menu-btn"
-                onClick={handleMenuClick as any}
-                ref={btnRef}
-            >
-                <HiOutlineMenu />
-            </button>
         </div>
     )
 }

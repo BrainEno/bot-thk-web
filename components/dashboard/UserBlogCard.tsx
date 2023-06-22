@@ -1,14 +1,12 @@
 import React from 'react'
 import { FiDelete, FiEdit } from 'react-icons/fi'
 import { RxReader } from 'react-icons/rx'
-import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 
 import { GetUserBlogsQuery } from '../../gqlSDK/sdk'
 
 interface UserBlogCardProps {
-    isSelected: boolean
     setSelectedId: (id: string) => void
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>
     username: string
@@ -18,7 +16,6 @@ interface UserBlogCardProps {
 export const UserBlogCard = ({
     username,
     blog,
-    isSelected,
     setSelectedId,
     setShowModal,
 }: UserBlogCardProps) => {
@@ -33,11 +30,12 @@ export const UserBlogCard = ({
         setShowModal(true)
     }
 
+    const handleRead = (slug: string) => () => {
+        router.push(`/blogs/${slug}`)
+    }
+
     return (
-        <div
-            className={classNames('blog-card', { selected: isSelected })}
-            onClick={() => setSelectedId(blog._id)}
-        >
+        <div className="blog-card">
             <h5>{blog.title}</h5>
             <span className="desc-text">
                 By: {username} | {dayjs(blog.createdAt).format('MMM,DD-YYYY')}
@@ -49,7 +47,7 @@ export const UserBlogCard = ({
             <div className="blog-icon-container">
                 <FiEdit onClick={() => handleEdit(blog._id)} />
                 <FiDelete onClick={handleDeleteClick(blog._id)} />
-                <RxReader />
+                <RxReader onClick={handleRead(blog.slug)} />
             </div>
         </div>
     )

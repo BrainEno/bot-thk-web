@@ -11,17 +11,15 @@ interface IBlogsWithTagProps {
     tagSlug: string
     tagBlogs: IBlog[]
 }
-
 const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({
     tagBlogs,
     tagName,
     tagSlug,
 }) => {
+    const titleText = `${tagName} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
         <Head>
-            <title>
-                {tagName} | {process.env.NEXT_PUBLIC_APP_NAME}
-            </title>
+            <title>{titleText}</title>
             <meta name="description" content={`${tagName} articles`} />
             <link
                 rel="canonical"

@@ -15,7 +15,7 @@ const MyBrand: React.FC<BrandProps> = ({
 }) => (
     <div
         style={{
-            display: 'flex',
+            display: 'inline-flex',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',

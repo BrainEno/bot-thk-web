@@ -7,9 +7,12 @@
     justify-content: space-between;
     align-items: center;
     color: $text-color;
-    position: sticky;
+    position: fixed;
     z-index: 100;
     top: 0;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 500ms;
     @include hover-transition;
 
     .menu-title {
@@ -126,23 +129,37 @@
 @media screen and (max-width: 900px) {
     .site-navigation {
         width: 100%;
+        height: 65px;
+        display: flex;
+        justify-content: space-between;
 
-        & svg {
+        & .mune-title {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        & button svg {
             width: 25px;
             height: 25px;
+            color: black;
         }
 
         .menu-content-container {
-            width: 200px;
-            height: calc(100% - 65px);
+            width: 55vw;
+            height: calc(100vh - 65px);
             background: $white;
             position: fixed;
             top: 65px;
             left: -350px;
             transition: 300ms ease left;
             flex-direction: column-reverse;
+            justify-content: center;
+            align-items: center;
             padding: 0;
-            padding-left: 10px;
+            z-index: 100;
 
             .my-avatar {
                 margin-left: 0;
@@ -151,7 +168,8 @@
             a {
                 width: 100%;
                 padding: 0;
-                letter-spacing: 2px;
+                letter-spacing: 3px;
+                text-align: center;
             }
 
             li {
@@ -163,6 +181,7 @@
 
             ul {
                 flex-direction: column;
+                align-items: center;
                 justify-content: flex-start;
                 padding: 0;
             }
@@ -171,10 +190,30 @@
             li,
             .menu-avtar-container {
                 width: 100%;
+                padding: 0;
+                margin: 0;
             }
 
             .menu-avtar-container {
-                padding-top: 20px;
+                width: calc(55vw - 40px);
+                margin: 20px 0;
+                padding: 0 20px;
+
+                a {
+                    width: max-content;
+                }
+
+                & .my-avatar {
+                    margin: 0;
+                    width: 35px;
+                    height: 35px;
+                }
+
+                .menu-avatar-name {
+                    margin-left: 10px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                    font-weight: 700;
+                }
             }
 
             &.active {
@@ -191,21 +230,35 @@
             justify-content: center;
         }
 
+        .log-container {
+            order: -3;
+            align-self: flex-start;
+        }
+
         .log-ul {
             margin-left: 0;
-            margin-top: 10px;
-            justify-content: flex-start;
+            margin: 0 0 30px;
             padding: 0;
-            padding-top: 25px;
             height: max-content;
+            width: 55vw;
 
-            li {
-                height: 60px;
+            &>div {
+                display: flex;
+                flex-direction: column;
+                height: 40px;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                font-size: 20px;
+                letter-spacing: 2px;
 
-                a {
-                    font-size: 20px;
-                    margin-left: 0px;
+
+                .nav-link {
+                    margin: 0;
                     padding: 0;
+                    text-align: center;
+                    margin-bottom: 10px;
                 }
             }
         }

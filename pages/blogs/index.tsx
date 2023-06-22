@@ -20,9 +20,10 @@ const Blogs = ({ router, posts }: BlogsProps) => {
 
     const isInitialLoading = !data && !error
 
+    const titleText = `All Blogs | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
         <Head>
-            <title>All Blogs | {process.env.NEXT_PUBLIC_APP_NAME}</title>
+            <title>{titleText}</title>
             <meta
                 name="description"
                 content="Cruel Literature,novels,poemes,and else"

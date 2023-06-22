@@ -44,13 +44,12 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         )
     }, [blog])
 
+    const titleText = `${blog!.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
         <>
             {
                 <Head>
-                    <title>
-                        {blog!.title} | {process.env.NEXT_PUBLIC_APP_NAME}
-                    </title>
+                    <title>{titleText}</title>
                     <meta name="description" content={blog!.description} />
                     <link
                         rel="canonical"

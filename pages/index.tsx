@@ -22,10 +22,11 @@ const Index: React.FC<IndexPageProps> = ({
     trending,
     featured,
 }) => {
+    const titleText = `Home | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = useCallback(() => {
         return (
             <Head>
-                <title>{`Home | ${process.env.NEXT_PUBLIC_APP_NAME}`}</title>
+                <title>{titleText}</title>
                 <meta
                     name="description"
                     content="Cruel Literature,novels,poemes,and else"
@@ -64,7 +65,7 @@ const Index: React.FC<IndexPageProps> = ({
                 <meta name="theme-color" content="#eff3f8" />
             </Head>
         )
-    }, [router.pathname])
+    }, [router.pathname, titleText])
 
     return (
         <>

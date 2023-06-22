@@ -12,11 +12,11 @@ interface ICategoryProps {
     catSlug: string
 }
 const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
+    const titleText = `${catName} | ${process.env.NEXT_PUBLIC_APP_NAME}`
+    
     const head = () => (
         <Head>
-            <title>
-                {catName} | {process.env.NEXT_PUBLIC_APP_NAME}
-            </title>
+            <title>{titleText}</title>
             <meta name="description" content={`${catName} articles`} />
             <link
                 rel="canonical"

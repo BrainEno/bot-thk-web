@@ -1,11 +1,11 @@
 .dashboard-right-container {
     background: linear-gradient(89.72deg, #f0f4f9 -4.95%, #eaebf3 578.66%);
     display: flex;
-    padding: 0px;
     flex: 1;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    overflow: hidden;
 
     & .header-container {
         height: 180px;
@@ -87,9 +87,7 @@
         }
     }
 
-    & .blog-card.selected {
-        transform: scale(1.01);
-    }
+
 
     .blog-icon-container {
         display: flex;
@@ -97,7 +95,7 @@
         justify-content: flex-end;
         width: 100%;
 
-        svg{
+        svg {
             margin-left: 8px;
         }
 
@@ -109,8 +107,9 @@
 
 @media screen and (max-width: 900px) {
     .dashboard-right-container {
-        width: 100%;
-        height: max-content;
+        position: absolute;
+        top: 55vh;
+        width: 100vw;
         padding: 20px 0;
         justify-content: center;
         align-items: center;

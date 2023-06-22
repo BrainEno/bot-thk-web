@@ -29,12 +29,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     .all-blogs-container {
       width: 100%;
       margin: 0;
       justify-content: center;
+
       & h1 {
-        margin-top: 50px;
+        margin-top: 105px;
       }
 
       & .all-blog-cards {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { NextRouter, withRouter } from 'next/router'
@@ -19,6 +19,7 @@ interface UserDashboardProps {
 const sdk = getSdkWithHooks(gqlClient)
 
 const UserDashboard = ({ user, router }: UserDashboardProps) => {
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const { data, error } = sdk.useGetUserBlogs(
         user && user._id ? 'profile/user-blogs' : null,
         {
@@ -28,9 +29,15 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
     const userBlogs = data?.getUserBlogs
 
     useEffect(() => {
-        setTimeout(() => {
-            if (!user && !data && error) router.push('/signin')
-        }, 2000)
+        if (!timer.current) {
+            timer.current = setTimeout(() => {
+                if (!user && !data && error) router.push('/signin')
+            }, 2000)
+        }
+
+        return () => {
+            timer.current = null
+        }
     }, [data, error, router, user])
 
     return (

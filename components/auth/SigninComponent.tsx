@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { getSdkWithHooks } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+import { showAlert } from '../Common/Alert'
 
 const sdk = getSdkWithHooks(gqlClient)
 
@@ -102,12 +103,6 @@ const SigninComponent = () => {
         }
     }, [router, user])
 
-    const showLoading = () =>
-        loading ? <div className="alert">正在加载...</div> : ''
-
-    const showMessage = () =>
-        message ? <div className="alert">{message}</div> : ''
-
     const signinForm = () => {
         return (
             <form onSubmit={handleSubmit} className="sign-form">
@@ -159,8 +154,8 @@ const SigninComponent = () => {
 
     return (
         <>
-            {loading && showLoading()}
-            {message && showMessage()}
+            {loading && showAlert('正在加载', 'success')}
+            {message && showAlert(message, 'warn')}
             {showForm && signinForm()}
             <Link href="/auth/password/forgot" passHref>
                 <span

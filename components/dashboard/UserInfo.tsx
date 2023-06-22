@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { FiUsers } from 'react-icons/fi'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { sdk } from '../../gqlSDK'
 import { CurrentUserQuery } from '../../gqlSDK/sdk'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+import useWindowSize from '../../hooks/useWindowSize'
 import Avatar from '../Avatar'
 
 interface UserInfoProps {
@@ -17,6 +18,13 @@ const UserInfo = ({ user }: UserInfoProps) => {
     const [bio, setBio] = useState(user.about ?? '')
     const [isEditing, setIsEditing] = useState(false)
     const auth = useAuthStore((state) => state.auth)
+
+    const { windowWidth } = useWindowSize()
+
+    const isDesktop = useMemo(
+        () => windowWidth && windowWidth > 900,
+        [windowWidth]
+    )
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -45,7 +53,7 @@ const UserInfo = ({ user }: UserInfoProps) => {
                     <Link href={`/profile/${user.username}`}>
                         <Avatar
                             title="更换头像"
-                            size={100}
+                            size={isDesktop ? 100 : 80}
                             radius={100}
                             src={`${user.photo}`}
                             char={user.name[0].toUpperCase()}
@@ -54,7 +62,7 @@ const UserInfo = ({ user }: UserInfoProps) => {
                 </div>
                 {!isEditing && (
                     <>
-                        <span>{user.name}</span>
+                        <span className='userInfo-name'>{user.name}</span>
                         <div>
                             <span className="userInfo-text">{user.email}</span>
                             {user && (
