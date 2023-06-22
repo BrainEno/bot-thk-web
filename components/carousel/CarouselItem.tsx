@@ -37,12 +37,10 @@ export const CarouselItem: React.FC<ICarouselItemProps> = ({
                 opacity: 0,
             }),
             center: {
-                // zIndex: 1,
                 x: 0,
                 opacity: 1,
             },
             exit: () => ({
-                // zIndex: 0,
                 x: toRight ? -300 : 300,
                 opacity: 0,
             }),

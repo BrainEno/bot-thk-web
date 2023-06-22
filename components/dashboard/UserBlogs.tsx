@@ -33,7 +33,6 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
     }, [current, blogs])
 
     const handleDeleteBlog = (id: string) => () => {
-        console.log('delete', id)
         sdk.DeleteBlogById({ blogId: id })
             .then((res) => {
                 if (res.deleteBlogById) {
@@ -96,7 +95,6 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
                     ? paginatedBlogs.map((b) => (
                           <UserBlogCard
                               setSelectedId={setSelectedId}
-                              isSelected={b._id === selectedId}
                               key={b._id}
                               username={user?.name || 'unkwnown'}
                               blog={b}

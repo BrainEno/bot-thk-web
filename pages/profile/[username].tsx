@@ -32,11 +32,11 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         if (error) router.push('/signin')
     }, [error, router])
 
+    const titleText = `${user?.username} | ${process.env.NEXT_PUBLIC_APP_NAME}`
+    
     const head = () => (
         <Head>
-            <title>
-                {user?.username} | {process.env.NEXT_PUBLIC_APP_NAME}
-            </title>
+            <title>{titleText}</title>
             <meta name="description" content={`Blogs by ${user?.username}`} />
             <link
                 rel="canonical"
@@ -126,7 +126,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                         <div className="blogs-container">
                             {blogs && blogs.length > 0 && paginatedBlogs
                                 ? paginatedBlogs.map((b, i: number) => (
-                                      <a href={`/blogs/${b._id}`} key={i}>
+                                      <a href={`/blogs/${b.slug}`} key={i}>
                                           <div className="blog-card">
                                               <h5>{b.title}</h5>
                                               <span className="desc-text">

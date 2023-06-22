@@ -17,14 +17,14 @@ const BannerImg = ({ imgSrc, alt }: { imgSrc: string; alt?: string }) => {
                     className="banner-img"
                     priority={true}
                     src={imgSrc}
+                    sizes="(max-width: 900px) 305px,
+                               350px"
                     fill
                     alt={alt || 'banner'}
                     style={{
                         objectFit: 'cover',
                         objectPosition: 'center',
                     }}
-                    sizes="(max-width: 900px) 305px,
-                               500px"
                     quality={windowWidth! > 900 ? 75 : 45}
                 />
             )}

@@ -45,6 +45,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+
         h1 {
             margin-block-start: 1.5rem;
             margin-block-end: 1.5rem;
@@ -54,9 +55,19 @@
     .featured-posts-container,
     .trending-posts-container,
     .recent-container {
+        display: flex;
         flex-direction: column;
         align-items: center;
         width: 305px;
+
+        & a {
+            display: block;
+            width: max-content;
+
+            h1 {
+                width: max-content;
+            }
+        }
     }
 
     .bg-white {
