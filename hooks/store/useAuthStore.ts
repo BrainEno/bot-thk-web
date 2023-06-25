@@ -4,8 +4,6 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { CurrentUserQuery, getSdk } from '../../gqlSDK/sdk'
 import { gqlClient } from '../../graphql/gqlClient'
 
-const sdk = getSdk(gqlClient)
-
 type AuthStatus = 'unknown' | 'authenticated'
 interface AuthState {
     user: CurrentUserQuery['currentUser'] | null
@@ -14,6 +12,7 @@ interface AuthState {
     logOut: () => void
 }
 
+const sdk = getSdk(gqlClient)
 export const useAuthStore = create(
     persist(
         (set) => ({

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { AiOutlineInfoCircle, AiOutlineWarning } from 'react-icons/ai'
+import { LiaCheckCircle } from 'react-icons/lia'
 
-type AlertColor = 'error' | 'warn' | 'success'
+type AlertColor = 'error' | 'warn' | 'success' | 'info'
 
 interface AlertProps {
     message: string
@@ -15,15 +17,18 @@ export const MyAlert: React.FC<AlertProps> = ({ message, severity }) => {
             {open && (
                 <div
                     onClick={() => setOpen(false)}
-                    style={{
-                        position: 'fixed',
-                        top: '50%',
-                        left: '50%',
-                        zIndex: 100,
-                        transform: 'translateX(-50%) translateY(-50%)',
-                    }}
-                    className={severity ? severity : 'success'}
+                    className={`alert ${severity ? severity : 'info'}`}
                 >
+                    {severity === 'warn' ? (
+                        <AiOutlineWarning size={18} />
+                    ) : severity === 'success' ? (
+                        <LiaCheckCircle size={18} />
+                    ) : (
+                        <AiOutlineInfoCircle
+                            size={18}
+                            color={severity === 'error' ? '#fff' : '#06111b'}
+                        />
+                    )}
                     {message}
                 </div>
             )}

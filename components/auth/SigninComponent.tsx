@@ -69,9 +69,11 @@ const SigninComponent = () => {
             setValues({ ...values, loading: true, message: '' })
 
             sdk.Login({ email, password })
-                .then(() => {
-                    auth()
-                    router.push('/')
+                .then((res) => {
+                    if (res.login) {
+                        auth()
+                        router.push('/')
+                    }
                 })
                 .catch((err: any) => {
                     if (err.response && err.response.errors) {
@@ -154,7 +156,7 @@ const SigninComponent = () => {
 
     return (
         <>
-            {loading && showAlert('正在加载', 'success')}
+            {loading && showAlert('正在加载...', 'info')}
             {message && showAlert(message, 'warn')}
             {showForm && signinForm()}
             <Link href="/auth/password/forgot" passHref>

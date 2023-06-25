@@ -73,10 +73,7 @@ export type Comment = {
     updatedAt: Scalars['DateTime']
 }
 
-export type LoginRes = {
-    __typename?: 'LoginRes'
-    accessToken: Scalars['String']
-}
+export type LoginRes = boolean;
 
 export type Mutation = {
     __typename?: 'Mutation'
@@ -241,7 +238,7 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = {
     __typename?: 'Mutation'
-    login: { __typename?: 'LoginRes'; accessToken: string }
+    login:boolean 
 }
 
 export type CreateBlogMutationVariables = Exact<{
@@ -603,9 +600,7 @@ export const RegisterDocument = gql`
 `
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
-        login(password: $password, email: $email) {
-            accessToken
-        }
+        login(password: $password, email: $email)
     }
 `
 export const CreateBlogDocument = gql`
