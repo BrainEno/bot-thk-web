@@ -1,0 +1,406 @@
+.blog-form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: fixed;
+  height: calc(100vh - 110px);
+  top: 90px;
+  overflow-y: scroll;
+
+
+  .blog-form {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    position: relative;
+
+    .form-btn,
+    .icon-btn {
+      cursor: pointer;
+      background-color: $white;
+      border: none;
+      margin-left: 12px;
+      border-radius: 3px;
+      box-shadow: -2px -2px 2px #eff3f8, 2px 2px 3px rgba(136, 165, 191, 0.48);
+
+      &:hover {
+        box-shadow: inset -2px -2px 3px #e9eef5, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
+
+      }
+
+    }
+
+    .blog-form-bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $white;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+      position: sticky;
+      transform: translateY(1px);
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+
+      .tags-form {
+        position: relative;
+        width: 70%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .icon-btn {
+          position: absolute;
+          left: 0px;
+        }
+
+        .tag-list-container {
+          position: absolute;
+          left: 50px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+
+
+          .tag-list {
+            display: flex;
+            flex-direction: row;
+
+
+            .chip {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 1.5px solid #c6cad0;
+              border-radius: 20px;
+              height: 20px;
+              padding: 6px 8px;
+              margin-left: 8px;
+              cursor: pointer;
+
+              &.selected {
+                border: 1.5px solid #0066cc;
+              }
+            }
+          }
+
+
+          .tag-input {
+            width: 80px;
+            height: 20px;
+            display: flex;
+            flex-direction: row;
+            border: 1px solid #c6cad0;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            padding: 6px 8px;
+
+            & input {
+              width: 80%;
+              border: none;
+              outline: none;
+              flex: 1;
+            }
+
+            .tag-input-btn {
+              display: none;
+              border: none;
+              height: 100%;
+              background-color: transparent;
+
+              &.show {
+                display: block;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+
+        .tag-add-btn {
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          display: block;
+          border-radius: 50%;
+          border: 1px solid #c6cad0;
+          margin-left: 10px;
+          margin-right: 10px;
+          cursor: pointer;
+        }
+
+      }
+
+      .icon-btn {
+        box-shadow: none;
+        border: none;
+        background-color: transparent;
+        width: 30px;
+        width: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & svg {
+          width: 30px;
+          height: 20px;
+        }
+      }
+
+      .form-btns {
+        padding: 10px 0;
+
+        .form-btn {
+          width: 70px;
+          padding: 8px 12px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          margin-left: -5px;
+          margin-right: 20px;
+
+          &:hover {
+            color: #0066cc;
+          }
+        }
+      }
+    }
+
+
+    .title-container {
+      padding: 12px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: $white;
+      border: none;
+      border-bottom: solid 2.5px #eff3f8;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      z-index: 2;
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+
+
+      .separator {
+        display: flex;
+        align-items: center;
+        line-height: 1.2em;
+        padding-bottom: 8px;
+        height: 100%;
+        font-size: 24px;
+        font-weight: 500;
+        color: #b7c2cf;
+        margin-right: 16px;
+      }
+
+      .title-form {
+        width: calc(100% - 25px);
+        padding-left: 25px;
+        height: 40px;
+        border: none;
+        font-size: 17px;
+        outline: none;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .blog-form-icons {
+        display: flex;
+        flex-direction: row;
+        padding-right: 10px;
+
+        .icon-btn {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          &:hover {
+            color: #0066cc;
+
+            & svg path {
+              stroke: #0066cc;
+            }
+
+
+          }
+        }
+      }
+    }
+
+    .body-container {
+      max-height: max-content;
+
+      & .banner-container {
+        position: sticky;
+      }
+
+      .ql-toolbar.ql-snow {
+        border: none !important;
+        background-color: $white;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .ql-container.ql-snow {
+        border: none !important;
+        background-color: $white;
+      }
+
+      .ql-editor {
+        border: none !important;
+        background-color: $white;
+        font-size: 16px;
+        letter-spacing: 1px;
+        height: 765px;
+      }
+    }
+
+  }
+
+
+}
+
+@media screen and (max-width: 900px) {
+  .blog-form-container {
+    width: 100%;
+    padding: 0;
+    top: 0;
+    height: calc(100vh - 40px);
+    padding: 20px 0;
+    justify-content: center;
+    align-items: center;
+
+
+
+    .blog-form {
+      margin: 0;
+      padding: 0;
+      width: 320px;
+      height: 80%;
+      box-shadow: none;
+
+      .title-container {
+        padding: 4px;
+        .title-form {
+          padding-left: 12px;
+          font-size: 16px;
+        }
+      }
+
+      .body-container {
+        .ql-toolbar.ql-snow{
+          z-index: 2;
+        }
+
+        .ql-editor {
+          font-size: 14px;
+          letter-spacing: 1px;
+          height: 35vh;
+        }
+
+        &.without-img{
+          .ql-editor {
+          font-size: 14px;
+          letter-spacing: 1px;
+          height: 62vh;
+        }
+        }
+      }
+
+      .blog-form-bottom {
+        .tags-form {
+          .icon-btn {
+            left: 0;
+            margin: 0 8px;
+          }
+
+          .tag-add-btn {
+            display: none;
+          }
+
+          .tag-list-container {
+            display: flex;
+            background:#1e1e1e;
+            justify-content: center;
+            align-items: center;
+            width: 90px;
+            left: 35px;
+            bottom: 0;
+            padding: 0;
+            margin: 0;
+
+            .tag-list {
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              margin: 0;
+              padding: 0;
+              width: 100%;
+
+              .chip {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                margin: 0;
+                width: calc(100% - 12px);
+                border: none;
+                border-radius: 0;
+                height: 20px;
+                padding: 5px 6px;
+                font-size: 12px;
+                color: #c1c1c1;
+                text-transform: uppercase;
+
+                & svg{
+                  margin-right: 4px;
+                }
+
+                &.selected {
+                  border: none;
+                  background: #252525;
+                  color: $white;
+                }
+              }
+            }
+          }
+        }
+
+        .form-btns {
+          display: flex;
+
+          .form-btn {
+            font-size: 13px;
+            font-weight: 600;
+            width: 50px;
+            height: 25px;
+            padding: 7px 4px 7px 4.65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+
+
+  }
+}
