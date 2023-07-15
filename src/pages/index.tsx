@@ -116,7 +116,7 @@ const Index: React.FC<IndexPageProps> = ({
 
 export const getStaticProps = async () => {
     const { getCatBlogs: recent } = await sdk.GetCatBlogs({
-        getCatBlogsSlug: 'recent-post',
+        getCatBlogsSlug:'rencent-post'
     })
     const { getCatBlogs: trending } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'trending',
@@ -124,7 +124,6 @@ export const getStaticProps = async () => {
     const { getCatBlogs: featured } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'featured',
     })
-
     return {
         props: { recent, trending, featured },
         revalidate: 1,

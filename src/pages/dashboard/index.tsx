@@ -1,3 +1,5 @@
+"use client"
+
 import UserDashboard from '../../components/dashboard/UserDashboard'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 

@@ -18,7 +18,7 @@ const EditBlog = () => {
         data: blog,
         error,
     } = useQuery<GetBlogByIdQuery, Error, GetBlogByIdQuery['getBlogById']>(
-        ['GetBlogById'],
+        ['GetBlogById', query.id],
         fetcher(GetBlogByIdDocument, { blogId: query.id as string }),
         { enabled: !!(query && query.id), select: (res) => res.getBlogById }
     )

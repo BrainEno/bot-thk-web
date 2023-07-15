@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -11,7 +11,9 @@ import {
     GetUserBlogsQueryVariables,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
+import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 
+import FollowInfoList from './FollowInfoList'
 import UserBlogs from './UserBlogs'
 import UserInfo from './UserInfo'
 
@@ -23,6 +25,9 @@ interface UserDashboardProps {
 }
 
 const UserDashboard = ({ user, router }: UserDashboardProps) => {
+    const [followStatus, setFollowStatus] = useState<
+        'HIDDEN' | 'FOLLOWER' | 'FOLLOWING'
+    >('HIDDEN')
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const {
@@ -30,13 +35,23 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
         error,
         isLoading,
     } = useQuery<GetUserBlogsQuery, Error, GetUserBlogsQuery['getUserBlogs']>(
-        ['getUserBlogs'],
+        ['getUserBlogs', user._id],
         fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
             GetUserBlogsDocument,
             { userId: user._id }
         ),
-        { enabled: !!(user && user._id), select: (res) => res.getUserBlogs }
+        {
+            enabled: !!(user && user._id),
+            refetchOnReconnect: true,
+            select: (res) => res.getUserBlogs,
+        }
     )
+
+    const { followers, followings } = useFollowInfo({
+        enabled: !(user && user.username),
+        tag: user.name,
+        username: user.username,
+    })
 
     useEffect(() => {
         if (!timer.current) {
@@ -52,8 +67,18 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
 
     return (
         <div className="user-dashboard">
-            {user && <UserInfo user={user} />}
-            {userBlogs && <UserBlogs blogs={userBlogs} user={user} />}
+            {user && <UserInfo user={user} setFollowStatus={setFollowStatus} />}
+            {followStatus === 'HIDDEN' && userBlogs && (
+                <UserBlogs blogs={userBlogs} user={user} />
+            )}
+            {followStatus !== 'HIDDEN' && (
+                <FollowInfoList
+                    type={followStatus}
+                    followers={followers}
+                    followings={followings}
+                    hideFollowInfo={() => setFollowStatus('HIDDEN')}
+                />
+            )}
         </div>
     )
 }

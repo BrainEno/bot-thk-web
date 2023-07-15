@@ -8,7 +8,6 @@ import { sdk } from '../../generated/sdk'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { showAlert } from '../Common/Alert'
 
-
 const SigninComponent = () => {
     const user = useAuthStore((state) => state.user)
     const auth = useAuthStore((state) => state.auth)
@@ -42,7 +41,6 @@ const SigninComponent = () => {
     ) => {
         e.preventDefault()
         setErrors({ email: '', password: '' })
-        console.log(errors)
         if (values.email.trim() === '') {
             setErrors({
                 ...errors,
@@ -68,7 +66,7 @@ const SigninComponent = () => {
 
             sdk.Login({ email, password })
                 .then((res) => {
-                    if (res.login) {
+                    if (res.login.ok) {
                         auth()
                         router.push('/')
                     }
@@ -94,6 +92,7 @@ const SigninComponent = () => {
                         message: '请求超时，请稍后重试',
                     })
                 })
+
         }
     }
 

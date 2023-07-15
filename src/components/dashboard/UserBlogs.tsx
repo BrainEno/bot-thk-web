@@ -96,17 +96,17 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
             </div>
 
             <div className="blog-card-container">
-                {blogs && blogs?.length
-                    ? paginatedBlogs.map((b) => (
-                          <UserBlogCard
-                              setSelectedId={setSelectedId}
-                              key={b._id}
-                              username={user?.name || 'unkwnown'}
-                              blog={b}
-                              setShowModal={setShowModal}
-                          />
-                      ))
-                    : ''}
+                {blogs &&
+                    blogs?.length &&
+                    paginatedBlogs.map((b) => (
+                        <UserBlogCard
+                            setSelectedId={setSelectedId}
+                            key={b.slug}
+                            username={user?.name || 'unkwnown'}
+                            blog={b}
+                            setShowModal={setShowModal}
+                        />
+                    ))}
             </div>
 
             <Pagination

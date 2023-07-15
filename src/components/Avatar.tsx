@@ -20,7 +20,7 @@ const Avatar = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundImage: src ? `url('${src}') ` : '',
+                backgroundImage: src ? `url('${src}')` : '',
                 width: `${size}px`,
                 height: `${size}px`,
                 borderRadius: radius ? `${radius}px` : '50%',
@@ -29,12 +29,12 @@ const Avatar = ({
                 backgroundPositionY: 'center',
                 backgroundRepeat: 'no-repeat',
                 cursor: 'pointer',
-                color:'#000000',
-                fontSize:20,
-                fontWeight:800
+                color: '#000000',
+                fontSize: 20,
+                fontWeight: 800,
             }}
         >
-            {!src&&char}
+            {!src && char}
         </div>
     )
 }

@@ -8,10 +8,10 @@ import { useRouter } from 'next/router'
 
 import { BlogInput } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
-import { getErrorMsg } from '../../helpers/getErrorMsg'
 import { QuillFormats, QuillModules } from '../../helpers/ToolbarOptions'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
+import { useUploadImage } from '../../hooks/useUpload'
 import BannerImg from '../BannerImg'
 import { showAlert } from '../Common/Alert'
 
@@ -49,53 +49,22 @@ export const BlogForm = ({
     const blogContainerRef = useRef(null)
 
     const user = useAuthStore((state) => state.user)
-    const imgInput = useRef<HTMLInputElement | null>(null)
+    const imageInput = useRef<HTMLInputElement | null>(null)
     const [title, setTitle] = useState('')
     const [active, setActive] = useState(false)
-    const [img, setImg] = useState('')
 
     const listTags = useTagStore((state) => state.list)
 
     const [body, setBody] = useState<string>('')
     const [msg, setMsg] = useState('')
-    const [error, setError] = useState('')
-
-    const [showBanner, setShowBanner] = useState(!!img || false)
+    const { image, setImage, upload, error } = useUploadImage()
+    const [showBanner, setShowBanner] = useState(!!image || false)
     const [showTags, setShowTags] = useState(!!draftTags?.length || false)
     const [selectedTags, setSelectedTags] = useState<string[]>(draftTags ?? [])
 
     const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
         setTitle(value)
-    }
-
-    const uploadImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { files } = e.target
-
-        if (!files || !files[0]) return
-        const url = process.env.NEXT_PUBLIC_CLOUDINARY_URI!
-        const preset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET!
-        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_NAME!
-
-        const formData = new FormData()
-        formData.append('file', files[0])
-        formData.append('upload_preset', preset)
-        formData.append('cloud_name', cloudName)
-
-        console.log(url, preset, cloudName)
-        fetch(url, { method: 'POST', body: formData })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('data', data)
-                const imageUri = data.secure_url
-
-                console.log(imageUri)
-                setImg(imageUri)
-            })
-            .catch((error) => {
-                const errMsg = getErrorMsg(error)
-                setError(errMsg)
-            })
     }
 
     const handleCancel = () => {
@@ -122,12 +91,12 @@ export const BlogForm = ({
         if (draftBody) setBody(draftBody)
         if (draftActive) setActive(draftActive)
         if (draftTitle) setTitle(draftTitle)
-        if (draftImg) setImg(draftImg)
+        if (draftImg) setImage(draftImg)
         if (draftTags) setSelectedTags(draftTags)
-    }, [draftActive, draftBody, draftImg, draftTags, draftTitle])
+    }, [draftActive, draftBody, draftImg, draftTags, draftTitle, setImage])
 
     const publishBlog = async () => {
-        const blogInput: BlogInput = { body, title, active, imageUri: img }
+        const blogInput: BlogInput = { body, title, active, imageUri: image }
         if (!blogInput.imageUri) {
             blogInput.imageUri = defaultImgUri
         }
@@ -151,7 +120,7 @@ export const BlogForm = ({
         }
 
         setTitle('')
-        setImg('')
+        setImage('')
         setActive(false)
         setBody('')
 
@@ -185,7 +154,6 @@ export const BlogForm = ({
             setBody('')
             setTitle('')
             setActive(false)
-            setImg('')
         }
     }, [formType, initCreateData, initEditData])
 
@@ -219,8 +187,8 @@ export const BlogForm = ({
                                 id="blog-image"
                                 accept="image/*"
                                 hidden
-                                ref={imgInput}
-                                onChange={uploadImg}
+                                ref={imageInput}
+                                onChange={upload}
                             />
                             <GrImage />
                         </label>
@@ -234,7 +202,7 @@ export const BlogForm = ({
                                 <BiHide />
                             </button>
                         ) : (
-                            img && (
+                            image && (
                                 <button
                                     type="button"
                                     className="icon-btn"
@@ -253,9 +221,9 @@ export const BlogForm = ({
                         ['without-img']: !showBanner,
                     })}
                 >
-                    {img && (
+                    {image && (
                         <BannerImg
-                            imgSrc={img}
+                            imgSrc={image}
                             alt={title}
                             isVisible={showBanner}
                             inEditor={true}

@@ -1,21 +1,30 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
+import { FiUsers } from 'react-icons/fi'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 
 import Avatar from '../../components/Avatar'
 import { Pagination } from '../../components/Common/Pagination'
 import MyBrand from '../../components/MyBrand'
+import {
+    GetUserInfoDocument,
+    GetUserInfoQuery,
+    GetUserInfoQueryVariables,
+} from '../../generated/gql/graphql'
+import {
+    GetFollowInfoDocument,
+    GetFollowInfoQuery,
+    GetFollowInfoQueryVariables,
+} from '../../generated/gql/graphql'
 import {
     GetUserBlogsDocument,
     GetUserBlogsQuery,
     GetUserBlogsQueryVariables,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
-import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 const pageSize = 6
 
@@ -26,25 +35,53 @@ interface IUserProfileProps {
 }
 
 const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
-    const router = useRouter()
-    const { user } = useAuthStore()
-
-    const {
-        data: blogs,
-        error,
-        isLoading,
-    } = useQuery<GetUserBlogsQuery, Error, GetUserBlogsQuery['getUserBlogs']>(
-        ['useGetUserBlogs'],
-        fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
-            GetUserBlogsDocument,
-            { userId: user?._id }
+    const { data: user } = useQuery<
+        GetUserInfoQuery,
+        Error,
+        GetUserInfoQuery['getUserInfo']
+    >(
+        ['useGetUserInfo', query.username],
+        fetcher<GetUserInfoQuery, GetUserInfoQueryVariables>(
+            GetUserInfoDocument,
+            { username: query.username }
         ),
-        { enabled: !!(user && user._id), select: (data) => data.getUserBlogs }
+        {
+            enabled: !!(query && query.username),
+            select: (data) => data.getUserInfo,
+        }
     )
 
-    useEffect(() => {
-        if (error && !isLoading) router.push('/signin')
-    }, [error, isLoading, router])
+    const { data: blogs } = useQuery<
+        GetUserBlogsQuery,
+        Error,
+        GetUserBlogsQuery['getUserBlogs']
+    >(
+        ['useGetUserBlogs', query.username],
+        fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
+            GetUserBlogsDocument,
+            { username: query.username }
+        ),
+        {
+            enabled: !!(query && query.username),
+            select: (data) => data.getUserBlogs,
+        }
+    )
+
+    const { data: followInfo } = useQuery<
+        GetFollowInfoQuery,
+        Error,
+        GetFollowInfoQuery['getFollowInfo']
+    >(
+        ['userGetFollowInfo'],
+        fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
+            GetFollowInfoDocument,
+            { username: query.username }
+        ),
+        {
+            enabled: !!(query && query.username),
+            select: (data) => data.getFollowInfo,
+        }
+    )
 
     const titleText = `${user?.username} | ${process.env.NEXT_PUBLIC_APP_NAME}`
 
@@ -104,17 +141,28 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                 <div className="profile-container">
                     <div className="profile-user">
                         <div className="avatar-container">
-                            <a href={`/user/update`}>
-                                <Avatar
-                                    title="头像"
-                                    size={100}
-                                    radius={100}
-                                    src={`${user.photo}`}
-                                />
-                            </a>
+                            <Avatar
+                                title="头像"
+                                size={100}
+                                radius={100}
+                                src={`${user.photo}`}
+                            />
                         </div>
                         <div className="profile-info">
                             <h3>{user.name}</h3>
+                            {followInfo && (
+                                <div className="profile-followInfo">
+                                    <span
+                                        className="profile-about"
+                                        style={{ textAlign: 'center' }}
+                                    >
+                                        <FiUsers />{' '}
+                                        {`关注 ${followInfo.followings.length} `}{' '}
+                                        ·
+                                        {` 被关注 ${followInfo.followers.length}`}
+                                    </span>
+                                </div>
+                            )}
                             {user.about && (
                                 <p className="profile-about">
                                     <b>{user.about}</b>

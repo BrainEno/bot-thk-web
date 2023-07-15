@@ -13,8 +13,7 @@
 @import 'header';
 @import 'userDashboard';
 @import 'userBlogs';
-@import 'publicProfile';
-@import 'updateProfile';
+@import 'profile';
 @import 'blogForm';
 @import 'manageBlogs';
 @import 'tagBlogs';
@@ -23,6 +22,7 @@
 @import 'image.scss';
 @import 'footer.scss';
 @import 'modal.scss';
+@import 'followInfoList.scss';
 
 html,
 body {

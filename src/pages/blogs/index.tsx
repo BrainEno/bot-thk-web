@@ -3,7 +3,10 @@ import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
 
 import PostInfo from '../../components/blog/PostInfo'
-import { ListBlogsWithCatTagDocument,ListBlogsWithCatTagQuery } from '../../generated/graphql-request'
+import {
+    ListBlogsWithCatTagDocument,
+    ListBlogsWithCatTagQuery,
+} from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
 import { fetcher } from '../../graphql/gqlClient'
 
@@ -19,7 +22,6 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
         ListBlogsWithCatTagQuery['listBlogsWithCatTag']
     >(['ListBlogsWithCatTag'], fetcher(ListBlogsWithCatTagDocument), {
         initialData,
-        refetchInterval: 60,
         select: (res) => res.listBlogsWithCatTag,
     })
 
@@ -62,15 +64,20 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
                 <section className="all-blogs-container">
                     <h1>All Blogs</h1>
                     <div className="all-blog-cards">
-                        {error || isLoading ? (
-                            <div className="loading-container">正在加载</div>
-                        ) : (
-                            <section className="post-grid">
-                                {data.map((post: any) => (
-                                    <PostInfo post={post} key={post._id} />
-                                ))}
-                            </section>
-                        )}
+                        <section className="post-grid">
+                            {error || isLoading
+                                ? initialData.listBlogsWithCatTag.map(
+                                      (post: any) => (
+                                          <PostInfo
+                                              post={post}
+                                              key={post._id}
+                                          />
+                                      )
+                                  )
+                                : data.map((post: any) => (
+                                      <PostInfo post={post} key={post._id} />
+                                  ))}
+                        </section>
                     </div>
                 </section>
             </main>
@@ -80,10 +87,11 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
 
 export default withRouter(Blogs)
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
     const initialData = await sdk.ListBlogsWithCatTag()
 
     return {
         props: { initialData },
+        revalidate: 1,
     }
 }

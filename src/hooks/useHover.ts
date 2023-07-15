@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+import { RefObject } from 'preact'
 
-type ElRef = React.RefObject<HTMLElement>;
+const useHover = <T extends HTMLElement = HTMLElement>(
+    eleRef: RefObject<T>
+) => {
+    const [hovered, setHovered] = useState(false)
 
-const useHover = (elRef: ElRef) => {
-  const [hovered, setHovered] = useState(false);
+    const enterHandler = () => setHovered(true)
+    const leaveHandler = () => setHovered(false)
 
-  const enterHandler = () => setHovered(true);
-  const leaveHandler = () => setHovered(false);
+    useEffect(() => {
+        const ele = eleRef.current
+        if (ele !== null && typeof window !== 'undefined') {
+            ele.addEventListener('mouseenter', enterHandler)
+            ele.addEventListener('mouseleave', leaveHandler)
+            return () => {
+                ele?.removeEventListener('mouseenter', enterHandler)
+                ele?.removeEventListener('mouseleave', leaveHandler)
+            }
+        }
+    }, [eleRef])
 
-  useEffect(() => {
-    const el = elRef.current;
-    if (el && typeof window !== 'undefined') {
-      el.addEventListener('mouseenter', enterHandler);
-      el.addEventListener('mouseleave', leaveHandler);
-      return () => {
-        el.removeEventListener('mouseenter', enterHandler);
-        el.removeEventListener('mouseleave', leaveHandler);
-      };
-    }
-  }, [hovered, elRef]);
+    return hovered
+}
 
-  return hovered;
-};
-
-export default useHover;
+export default useHover

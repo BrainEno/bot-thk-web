@@ -16,7 +16,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-unused-expressions": "off",
     "simple-import-sort/imports": [
-      "error",
+      "warn",
       {
         "groups": [
           // Side effect imports.
@@ -30,6 +30,6 @@
         ]
       }
     ],
-    "simple-import-sort/exports": "error"
+    "simple-import-sort/exports": "warn"
   }
 }

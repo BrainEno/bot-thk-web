@@ -102,28 +102,27 @@
 
     .userInfo-text {
       text-align: start;
-      font-size: 18px;
+      font-size: 15px;
       color: #6d737a;
       margin-top: 10px;
 
-
+      &:first-child {
+        margin-top: 25px;
+      }
 
       &.white {
+        font-size: 18px;
         padding: 0 60px;
         color: $white;
       }
 
     }
 
-
-
     .userInfo-form {
       width: 70%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-
-
 
       .userInfo-group {
         width: 100%;
@@ -140,12 +139,6 @@
         flex-direction: column;
         align-items: flex-start;
 
-
-
-
-
-
-
         .userInfo-label {
           font-size: 14px;
           margin-bottom: 8px;
@@ -153,8 +146,6 @@
           font-weight: 500;
           letter-spacing: 1px;
         }
-
-
 
         .userInfo-input {
           width: calc(100% - 28px);
@@ -178,12 +169,19 @@
 
       }
 
-
-
     }
 
   }
 
+  .userInfo-follow {
+    .userInfo-link {
+      cursor: pointer;
+
+      &:hover {
+        color: $text-link
+      }
+    }
+  }
 
 
   & ul {
@@ -211,8 +209,6 @@
     overflow-y: scroll;
   }
 
-
-
   .userInfo-container {
     width: 100vw;
     height: calc(45vh - 40px);
@@ -221,6 +217,7 @@
     padding: 25px 0 15px;
     position: sticky;
     top: 0;
+    z-index: 100px;
 
 
 
@@ -246,10 +243,16 @@
         font-size: 12px;
         margin: 0;
         margin-top: 4px;
+
+        &:first-of-type {
+          margin-top: 8px;
+        }
       }
 
       .userInfo-text.white {
-        margin-top: 10px;
+        width: 300px;
+        font-size: 14px;
+        margin-top: 2px;
       }
 
       .userInfo-btn {
@@ -269,18 +272,18 @@
             font-size: 12px;
           }
 
-          .userInfo-input.multiple-line{
+          .userInfo-input.multiple-line {
             height: 60px;
           }
         }
 
-        .userInfo-group{
+        .userInfo-group {
           justify-content: center;
           align-items: center;
           height: 26px;
           margin-top: 20px;
 
-          .userInfo-btn.sm{
+          .userInfo-btn.sm {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -289,10 +292,17 @@
             width: 50px;
             padding: 4px 0 4px 2px;
             text-align: center;
-            margin-right:10px;
+            margin-right: 10px;
           }
         }
 
+      }
+
+      .userInfo-follow {
+        margin: 12px 0;
+        & .userInfo-text.white {
+          text-align: center;
+        }
       }
     }
 
@@ -300,13 +310,9 @@
 
 
     & ul {
-
       width: 100%;
-
       justify-content: center;
-
       flex-direction: row;
-
       margin: 0;
 
     }

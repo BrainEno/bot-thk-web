@@ -7,8 +7,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
+import { Provider } from 'urql'
 
 import Header from '../components/header/Header'
+import { urqlClient } from '../graphql/urqlClient'
 import * as gtag from '../helpers/gtag'
 
 const queryClient = new QueryClient()
@@ -48,10 +50,12 @@ function MyApp({ Component, pageProps }: AppProps<{ initialReduxState: any }>) {
           `,
                 }}
             />
-            <QueryClientProvider client={queryClient}>
-                <Header />
-                <Component {...pageProps} />
-            </QueryClientProvider>
+            <Provider value={urqlClient}>
+                <QueryClientProvider client={queryClient}>
+                    <Header />
+                    <Component {...pageProps} />
+                </QueryClientProvider>
+            </Provider>
         </>
     )
 }

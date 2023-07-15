@@ -2,11 +2,13 @@ overwrite: true
 schema: http://localhost:4001/graphql
 documents: "../gql-server/src/schemas/**"
 generates:
-  ./src/generated/graphql-request.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-graphql-request
+    src/generated/graphql-request.ts:
+      plugins:
+        - typescript
+        - typescript-operations
+        - typescript-graphql-request
+    src/generated/gql/:
+      preset: client
 config:
   rawRequest: false
   scalars:
