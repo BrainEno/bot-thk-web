@@ -6,3 +6,5 @@ config.js
 .vercel
 yarn-debug.log*
 yarn-error.log*
+# Local Netlify folder
+.netlify
