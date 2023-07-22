@@ -2,7 +2,7 @@
     padding: 0 0 3rem 0;
 
     h1 {
-        width: 100%;
+        width: max-content;
         color: $text-color;
         padding: 1.5rem 0;
     }
@@ -13,6 +13,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    &>div>a {
+        display: block;
+        width: max-content;
+    }
 }
 
 .bg-white {
@@ -21,6 +26,11 @@
     justify-content: center;
 
     & .recent-container {
+        &>a {
+            display: block;
+            width: max-content;
+        }
+
         & .grid-pagination-container {
             & .pagination-container {
                 background: white;
@@ -38,6 +48,11 @@
 .trending-posts-container {
     display: flex;
     justify-content: center;
+
+    &>div>a {
+        display: block;
+        width: max-content;
+    }
 }
 
 @media screen and (max-width: 900px) {

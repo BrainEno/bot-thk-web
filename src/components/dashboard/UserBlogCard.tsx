@@ -2,6 +2,7 @@ import React from 'react'
 import { FiDelete, FiEdit } from 'react-icons/fi'
 import { RxReader } from 'react-icons/rx'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { GetUserBlogsQuery } from '../../generated/graphql-request'
@@ -37,7 +38,9 @@ export const UserBlogCard = ({
 
     return (
         <div className="blog-card">
-            <h5>{blog.title}</h5>
+            <Link href={`/blogs/${blog.slug}`} className="blog-title">
+                <h5>{blog.title}</h5>
+            </Link>
             <span className="desc-text">
                 By: {username} | {dayjs(blog.createdAt).format('MMM,DD-YYYY')}
             </span>
@@ -46,9 +49,9 @@ export const UserBlogCard = ({
             </div>
 
             <div className="blog-icon-container">
-                <FiEdit onClick={() => handleEdit(blog._id)} />
-                <FiDelete onClick={handleDeleteClick(blog._id)} />
-                <RxReader onClick={handleRead(blog.slug)} />
+                <FiEdit onClick={() => handleEdit(blog._id)} title="编辑" />
+                <FiDelete onClick={handleDeleteClick(blog._id)} title="删除" />
+                <RxReader onClick={handleRead(blog.slug)} title="查看" />
             </div>
         </div>
     )

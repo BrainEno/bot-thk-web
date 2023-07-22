@@ -64,12 +64,27 @@
         box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6),
             -6px -6px 26px rgba(255, 255, 255, 0.8);
         border-radius: 16px;
+        position: relative;
 
-        & h5 {
-            font-weight: 500;
-            font-size: 18px;
-            margin: auto;
-            margin-bottom: 12px;
+
+        & .blog-title {
+            h5 {
+                width: 350px;
+                font-weight: 500;
+                font-size: 18px;
+                margin: auto;
+                margin-bottom: 12px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                &:hover {
+                    color: $text-link;
+                    white-space: pre-wrap;
+                    text-overflow: initial;
+                }
+            }
+
         }
 
         & .desc-text {
@@ -94,13 +109,19 @@
         align-items: center;
         justify-content: flex-end;
         width: 100%;
+        position: absolute;
+        bottom: 16px;
+        right: 28px;
 
         svg {
-            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            margin-left: 13px;
         }
 
         svg:hover {
             transform: scale(1.1);
+            color: $text-link;
         }
     }
 }
@@ -157,6 +178,8 @@
                 margin: 20px 0;
 
                 & h5 {
+                    width: 250px;
+                    white-space: pre-wrap;
                     font-weight: 800;
                     font-size: 15px;
                 }

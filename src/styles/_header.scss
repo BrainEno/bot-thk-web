@@ -128,112 +128,26 @@
 
         .nav-link {
             margin-left: 8px;
-            font-size: 18px;
+            font-size: 19px;
             padding: 0px;
-        }
-
-    }
-
-    .menu-notification {
-        position: relative;
-
-        .icon-btn {
             display: flex;
-            justify-content: center;
+            flex-direction: row;
             align-items: center;
-            height: 34px;
-            width: 34px;
-            border-radius: 50%;
-            padding-top: 1px;
-            margin-left: 10px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            transform-origin: center;
-            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            font-weight: 600;
+            letter-spacing: 1.5px;
 
-            svg {
-                color: #999999;
-                transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            & svg {
+                margin-right: 4px;
             }
 
-            &:hover {
-                background-color: #f0f4f9;
-                box-shadow: 0 0 2px 2px #f0f4f9;
-
-                svg {
-                    color: #656565;
-                    scale: 1.02;
-                }
-            }
-
-            &:active {
-                background-color: #f0f4f9;
-                opacity: 0.4;
-                box-shadow: 0 0 2px 2px #f0f4f9;
-
-                svg {
-                    color: #656565;
-                    scale: 1.02;
-
-                }
-            }
-
-        }
-
-        .notifications {
-            transform-origin: top right;
-            transition: opacity 345ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 230ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-            position: absolute;
-            top: 63px;
-            right: 2px;
-            background: $white;
-            border-radius: 8px;
-            border: 0.5px solid #c9c9c9;
-            height: max-content;
-            max-height: 240px;
-            width: 200px;
-            overflow-y: scroll;
-
-            & .notification-container {
-                padding: 6px 16px;
-                border-bottom: 0.5px solid #c9c9c9;
-                margin-bottom: -1px;
-                font-size: 14px;
-                letter-spacing: 0.8px;
-
-                .notification-label {
-                    margin-bottom: 3px;
-                    font-size: 12px;
-                    font-weight: 500;
-                    color: #868686;
-                    display: flex;
-                    height: 24px;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-direction: row;
-                    letter-spacing: 0.2px;
-
-                    & p:first-child {
-                        margin-right: 12px;
-                    }
-                }
-
-                .notification-message {
-                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                    font-size: 15px;
-                    font-weight: 500;
-                    color: #535353;
-                    margin-bottom: 8px;
-
-                    & span a{
-                        color: $text-link;
-                    }
-                }
+            &:hover,
+            &:hover svg {
+                color: $text-link;
             }
         }
+
     }
+
 }
 
 @media screen and (max-width: 900px) {
@@ -343,42 +257,32 @@
         .log-container {
             order: -3;
             align-self: flex-start;
-        }
 
-        .log-ul {
-            margin-left: 0;
-            margin: 0 0 30px;
-            padding: 0;
-            height: max-content;
-            width: 55vw;
 
-            &>div {
+            .log-ul {
+                margin-left: 0;
+                margin: 0 0 155px;
+                padding: 0;
+                height: max-content;
+                width: 55vw;
                 display: flex;
-                flex-direction: column;
-                height: 40px;
-                width: 100%;
                 justify-content: center;
-                align-items: center;
-                margin: 0;
-                font-size: 20px;
-                letter-spacing: 2px;
+                flex-direction: row;
 
 
                 .nav-link {
+                    width: max-content;
                     margin: 0;
+                    margin-left: -10px;
                     padding: 0;
                     text-align: center;
                     margin-bottom: 10px;
+                    color: $text-link;
                 }
             }
+
         }
 
-        .menu-notification {
-            position: fixed;
-            top: 15px;
-            right: 50px;
-            margin: 0;
-        }
     }
 }
 

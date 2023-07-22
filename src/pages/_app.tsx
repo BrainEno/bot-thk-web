@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps<{ initialReduxState: any }>) {
             <Provider value={urqlClient}>
                 <QueryClientProvider client={queryClient}>
                     <Header />
-                    <Component {...pageProps} />
+                        <Component {...pageProps} />
                 </QueryClientProvider>
             </Provider>
         </>

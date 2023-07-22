@@ -68,7 +68,6 @@ const SigninComponent = () => {
                 .then((res) => {
                     if (res.login.ok) {
                         auth()
-                        router.push('/')
                     }
                 })
                 .catch((err: any) => {
@@ -92,13 +91,12 @@ const SigninComponent = () => {
                         message: '请求超时，请稍后重试',
                     })
                 })
-
         }
     }
 
     useEffect(() => {
         if (user && user._id) {
-            router.push('/dashboard')
+            setTimeout(() => router.push('/dashboard'), 500)
         }
     }, [router, user])
 

@@ -79,7 +79,7 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   newCat: Scalars['Boolean']['output'];
   newTag: Scalars['Boolean']['output'];
-  refreshToken: RefreshToken;
+  refreshToken: UserResponse;
   register: Scalars['String']['output'];
   resetPassword: Scalars['Boolean']['output'];
   revokeRefreshTokensForUser: Scalars['Boolean']['output'];
@@ -257,12 +257,6 @@ export type QuerySearchUsersArgs = {
   name: Scalars['String']['input'];
 };
 
-export type RefreshToken = {
-  __typename?: 'RefreshToken';
-  accessToken: Scalars['String']['output'];
-  ok: Scalars['Boolean']['output'];
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
   blogPublished: Notification;
@@ -355,7 +349,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshToken', ok: boolean, accessToken: string } };
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'UserResponse', ok: boolean, accessToken: string } };
 
 export type EditProfileMutationVariables = Exact<{
   about?: InputMaybe<Scalars['String']['input']>;
@@ -440,11 +434,6 @@ export type UnFollowMutationVariables = Exact<{
 
 export type UnFollowMutation = { __typename?: 'Mutation', unFollow: boolean };
 
-export type MutationMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MutationMutation = { __typename?: 'Mutation', logout: boolean };
-
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -491,7 +480,7 @@ export type SearchBlogsQueryVariables = Exact<{
 }>;
 
 
-export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'Blog', slug: string, title: string, author: { __typename?: 'User', name: string } }> };
+export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'Blog', slug: string, title: string, description?: string | null, createdAt: string, imageUri?: string | null, author: { __typename?: 'User', name: string, photo?: string | null }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }> }> };
 
 export type GetUserBlogsQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['String']['input']>;
@@ -646,11 +635,6 @@ export const FollowDocument = gql`
 export const UnFollowDocument = gql`
     mutation UnFollow($name: String!) {
   unFollow(name: $name)
-}
-    `;
-export const MutationDocument = gql`
-    mutation Mutation {
-  logout
 }
     `;
 export const CurrentUserDocument = gql`
@@ -821,8 +805,16 @@ export const SearchBlogsDocument = gql`
   searchBlogs(query: $query) {
     slug
     title
+    description
+    createdAt
+    imageUri
     author {
       name
+      photo
+    }
+    tags {
+      name
+      slug
     }
   }
 }
@@ -1027,9 +1019,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UnFollow(variables: UnFollowMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UnFollowMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UnFollowMutation>(UnFollowDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UnFollow', 'mutation');
-    },
-    Mutation(variables?: MutationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<MutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MutationMutation>(MutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Mutation', 'mutation');
     },
     CurrentUser(variables?: CurrentUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CurrentUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQuery>(CurrentUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUser', 'query');

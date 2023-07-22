@@ -7,23 +7,15 @@ import {
     useState,
 } from 'react'
 import { IoMdArrowBack } from 'react-icons/io'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import {
-    FollowMutation,
-    FollowMutationVariables,
-    UnFollowMutation,
-    UnFollowMutationVariables,
-} from '../../generated/gql/graphql'
-import {
-    FollowDocument,
     GetFollowInfoQuery,
-    UnFollowDocument,
 } from '../../generated/graphql-request'
-import { fetcher } from '../../graphql/gqlClient'
+import { useFollowMutation } from '../../hooks/mutation/useFollowMutation';
+import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation';
 import useHover from '../../hooks/useHover'
 import Modal from '../Common/Modal'
 
@@ -42,10 +34,9 @@ interface FollowInfoListProps {
     hideFollowInfo: () => void
 }
 
-export const DEFAULT_AVATAR =
-    'https://res.cloudinary.com/hapmoniym/image/upload/v1608712074/icons/avatar_w5us1g.png'
+export const DEFAULT_AVATAR =process.env.NEXT_PUBLIC_DEFULT_AVATAR as string;
 
-const FollowInfo = ({
+export const FollowInfo = ({
     user,
     followed,
     setShowModal,
@@ -53,24 +44,8 @@ const FollowInfo = ({
 }: FollowInfoProps) => {
     const unFollowBtn = useRef<HTMLButtonElement>(null!)
     const unFollowHovered = useHover(unFollowBtn)
-    const queryClient = useQueryClient()
-    const followMutation = useMutation<
-        FollowMutation,
-        Error,
-        FollowMutationVariables
-    >(
-        async ({ followName }) =>
-            fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, {
-                followName,
-            })(),
-        {
-            onSuccess: (res) => {
-                if (res.follow) {
-                    queryClient.invalidateQueries(['getFollowInfo'])
-                }
-            },
-        }
-    )
+
+    const followMutation=useFollowMutation()
 
     const follow = (name: string) => {
         followMutation.mutate({ followName: name })
@@ -88,16 +63,16 @@ const FollowInfo = ({
                     <Image
                         src={user.photo || DEFAULT_AVATAR}
                         alt="Avatar"
-                        width={70}
-                        height={70}
+                        width={40}
+                        height={40}
                         className="followInfo-avatar"
                     />
                 </Link>
                 <div className="followInfo-profile">
-                    <p className="followInfo-name">{user.name}</p>
-                    <p className="followInfo-about">
+                    <span className="followInfo-name">{user.name}</span>
+                    <span className="followInfo-about">
                         {user.about && user.about}
-                    </p>
+                    </span>
                 </div>
             </div>
             <div className="followInfo-right">
@@ -130,31 +105,11 @@ const FollowInfoList = ({
     followings,
     hideFollowInfo,
 }: FollowInfoListProps) => {
-    const queryClient = useQueryClient()
     const [showModal, setShowModal] = useState(false)
     const [toUnFollow, setToUnFollow] = useState('')
     const confirmUnFollow = useRef(false)
 
-    const unFollowMutation = useMutation<
-        UnFollowMutation,
-        Error,
-        UnFollowMutationVariables
-    >(
-        async ({ name }) =>
-            fetcher<UnFollowMutation, UnFollowMutationVariables>(
-                UnFollowDocument,
-                {
-                    name,
-                }
-            )(),
-        {
-            onSuccess: (res) => {
-                if (res.unFollow) {
-                    queryClient.invalidateQueries(['getFollowInfo'])
-                }
-            },
-        }
-    )
+    const unFollowMutation=useUnFollowMutation()
 
     const users = useMemo(() => {
         if (type === 'FOLLOWER') {
@@ -217,6 +172,7 @@ const FollowInfoList = ({
                             setShowModal={setShowModal}
                             confirmUnFollow={confirmUnFollow.current}
                             setToUnFollow={setToUnFollow}
+                          
                         />
                     ))}
             </div>

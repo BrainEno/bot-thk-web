@@ -50,7 +50,7 @@
         flex-direction: column;
 
         .post-title {
-          overflow: hidden;
+            overflow: hidden;
             font-size: 1.3em;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -85,7 +85,8 @@
     .grid-pagination-container {
         width: 100%;
 
-        .post-grid.container {
+        .post-grid,
+        .post-container {
             padding: 0;
         }
 
@@ -95,10 +96,20 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
+            .post-container{
+                .post-title{
+                    width: 80vw;
+                    font-size: 18.5px;
+                    text-overflow: ellipsis;
+                }
+            }
         }
     }
 
+
     .description-text {
+        max-width: 80vw;
         font-size: 16px;
         font-weight: 400;
         color: #555;

@@ -9,7 +9,8 @@
 @import 'blogMasonry';
 @import 'postGrid';
 @import 'article';
-@import 'search';
+@import 'menuSearch';
+@import 'menuNotification';
 @import 'header';
 @import 'userDashboard';
 @import 'userBlogs';
@@ -23,6 +24,7 @@
 @import 'footer.scss';
 @import 'modal.scss';
 @import 'followInfoList.scss';
+@import 'search.scss';
 
 html,
 body {

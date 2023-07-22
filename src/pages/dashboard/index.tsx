@@ -1,7 +1,13 @@
-"use client"
+'use client'
 
-import UserDashboard from '../../components/dashboard/UserDashboard'
+import dynamic from 'next/dynamic'
+
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+
+const UserDashboard = dynamic(
+    import('../../components/dashboard/UserDashboard'),
+    { ssr: false }
+)
 
 const UserCenter = () => {
     const user = useAuthStore((state) => state.user)
