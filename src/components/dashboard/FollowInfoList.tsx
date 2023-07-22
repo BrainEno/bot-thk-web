@@ -63,8 +63,8 @@ export const FollowInfo = ({
                     <Image
                         src={user.photo || DEFAULT_AVATAR}
                         alt="Avatar"
-                        width={40}
-                        height={40}
+                        width={42}
+                        height={42}
                         className="followInfo-avatar"
                     />
                 </Link>
