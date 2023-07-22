@@ -128,7 +128,7 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
                             className="userInfo-btn"
                             onClick={() => setIsEditing(!isEditing)}
                         >
-                            编辑个人信息
+                            编辑信息
                         </button>
                     </>
                 )}

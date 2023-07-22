@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import {useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import dynamic from 'next/dynamic'
 import { NextRouter, withRouter } from 'next/router'
 
 import {
@@ -13,9 +14,9 @@ import {
 import { fetcher } from '../../graphql/gqlClient'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 
-import FollowInfoList from './FollowInfoList'
-import UserBlogs from './UserBlogs'
-import UserInfo from './UserInfo'
+const FollowInfoList = dynamic(() => import('./FollowInfoList'), { ssr: false })
+const UserBlogs = dynamic(() => import('./UserBlogs'), { ssr: false })
+const UserInfo = dynamic(() => import('./UserInfo'), { ssr: false })
 
 dayjs.extend(relativeTime)
 
@@ -48,7 +49,7 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
     )
 
     const { followers, followings } = useFollowInfo({
-        enabled: !(user && user.username),
+        enabled: !!(user && user.username),
         tag: user.name,
         username: user.username,
     })
@@ -67,7 +68,7 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
 
     return (
         <div className="user-dashboard">
-            {user && <UserInfo user={user} setFollowStatus={setFollowStatus} />}
+            <UserInfo user={user} setFollowStatus={setFollowStatus} />
             {followStatus === 'HIDDEN' && userBlogs && (
                 <UserBlogs blogs={userBlogs} user={user} />
             )}

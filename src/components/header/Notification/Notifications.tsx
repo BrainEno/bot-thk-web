@@ -1,9 +1,17 @@
+import { RefObject, useRef } from 'react'
+import { BiCheck } from 'react-icons/bi'
+import { LiaCheckDoubleSolid } from 'react-icons/lia'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 
-import { INotification } from '../../hooks/store/useNotificationStore'
+import {
+    INotification,
+    useNotificationStore,
+} from '../../../hooks/store/useNotificationStore'
+import { useClickOutside } from '../../../hooks/useClickOutside'
+import useHover from '../../../hooks/useHover'
 
 const Notification = ({ notification }: { notification: INotification }) => {
     const isFollowerType = notification.type === 'user'
@@ -12,12 +20,15 @@ const Notification = ({ notification }: { notification: INotification }) => {
     const authorNameLink = `${notification.linkString.split('__')[0]}`
     const blogTitleLink = `${notification.linkString.split('__')[1]}`
 
+    const checkNotification = useNotificationStore(
+        (state) => state.updateViewed
+    )
+
+    const msgRef = useRef<HTMLDivElement | null>(null)
+    const checkHovered = useHover(msgRef)
+
     return (
-        <div
-            className={classNames('notification-container', {
-                isViewed: notification.isViewed,
-            })}
-        >
+        <div className={classNames('notification-container')}>
             <div className="notification-label">
                 <p>{isFollowerType ? '新的关注' : '新的订阅'}</p>
                 <p>
@@ -30,7 +41,8 @@ const Notification = ({ notification }: { notification: INotification }) => {
                 </p>
             </div>
 
-            <div className="notification-message">
+            <div className="notification-message" ref={msgRef}>
+                {!notification.isViewed && <div className="new" />}
                 {isFollowerType ? (
                     <span>
                         <Link href={`/profile/${notification.linkString}`}>
@@ -49,6 +61,20 @@ const Notification = ({ notification }: { notification: INotification }) => {
                         </Link>
                     </span>
                 )}
+                {!notification.isViewed && (
+                    <>
+                        {checkHovered && (
+                            <div
+                                className="checkNew"
+                                onClick={() =>
+                                    checkNotification(notification.id)
+                                }
+                            >
+                                <BiCheck size={16} color="#fff" />
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     )
@@ -57,12 +83,21 @@ const Notification = ({ notification }: { notification: INotification }) => {
 interface NotificationsProps {
     notifications: INotification[]
     isVisible: boolean
+    close: () => void
+    menuBtnRef: RefObject<HTMLButtonElement>
 }
 
 export const Notifications = ({
     notifications,
     isVisible,
+    close,
+    menuBtnRef,
 }: NotificationsProps) => {
+    const ref = useRef<HTMLDivElement | null>(null)
+    useClickOutside(ref, close, menuBtnRef)
+    const checkAll = useNotificationStore((state) => state.checkAll)
+    const isAnyNew = notifications.some((n) => !n.isViewed)
+
     return (
         <AnimatePresence>
             {isVisible && (
@@ -71,7 +106,17 @@ export const Notifications = ({
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
+                    ref={ref}
                 >
+                    <div className="checkAll">
+                        <div>所有消息</div>
+                        {isAnyNew && (
+                            <button onClick={checkAll}>
+                                已读
+                                <LiaCheckDoubleSolid style={{marginLeft:4}} size={16} color="#fff" />
+                            </button>
+                        )}
+                    </div>
                     {notifications.map((n) => (
                         <Notification notification={n} key={n.id} />
                     ))}

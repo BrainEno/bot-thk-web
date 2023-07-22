@@ -87,11 +87,10 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
 
 export default withRouter(Blogs)
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     const initialData = await sdk.ListBlogsWithCatTag()
 
     return {
         props: { initialData },
-        revalidate: 1,
     }
 }

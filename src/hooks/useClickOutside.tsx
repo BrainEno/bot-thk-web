@@ -15,7 +15,7 @@ export const useClickOutside = (
                 callback()
             }
         } else {
-            if (ref.current && ref.current.contains(e.target)) {
+            if (ref.current && !ref.current.contains(e.target)) {
                 callback()
             }
         }

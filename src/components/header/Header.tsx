@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BiLogIn, BiLogOut } from 'react-icons/bi'
 import { HiOutlineMenu } from 'react-icons/hi'
-import { IoMdNotifications } from 'react-icons/io'
 import { isServer } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
@@ -14,7 +13,7 @@ import {
     BlogPublishedSubscriptionVariables,
     UserFollowedSubscription,
 } from '../../generated/gql/graphql'
-import { BlogPublishedDocument } from '../../generated/gql/graphql';
+import { BlogPublishedDocument } from '../../generated/gql/graphql'
 import {
     GetFollowInfoDocument,
     GetFollowInfoQuery,
@@ -32,16 +31,14 @@ import useWindowSize from '../../hooks/useWindowSize'
 import Avatar from '../Avatar'
 import MyBrand from '../MyBrand'
 
-import { Notifications } from './Notifications'
-import Search from './Search'
+import { MenuNotification } from './Notification/MenuNotification'
+import MenuSearch from './Search/MenuSearch'
 
 const Header = () => {
-    const notifications = useNotificationStore((state) => state.notifications)
     const append = useNotificationStore((state) => state.append)
     const userInLS = !isServer && localStorage.getItem('current-user')
     const prevName = deepParse(userInLS)?.state?.prevName || ''
 
-    const [showNotifications, setShowNotifications] = useState(false)
     const { pathname, query } = useRouter()
     const user = useAuthStore((state) => state.user)
 
@@ -140,7 +137,7 @@ const Header = () => {
 
     const handleLogOut = () => {
         logOut()
-        router.push('/signin')
+        router.replace('/logout', '/signin')
     }
 
     useEffect(() => {
@@ -150,6 +147,18 @@ const Header = () => {
             setIsAuth(false)
         }
     }, [user])
+
+    useEffect(() => {
+        const closeMenu = () => setMenuActive(false)
+
+        if (!isDesktop) {
+            router.events.on('routeChangeComplete', closeMenu)
+        }
+
+        return () => {
+            router.events.off('routeChangeComplete', closeMenu)
+        }
+    })
 
     return (
         <>
@@ -250,32 +259,8 @@ const Header = () => {
                             </Link>
                         </li>
                     </ul>
-                    <Search />
-                    <div className="log-container">
-                        {isAuth ? (
-                            <div className="log-ul">
-                                <div onClick={handleLogOut}>
-                                    {isDesktop ? (
-                                        '退出'
-                                    ) : (
-                                        <BiLogOut size={25} />
-                                    )}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="log-ul">
-                                <div>
-                                    <Link className="nav-link" href="/signin">
-                                        {isDesktop ? (
-                                            '登录'
-                                        ) : (
-                                            <BiLogIn size={25} />
-                                        )}
-                                    </Link>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <MenuSearch isAuth={isAuth} />
+                    <MenuNotification isAuth={isAuth} />
                     {isAuth && (
                         <div className="menu-avtar-container">
                             <Link href="/dashboard" passHref>
@@ -299,22 +284,27 @@ const Header = () => {
                             )}
                         </div>
                     )}
-                    <div
-                        className="menu-notification"
-                        style={{ visibility: isAuth ? 'visible' : 'hidden' }}
-                    >
-                        <button
-                            className="icon-btn"
-                            onClick={() =>
-                                setShowNotifications(!showNotifications)
-                            }
-                        >
-                            <IoMdNotifications size={24} />
-                        </button>
-                        <Notifications
-                            isVisible={showNotifications}
-                            notifications={notifications}
-                        />
+                    <div className="log-container">
+                        {isAuth ? (
+                            <div className="log-ul">
+                                <div
+                                    onClick={handleLogOut}
+                                    className="nav-link"
+                                >
+                                    <BiLogOut size={25} />
+                                    退出
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="log-ul">
+                                <div>
+                                    <Link className="nav-link" href="/signin">
+                                        <BiLogIn size={25} />
+                                        <div>登录</div>
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

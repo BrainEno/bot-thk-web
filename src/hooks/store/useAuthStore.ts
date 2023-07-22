@@ -33,7 +33,6 @@ export const useAuthStore = create(
             prevName: '',
             status: 'unknown' as AuthStatus,
             auth: async () => {
-                // await fetch('/api/cookies')
                 const { currentUser } = await sdk.CurrentUser()
 
                 if (currentUser) {

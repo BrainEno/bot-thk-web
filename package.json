@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
+  "name": "bot-thk-web",
   "version": "1.0.0",
-  "description": "blogsite",
+  "description": "A multi-user blog creation platform focused on literature.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -15,10 +15,13 @@
     "cypress": "cypress open"
   },
   "keywords": [
-    "Literature",
+    "literature",
     "blog",
     "novel",
-    "poetry"
+    "poetry",
+    "nextjs",
+    "graphql",
+    "subscription"
   ],
   "author": "BrainEno",
   "license": "ISC",

@@ -1,6 +1,6 @@
-import { produce } from 'immer'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
 
 export interface INotification {
     id: string
@@ -15,11 +15,12 @@ interface NotificationState {
     notifications: INotification[]
     append: (notification: INotification) => void
     updateViewed: (id: string) => void
+    checkAll: () => void
 }
 
 export const useNotificationStore = create(
-    persist<NotificationState>(
-        (set) => ({
+    persist(
+        immer<NotificationState>((set) => ({
             notifications: [],
             append: (notification: INotification) =>
                 set((state) => {
@@ -38,18 +39,19 @@ export const useNotificationStore = create(
                     return state
                 }),
             updateViewed: (id: string) =>
-                set(
-                    produce((state: NotificationState) => {
-                        const index = state.notifications.findIndex(
-                            (n) => n.id === id
-                        )
-                        if (index)
-                            return [
-                                (state.notifications[index].isViewed = true),
-                            ]
-                    })
-                ),
-        }),
+                set((state: NotificationState) => {
+                    const index = state.notifications.findIndex(
+                        (n) => n.id === id
+                    )
+                    if (index !== -1) state.notifications[index].isViewed = true
+                }),
+            checkAll: () =>
+                set((state: NotificationState) => {
+                    for (const index in state.notifications) {
+                        state.notifications[index].isViewed = true
+                    }
+                }),
+        })),
         {
             name: 'notifications',
             storage: createJSONStorage(() => localStorage),

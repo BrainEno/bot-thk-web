@@ -133,7 +133,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                                 |{' '}
                                 {blog &&
                                     dayjs(blog!.createdAt, 'zh', true).format(
-                                        'MMMM,DD,YYYY'
+                                        'MMM,DD,YYYY'
                                     )}
                             </span>
                         </p>

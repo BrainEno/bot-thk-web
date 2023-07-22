@@ -86,14 +86,16 @@ const Index: React.FC<IndexPageProps> = ({
                     </div>
                 </section>
 
-                <section className="bg-white">
-                    <div className="recent-container">
-                        <Link href="/categories/recent-post">
-                            <h1>Recent Post</h1>
-                        </Link>
-                        {<PostGrid posts={recent!} />}
-                    </div>
-                </section>
+                {recent && (
+                    <section className="bg-white">
+                        <div className="recent-container">
+                            <Link href="/categories/recent-post">
+                                <h1>Recent Post</h1>
+                            </Link>
+                            {<PostGrid posts={recent} />}
+                        </div>
+                    </section>
+                )}
 
                 <section className="trending-posts-container">
                     <div>
@@ -115,12 +117,15 @@ const Index: React.FC<IndexPageProps> = ({
 }
 
 export const getStaticProps = async () => {
-    const { getCatBlogs: recent } = await sdk.GetCatBlogs({
-        getCatBlogsSlug:'rencent-post'
-    })
     const { getCatBlogs: trending } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'trending',
     })
+
+    const { getCatBlogs: recent } = await sdk.GetCatBlogs({
+        getCatBlogsSlug: 'recent-post',
+    })
+
+
     const { getCatBlogs: featured } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'featured',
     })
