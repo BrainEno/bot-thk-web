@@ -37,16 +37,16 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
     const { followers, followings } = useFollowInfo({
         enabled: !!(user && user.username),
         tag: user.name,
-        username:user.username
+        username: user.username,
     })
 
     const { windowWidth } = useWindowSize()
 
     const uploadImageCallback = (imageUri: string) => {
         sdk.EditProfile({ photo: imageUri })
-            .then((success) => {
+            .then(async (success) => {
                 if (success) {
-                    auth()
+                    await auth()
                 }
             })
             .then((err) => {
@@ -75,8 +75,9 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
         e.preventDefault()
         sdk.EditProfile({ name, about: bio }).then((success) => {
             if (success) {
-                auth()
-                setIsEditing(false)
+                auth().then(() => {
+                    setIsEditing(false)
+                })
             } else {
                 setIsEditing(false)
             }

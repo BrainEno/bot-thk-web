@@ -131,7 +131,7 @@ export const getStaticProps = async () => {
     })
     return {
         props: { recent, trending, featured },
-        revalidate: 1,
+        revalidate: 10,
     }
 }
 

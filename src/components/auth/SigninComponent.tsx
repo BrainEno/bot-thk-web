@@ -65,9 +65,9 @@ const SigninComponent = () => {
             setValues({ ...values, loading: true, message: '' })
 
             sdk.Login({ email, password })
-                .then((res) => {
+                .then(async (res) => {
                     if (res.login.ok) {
-                        auth()
+                        await auth()
                     }
                 })
                 .catch((err: any) => {

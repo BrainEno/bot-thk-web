@@ -136,8 +136,9 @@ const Header = () => {
     }
 
     const handleLogOut = () => {
-        logOut()
-        router.replace('/logout', '/signin')
+        logOut().then(() => {
+            router.push('/signin')
+        })
     }
 
     useEffect(() => {

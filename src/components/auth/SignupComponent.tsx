@@ -65,7 +65,7 @@ const SignupComponent = () => {
                 registerEmail: email,
                 registerPassword: password,
             })
-                .then((res) => {
+                .then(async(res) => {
                     const { register: token } = res
 
                     if (token && token !== '') {
@@ -80,7 +80,7 @@ const SignupComponent = () => {
                         })
                         gqlClient.setHeader('authorization', `Bearer ${token}`)
 
-                        auth()
+                        await auth()
                     }
                 })
                 .catch((err: any) => {

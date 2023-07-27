@@ -10,8 +10,8 @@ interface AuthState {
     user: CurrentUserQuery['currentUser'] | null
     prevName: string
     status: AuthStatus
-    auth: () => void
-    logOut: () => void
+    auth: () => Promise<void>
+    logOut: () => Promise<void>
 }
 
 const secureStorage: StateStorage = {
