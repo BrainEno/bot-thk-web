@@ -33,6 +33,33 @@
       font-weight: 200;
     }
 
+    .profile-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & .time-text {
+        color: #d6e1ef;
+        font-size: 15.6px;
+      }
+
+      & .chat-btn {
+        outline: none;
+        background-color: transparent;
+        width: 35px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 20px;
+        cursor: pointer;
+        border-radius: 3px;
+        border: none;
+        box-shadow: -2px -2px 2px rgba(195, 200, 205, 0.09), 2px 2px 2px #000;
+
+      }
+    }
+
     p {
       text-align: center;
       font-size: 18px;
@@ -52,7 +79,7 @@
       margin-top: 60px;
     }
 
-    .profile-followInfo{
+    .profile-followInfo {
       display: flex;
       justify-content: center;
     }
@@ -190,10 +217,11 @@
       width: 300px;
       height: 200px;
 
-      h5{
-        margin:10px 0;
+      h5 {
+        margin: 10px 0;
       }
-      .desc-text{
+
+      .desc-text {
         font-size: 12px;
       }
     }

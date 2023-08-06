@@ -108,7 +108,7 @@ export type Mutation = {
   register: Scalars['String']['output'];
   resetPassword: Scalars['Boolean']['output'];
   revokeRefreshTokensForUser: Scalars['Boolean']['output'];
-  sendMesage: Scalars['Boolean']['output'];
+  sendMessage: Scalars['Boolean']['output'];
   unFollow: Scalars['Boolean']['output'];
   updateBlog: NewBlogResponse;
   updateParticipants: Scalars['Boolean']['output'];
@@ -186,6 +186,11 @@ export type MutationNewTagArgs = {
 };
 
 
+export type MutationRefreshTokenArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -204,7 +209,7 @@ export type MutationRevokeRefreshTokensForUserArgs = {
 };
 
 
-export type MutationSendMesageArgs = {
+export type MutationSendMessageArgs = {
   body: Scalars['String']['input'];
   conversationId: Scalars['String']['input'];
   senderId: Scalars['String']['input'];
@@ -384,6 +389,7 @@ export type User = {
 
 export type UserInfoResponse = {
   __typename?: 'UserInfoResponse';
+  _id: Scalars['String']['output'];
   about: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
@@ -428,7 +434,9 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
+export type RefreshTokenMutationVariables = Exact<{
+  userId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'UserResponse', ok: boolean, accessToken: string } };
@@ -538,14 +546,14 @@ export type UpdateParticipantsMutationVariables = Exact<{
 
 export type UpdateParticipantsMutation = { __typename?: 'Mutation', updateParticipants: boolean };
 
-export type SendMesageMutationVariables = Exact<{
+export type SendMessageMutationVariables = Exact<{
   conversationId: Scalars['String']['input'];
   senderId: Scalars['String']['input'];
   body: Scalars['String']['input'];
 }>;
 
 
-export type SendMesageMutation = { __typename?: 'Mutation', sendMesage: boolean };
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: boolean };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -625,14 +633,14 @@ export type SearchUsersQueryVariables = Exact<{
 }>;
 
 
-export type SearchUsersQuery = { __typename?: 'Query', searchUsers?: Array<{ __typename?: 'User', username: string, name: string, email: string, profile: string, about?: string | null, photo?: string | null, followingIds: Array<string>, followerIds: Array<string> }> | null };
+export type SearchUsersQuery = { __typename?: 'Query', searchUsers?: Array<{ __typename?: 'User', _id: any, username: string, name: string, email: string, profile: string, about?: string | null, photo?: string | null, followingIds: Array<string>, followerIds: Array<string> }> | null };
 
 export type GetUserInfoQueryVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
 
 
-export type GetUserInfoQuery = { __typename?: 'Query', getUserInfo: { __typename?: 'UserInfoResponse', createdAt: string, email: string, name: string, photo: string, about: string, username: string } };
+export type GetUserInfoQuery = { __typename?: 'Query', getUserInfo: { __typename?: 'UserInfoResponse', _id: string, createdAt: string, email: string, name: string, photo: string, about: string, username: string } };
 
 export type GetFollowInfoQueryVariables = Exact<{
   username?: InputMaybe<Scalars['String']['input']>;
@@ -644,14 +652,14 @@ export type GetFollowInfoQuery = { __typename?: 'Query', getFollowInfo?: { __typ
 export type ConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, _id: any, latestMessage?: { __typename?: 'Message', sender: { __typename?: 'User', _id: any, name: string } } | null, messages: Array<{ __typename?: 'Message', body: string, createdAt: string, sender: { __typename?: 'User', _id: any, name: string } }>, participants: Array<{ __typename?: 'Participant', _id: any, userId: string }> }> };
+export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, _id: any, latestMessage?: { __typename?: 'Message', sender: { __typename?: 'User', _id: any, name: string, username: string } } | null, messages: Array<{ __typename?: 'Message', body: string, createdAt: string, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }>, participants: Array<{ __typename?: 'Participant', _id: any, userId: string, user: { __typename?: 'User', _id: any, name: string, photo?: string | null } }> }> };
 
 export type MessagesQueryVariables = Exact<{
   conversationId: Scalars['String']['input'];
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', body: string, createdAt: string, senderId: string, _id: any, sender: { __typename?: 'User', _id: any, name: string } }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', body: string, createdAt: string, senderId: string, _id: any, sender: { __typename?: 'User', _id: any, name: string, photo?: string | null, username: string } }> };
 
 export type BlogPublishedSubscriptionVariables = Exact<{
   followingIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -698,8 +706,8 @@ export const LogoutDocument = gql`
 }
     `;
 export const RefreshTokenDocument = gql`
-    mutation RefreshToken {
-  refreshToken {
+    mutation RefreshToken($userId: String) {
+  refreshToken(userId: $userId) {
     ok
     accessToken
   }
@@ -780,9 +788,9 @@ export const UpdateParticipantsDocument = gql`
   )
 }
     `;
-export const SendMesageDocument = gql`
-    mutation SendMesage($conversationId: String!, $senderId: String!, $body: String!) {
-  sendMesage(conversationId: $conversationId, senderId: $senderId, body: $body)
+export const SendMessageDocument = gql`
+    mutation SendMessage($conversationId: String!, $senderId: String!, $body: String!) {
+  sendMessage(conversationId: $conversationId, senderId: $senderId, body: $body)
 }
     `;
 export const CurrentUserDocument = gql`
@@ -1041,6 +1049,7 @@ export const GetBlogByIdDocument = gql`
 export const SearchUsersDocument = gql`
     query SearchUsers($name: String!) {
   searchUsers(name: $name) {
+    _id
     username
     name
     email
@@ -1055,6 +1064,7 @@ export const SearchUsersDocument = gql`
 export const GetUserInfoDocument = gql`
     query GetUserInfo($username: String!) {
   getUserInfo(username: $username) {
+    _id
     createdAt
     email
     name
@@ -1099,6 +1109,7 @@ export const ConversationsDocument = gql`
       sender {
         _id
         name
+        username
       }
     }
     createdAt
@@ -1108,11 +1119,18 @@ export const ConversationsDocument = gql`
       sender {
         _id
         name
+        username
+        photo
       }
       createdAt
     }
     participants {
       _id
+      user {
+        _id
+        name
+        photo
+      }
       userId
     }
   }
@@ -1126,6 +1144,8 @@ export const MessagesDocument = gql`
     sender {
       _id
       name
+      photo
+      username
     }
     senderId
     _id
@@ -1217,8 +1237,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     UpdateParticipants(variables: UpdateParticipantsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateParticipantsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateParticipantsMutation>(UpdateParticipantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateParticipants', 'mutation');
     },
-    SendMesage(variables: SendMesageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<SendMesageMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SendMesageMutation>(SendMesageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendMesage', 'mutation');
+    SendMessage(variables: SendMessageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<SendMessageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendMessageMutation>(SendMessageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendMessage', 'mutation');
     },
     CurrentUser(variables?: CurrentUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CurrentUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQuery>(CurrentUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUser', 'query');

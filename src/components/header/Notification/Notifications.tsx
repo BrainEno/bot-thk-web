@@ -3,6 +3,7 @@ import { BiCheck } from 'react-icons/bi'
 import { LiaCheckDoubleSolid } from 'react-icons/lia'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 
@@ -12,6 +13,8 @@ import {
 } from '../../../hooks/store/useNotificationStore'
 import { useClickOutside } from '../../../hooks/useClickOutside'
 import useHover from '../../../hooks/useHover'
+
+dayjs.extend(relativeTime)
 
 const Notification = ({ notification }: { notification: INotification }) => {
     const isFollowerType = notification.type === 'user'
@@ -31,14 +34,7 @@ const Notification = ({ notification }: { notification: INotification }) => {
         <div className={classNames('notification-container')}>
             <div className="notification-label">
                 <p>{isFollowerType ? '新的关注' : '新的订阅'}</p>
-                <p>
-                    {dayjs(
-                        notification.dateString,
-                        'YYYY/MMM/DD',
-                        'zh',
-                        true
-                    ).format('YYYY-MM-DD')}
-                </p>
+                <p>{dayjs(notification.dateString, 'zh').fromNow()}</p>
             </div>
 
             <div className="notification-message" ref={msgRef}>
@@ -113,7 +109,11 @@ export const Notifications = ({
                         {isAnyNew && (
                             <button onClick={checkAll}>
                                 已读
-                                <LiaCheckDoubleSolid style={{marginLeft:4}} size={16} color="#fff" />
+                                <LiaCheckDoubleSolid
+                                    style={{ marginLeft: 4 }}
+                                    size={16}
+                                    color="#fff"
+                                />
                             </button>
                         )}
                     </div>
