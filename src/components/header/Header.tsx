@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BiLogIn, BiLogOut } from 'react-icons/bi'
 import { HiOutlineMenu } from 'react-icons/hi'
+import secureLocalStorage from 'react-secure-storage'
 import { isServer } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
@@ -36,11 +37,12 @@ import MenuSearch from './Search/MenuSearch'
 
 const Header = () => {
     const append = useNotificationStore((state) => state.append)
-    const userInLS = !isServer && localStorage.getItem('current-user')
+    const userInLS = !isServer && secureLocalStorage.getItem('current-user')
     const prevName = deepParse(userInLS)?.state?.prevName || ''
 
     const { pathname, query } = useRouter()
     const user = useAuthStore((state) => state.user)
+    const auth = useAuthStore((state) => state.auth)
 
     const { data: followings } = useQuery<
         GetFollowInfoQuery,
@@ -147,7 +149,7 @@ const Header = () => {
         } else {
             setIsAuth(false)
         }
-    }, [user])
+    }, [user, auth])
 
     useEffect(() => {
         const closeMenu = () => setMenuActive(false)

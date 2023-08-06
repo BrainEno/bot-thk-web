@@ -6,18 +6,19 @@ import {
     useRef,
     useState,
 } from 'react'
+import { BsFillChatLeftDotsFill } from 'react-icons/bs'
 import { IoMdArrowBack } from 'react-icons/io'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import {
-    GetFollowInfoQuery,
-} from '../../generated/graphql-request'
-import { useFollowMutation } from '../../hooks/mutation/useFollowMutation';
-import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation';
+import { GetFollowInfoQuery } from '../../generated/graphql-request'
+import { useFollowMutation } from '../../hooks/mutation/useFollowMutation'
+import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation'
 import useHover from '../../hooks/useHover'
+import { useStartConversation } from '../../hooks/useStartConversation'
 import Modal from '../Common/Modal'
+import { showAlert } from '../Common/Alert'
 
 interface FollowInfoProps {
     user: NonNullable<GetFollowInfoQuery['getFollowInfo']>['followers'][0]
@@ -34,7 +35,7 @@ interface FollowInfoListProps {
     hideFollowInfo: () => void
 }
 
-export const DEFAULT_AVATAR =process.env.NEXT_PUBLIC_DEFULT_AVATAR as string;
+export const DEFAULT_AVATAR = process.env.NEXT_PUBLIC_DEFULT_AVATAR as string
 
 export const FollowInfo = ({
     user,
@@ -45,7 +46,7 @@ export const FollowInfo = ({
     const unFollowBtn = useRef<HTMLButtonElement>(null!)
     const unFollowHovered = useHover(unFollowBtn)
 
-    const followMutation=useFollowMutation()
+    const followMutation = useFollowMutation()
 
     const follow = (name: string) => {
         followMutation.mutate({ followName: name })
@@ -56,8 +57,11 @@ export const FollowInfo = ({
         setToUnFollow(name)
     }
 
+    const { createConversation, error } = useStartConversation()
+
     return (
         <div className="followInfo">
+            {error && showAlert(error, 'error')}
             <div className="followInfo-left">
                 <Link href={`/profile/${user.username}`}>
                     <Image
@@ -69,7 +73,20 @@ export const FollowInfo = ({
                     />
                 </Link>
                 <div className="followInfo-profile">
-                    <span className="followInfo-name">{user.name}</span>
+                    <div className='followInfo-headline'>
+                        <Link
+                            href={`/profile/${user.username}`}
+                            className="followInfo-name"
+                        >
+                            {user.name}
+                        </Link>
+                        <button
+                            className="chat-btn"
+                            onClick={() => createConversation(user._id)}
+                        >
+                            <BsFillChatLeftDotsFill color="#444" />
+                        </button>
+                    </div>
                     <span className="followInfo-about">
                         {user.about && user.about}
                     </span>
@@ -109,7 +126,7 @@ const FollowInfoList = ({
     const [toUnFollow, setToUnFollow] = useState('')
     const confirmUnFollow = useRef(false)
 
-    const unFollowMutation=useUnFollowMutation()
+    const unFollowMutation = useUnFollowMutation()
 
     const users = useMemo(() => {
         if (type === 'FOLLOWER') {
@@ -172,7 +189,6 @@ const FollowInfoList = ({
                             setShowModal={setShowModal}
                             confirmUnFollow={confirmUnFollow.current}
                             setToUnFollow={setToUnFollow}
-                          
                         />
                     ))}
             </div>

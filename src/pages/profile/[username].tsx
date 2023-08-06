@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { BsFillChatLeftDotsFill } from 'react-icons/bs'
 import { FiUsers } from 'react-icons/fi'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -7,6 +8,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 
 import Avatar from '../../components/Avatar'
+import { showAlert } from '../../components/Common/Alert'
 import { Pagination } from '../../components/Common/Pagination'
 import MyBrand from '../../components/MyBrand'
 import {
@@ -25,6 +27,8 @@ import {
     GetUserBlogsQueryVariables,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
+import { useStartConversation } from '../../hooks/useStartConversation';
 
 const pageSize = 6
 
@@ -35,6 +39,7 @@ interface IUserProfileProps {
 }
 
 const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
+    const curUserId = useAuthStore((state) => state.user?._id)
     const { data: user } = useQuery<
         GetUserInfoQuery,
         Error,
@@ -83,7 +88,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         }
     )
 
-    const titleText = `${user?.username} | ${process.env.NEXT_PUBLIC_APP_NAME}`
+    const titleText = `${user?.name} | ${process.env.NEXT_PUBLIC_APP_NAME}`
 
     const head = () => (
         <Head>
@@ -134,9 +139,12 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         return blogs?.slice(firstIndex, lastIndex)
     }, [current, blogs])
 
+    const {createConversation,error} =useStartConversation();
+
     return (
         <>
             {user && head()}
+            {showAlert(error, 'error')}
             {user && (
                 <div className="profile-container">
                     <div className="profile-user">
@@ -168,9 +176,22 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                                     <b>{user.about}</b>
                                 </p>
                             )}
-                            <p>
-                                Joined {dayjs(user.createdAt, 'zh').fromNow()}
-                            </p>
+                            <div className="profile-bottom">
+                                <span className="time-text">
+                                    Joined{' '}
+                                    {dayjs(user.createdAt, 'zh').fromNow()}
+                                </span>
+                                {curUserId !== user._id && (
+                                    <button
+                                        className="chat-btn"
+                                        onClick={() =>
+                                            createConversation(user._id)
+                                        }
+                                    >
+                                        <BsFillChatLeftDotsFill color="#fff" />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
 

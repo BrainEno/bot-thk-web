@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -9,7 +9,6 @@ import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { showAlert } from '../Common/Alert'
 
 const SigninComponent = () => {
-    const user = useAuthStore((state) => state.user)
     const auth = useAuthStore((state) => state.auth)
 
     const router = useRouter()
@@ -67,10 +66,13 @@ const SigninComponent = () => {
             sdk.Login({ email, password })
                 .then(async (res) => {
                     if (res.login.ok) {
-                        await auth()
+                        await auth().then(() => {
+                            router.push('/dashboard')
+                        })
                     }
                 })
                 .catch((err: any) => {
+                    console.log(err)
                     if (err.response && err.response.errors) {
                         console.log(Object.keys(err.response))
 
@@ -93,12 +95,6 @@ const SigninComponent = () => {
                 })
         }
     }
-
-    useEffect(() => {
-        if (user && user._id) {
-            setTimeout(() => router.push('/dashboard'), 500)
-        }
-    }, [router, user])
 
     const signinForm = () => {
         return (

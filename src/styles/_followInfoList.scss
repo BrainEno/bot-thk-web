@@ -77,6 +77,12 @@
                 align-items: flex-start;
                 height: calc(100% - 16px);
 
+                .followInfo-headline {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                }
 
                 .followInfo-name {
                     font-weight: 600;
@@ -84,6 +90,19 @@
                     letter-spacing: 1.5px;
                     font-size: 17px;
                     margin-bottom: 8px;
+                }
+
+                .chat-btn {
+                    cursor: pointer;
+                    border: none;
+                    background-color: transparent;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-left: 4px;
+                    height: 24px;
+                    margin-bottom: 6px;
                 }
 
                 .followInfo-about {

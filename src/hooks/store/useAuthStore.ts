@@ -38,6 +38,8 @@ export const useAuthStore = create(
                 if (currentUser) {
                     set({ user: currentUser })
                     set({ prevName: currentUser.name })
+                } else {
+                    set({ user: null })
                 }
             },
             logOut: async () => {
