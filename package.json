@@ -27,6 +27,7 @@
   "author": "BrainEno",
   "license": "ISC",
   "dependencies": {
+    "@auth/core": "^0.10.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/noto-sans-sc": "^5.0.1",
