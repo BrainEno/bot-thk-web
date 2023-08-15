@@ -40,7 +40,5 @@ export const useMessagesQuery = ({
         }
     }, [isSuccess, user, refetch])
 
-    console.log('messages in hook', messages)
-
-    return messages
+    return messages ?? []
 }

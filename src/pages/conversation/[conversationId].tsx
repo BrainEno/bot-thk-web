@@ -20,7 +20,6 @@ const Conversations = () => {
             <div className="conversation">
                 <ConversationList
                     conversations={conversations!}
-                    curUserId={userId}
                 />
 
                 <ConversationContent

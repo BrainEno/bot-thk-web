@@ -27,7 +27,6 @@
   "author": "BrainEno",
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "^0.10.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/noto-sans-sc": "^5.0.1",
@@ -71,6 +70,7 @@
     "@netlify/plugin-nextjs": "^4.38.1",
     "@next/bundle-analyzer": "^13.2.3",
     "@types/gtag.js": "^0.0.12",
+    "@types/jest": "^29.5.3",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.14.6",
     "@types/prettier": "^2.7.2",
