@@ -2,16 +2,11 @@ import React from 'react'
 import { useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { signIn } from 'next-auth/react'
 
-import { sdk } from '../../generated/sdk'
-import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { showAlert } from '../Common/Alert'
+import { showAlert } from '../common/Alert'
 
 const SigninComponent = () => {
-    const auth = useAuthStore((state) => state.auth)
-
-    const router = useRouter()
     const [values, setValues] = useState({
         email: '',
         password: '',
@@ -62,37 +57,29 @@ const SigninComponent = () => {
             })
         } else {
             setValues({ ...values, loading: true, message: '' })
+            console.log(email, password)
+            signIn('credentials', { email, password }).catch((err: any) => {
+                console.log('logIn Error:', err)
+                if (err.response && err.response.errors) {
+                    console.log(Object.keys(err.response))
 
-            sdk.Login({ email, password })
-                .then(async (res) => {
-                    if (res.login.ok) {
-                        await auth().then(() => {
-                            router.push('/dashboard')
-                        })
-                    }
-                })
-                .catch((err: any) => {
-                    console.log(err)
-                    if (err.response && err.response.errors) {
-                        console.log(Object.keys(err.response))
-
-                        const errs = err.response.errors
-                        errs.forEach((err: any) => {
-                            const { code } = err.extensions
-                            if (code === 'INVALID_EMAIL') {
-                                setErrors({ ...errors, email: err.message })
-                            } else if (code === 'INVALID_PASSWORD') {
-                                setErrors({ ...errors, password: err.message })
-                            }
-                        })
-                        setValues({ ...values, loading: false, message: '' })
-                    }
-                    setValues({
-                        ...values,
-                        loading: false,
-                        message: '请求超时，请稍后重试',
+                    const errs = err.response.errors
+                    errs.forEach((err: any) => {
+                        const { code } = err.extensions
+                        if (code === 'INVALID_EMAIL') {
+                            setErrors({ ...errors, email: err.message })
+                        } else if (code === 'INVALID_PASSWORD') {
+                            setErrors({ ...errors, password: err.message })
+                        }
                     })
+                    setValues({ ...values, loading: false, message: '' })
+                }
+                setValues({
+                    ...values,
+                    loading: false,
+                    message: '请求超时，请稍后重试',
                 })
+            })
         }
     }
 

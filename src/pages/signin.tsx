@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import SigninComponent from '../components/auth/SigninComponent'
-import MyBrand from '../components/MyBrand'
+import MyBrand from '../components/common/MyBrand'
 
 const Signin = () => {
     return (

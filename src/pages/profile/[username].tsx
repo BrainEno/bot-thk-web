@@ -7,10 +7,10 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 
-import Avatar from '../../components/Avatar'
-import { showAlert } from '../../components/Common/Alert'
-import { Pagination } from '../../components/Common/Pagination'
-import MyBrand from '../../components/MyBrand'
+import { showAlert } from '../../components/common/Alert'
+import Avatar from '../../components/common/Avatar'
+import MyBrand from '../../components/common/MyBrand'
+import { Pagination } from '../../components/common/Pagination'
 import {
     GetUserInfoDocument,
     GetUserInfoQuery,

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import MyBrand from '../../../components/MyBrand'
+import MyBrand from '../../../components/common/MyBrand'
 import { sdk } from '../../../generated/sdk'
 import { getErrorMsg } from '../../../helpers/getErrorMsg'
 

@@ -36,10 +36,11 @@
         align-items: center;
         height: 48px;
         cursor: pointer;
+        margin-bottom: 10px;
         border-radius: 12px;
+        background-color: #fff;
 
-        &,
-        .selected {
+        &.selected {
             background-color: #e7f2ff;
         }
 
@@ -78,11 +79,10 @@
     padding-top: 40px;
     z-index: 1;
 
-
-
     .messages {
         position: sticky;
         width: calc(100% - 80px);
+        height: calc(100% - 66px);
         padding: 0px 40px;
         display: flex;
         flex-direction: column-reverse;
@@ -169,6 +169,8 @@
         border-bottom: #e5e5e5 1px solid;
         margin: 20px 30px;
         height: 28px;
+        position: absolute;
+        bottom: 0;
 
         .conversation-input {
             width: 96%;

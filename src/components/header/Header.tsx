@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import { useSubscription } from 'urql'
 
 import {
@@ -26,11 +27,12 @@ import { fetcher } from '../../graphql/gqlClient'
 import { deepParse } from '../../helpers/deepParse'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useNotificationStore } from '../../hooks/store/useNotificationStore'
+import useAuth from '../../hooks/useAuth'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import useScrollDirection from '../../hooks/useScrollDirection'
 import useWindowSize from '../../hooks/useWindowSize'
-import Avatar from '../Avatar'
-import MyBrand from '../MyBrand'
+import Avatar from '../common/Avatar'
+import MyBrand from '../common/MyBrand'
 
 import { MenuNotification } from './Notification/MenuNotification'
 import MenuSearch from './Search/MenuSearch'
@@ -39,10 +41,12 @@ const Header = () => {
     const append = useNotificationStore((state) => state.append)
     const userInLS = !isServer && secureLocalStorage.getItem('current-user')
     const prevName = deepParse(userInLS)?.state?.prevName || ''
+    const isAuth = useAuth(true)
 
     const { pathname, query } = useRouter()
-    const user = useAuthStore((state) => state.user)
-    const auth = useAuthStore((state) => state.auth)
+
+    const session = useSession()
+    const user = session.data?.user
 
     const { data: followings } = useQuery<
         GetFollowInfoQuery,
@@ -52,10 +56,10 @@ const Header = () => {
         ['userGetFollowInfo'],
         fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
             GetFollowInfoDocument,
-            { username: user?.username }
+            { username: user?.name }
         ),
         {
-            enabled: !!(user && user.username),
+            enabled: !!(user && user.name),
             select: (data) => data.getFollowInfo!.followings,
         }
     )
@@ -114,7 +118,6 @@ const Header = () => {
         }
     )
 
-    const [isAuth, setIsAuth] = useState(false)
     const { logOut } = useAuthStore()
     const router = useRouter()
     const [menuActive, setMenuActive] = useState(false)
@@ -139,17 +142,10 @@ const Header = () => {
 
     const handleLogOut = () => {
         logOut().then(() => {
+            session.data=null;
             router.push('/signin')
         })
     }
-
-    useEffect(() => {
-        if (user) {
-            setIsAuth(true)
-        } else {
-            setIsAuth(false)
-        }
-    }, [user, auth])
 
     useEffect(() => {
         const closeMenu = () => setMenuActive(false)
@@ -268,15 +264,15 @@ const Header = () => {
                         <div className="menu-avtar-container">
                             <Link href="/dashboard" passHref>
                                 <div className="my-avatar">
-                                    {!!user && (
+                                    {user && (
                                         <Avatar
                                             char={user.name
-                                                .slice(0, 1)
+                                                ?.slice(0, 1)
                                                 .toUpperCase()}
                                             title="个人主页"
                                             size={38}
                                             radius={38}
-                                            src={`${user?.photo ?? ''}`}
+                                            src={`${user?.image ?? ''}`}
                                         />
                                     )}
                                 </div>

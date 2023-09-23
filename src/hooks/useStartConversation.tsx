@@ -19,19 +19,18 @@ export const useStartConversation = () => {
     const createConversation = (userId: string) => {
         console.log('in createConversation:  ', conversations, isSuccess)
         if (conversations && isSuccess) {
-            const exist = conversations.find(
+            const existConversation = conversations.find(
                 (c) =>
                     userId !== curUserId &&
                     !!c.participants.find((p) => p.userId === userId) &&
-                    !!c.participants.find((p) => p.userId === curUserId)
+                    c.participants.find((p) => p.userId === curUserId)
             )
 
-            if (exist) {
-                console.log('conversation id:', exist._id.toString())
-                router.push(`/conversation/${exist._id.toString()}`)
+            if (existConversation) {
+                router.push(`/conversation/${existConversation._id.toString()}`)
             } else {
-                const participantIds = [userId, curUserId]
-                createConversationMutation.mutate({ participantIds })
+                const participantUserIds = [userId, curUserId]
+                createConversationMutation.mutate({ participantUserIds })
             }
         } else if (!isSuccess) {
             console.log(isSuccess)
@@ -40,8 +39,8 @@ export const useStartConversation = () => {
                 router.push('/signin')
             }, 2000)
         } else {
-            const participantIds = [userId, curUserId]
-            createConversationMutation.mutate({ participantIds })
+            const participantUserIds = [userId, curUserId]
+            createConversationMutation.mutate({ participantUserIds })
         }
         setError('')
     }

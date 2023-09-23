@@ -5,7 +5,7 @@ import { NextRouter, withRouter } from 'next/router'
 
 import { PostGrid, PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
-import Footer from '../components/Footer'
+import Footer from '../components/common/Footer'
 import { sdk } from '../generated/sdk'
 import { IBlog } from '../types'
 

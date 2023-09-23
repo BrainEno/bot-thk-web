@@ -1,26 +1,23 @@
 import { useState } from 'react'
 import { BsSend } from 'react-icons/bs'
+import { useRouter } from 'next/router'
 
 import { useSendMessageMutation } from '../../hooks/mutation/useSendMessageMutation'
-import { useMessagesQuery } from '../../hooks/query/useMessagesQuery'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
 
-import { MessageItem } from './MessageItem'
+import { ConversationMessages } from './ConversationMessages'
 
-interface ConversationProps {
-    conversationId: string
-    curUserId: string
-}
-
-export const ConversationContent = ({
-    conversationId,
-    curUserId,
-}: ConversationProps) => {
+export const ConversationContent = () => {
+    const curUserId = useAuthStore((state) => state.user?._id)
     const [body, setBody] = useState('')
     const sendMessageMutation = useSendMessageMutation((data) => {
         if (data) {
             console.log(data)
         }
     })
+    const router=useRouter()
+    const conversationId=router.query.conversationId as string;
+    console.log(conversationId)
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setBody(e.target.value)
@@ -36,23 +33,12 @@ export const ConversationContent = ({
         setBody('')
     }
 
-    const messages = useMessagesQuery({
-        conversationId,
-        enabled: !!conversationId,
-    })
-
     return (
         <div className="conversation-content">
-            <div className="messages">
-                {messages &&
-                    messages.map((m) => (
-                        <MessageItem
-                            key={m._id}
-                            message={m}
-                            sentByMe={m.senderId === curUserId}
-                        />
-                    ))}
-            </div>
+            <ConversationMessages
+                conversationId={conversationId}
+                curUserId={curUserId}
+            />
             <form onSubmit={handleSubmit} className="conversation-form">
                 <textarea
                     value={body}

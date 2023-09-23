@@ -78,6 +78,14 @@ export type FollowInfo = {
   followings: Array<User>;
 };
 
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  accessToken: Scalars['String']['output'];
+  accessTokenExpiry: Scalars['Float']['output'];
+  ok: Scalars['Boolean']['output'];
+  refreshToken: Scalars['String']['output'];
+};
+
 export type Message = {
   __typename?: 'Message';
   _id: Scalars['ObjectId']['output'];
@@ -99,12 +107,12 @@ export type Mutation = {
   editProfile: Scalars['Boolean']['output'];
   follow: Scalars['Boolean']['output'];
   forgotPassword: Scalars['String']['output'];
-  login: UserResponse;
+  login: LoginResponse;
   logout: Scalars['Boolean']['output'];
   markConversationAsRead: Scalars['Boolean']['output'];
   newCat: Scalars['Boolean']['output'];
   newTag: Scalars['Boolean']['output'];
-  refreshToken: UserResponse;
+  refreshToken: LoginResponse;
   register: Scalars['String']['output'];
   resetPassword: Scalars['Boolean']['output'];
   revokeRefreshTokensForUser: Scalars['Boolean']['output'];
@@ -122,7 +130,7 @@ export type MutationCreateBlogArgs = {
 
 
 export type MutationCreateConversationArgs = {
-  participantIds: Array<Scalars['String']['input']>;
+  participantUserIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -187,7 +195,7 @@ export type MutationNewTagArgs = {
 
 
 export type MutationRefreshTokenArgs = {
-  userId?: InputMaybe<Scalars['String']['input']>;
+  refreshToken: Scalars['String']['input'];
 };
 
 
@@ -398,12 +406,6 @@ export type UserInfoResponse = {
   username: Scalars['String']['output'];
 };
 
-export type UserResponse = {
-  __typename?: 'UserResponse';
-  accessToken: Scalars['String']['output'];
-  ok: Scalars['Boolean']['output'];
-};
-
 export type RegisterMutationVariables = Exact<{
   registerPassword: Scalars['String']['input'];
   registerEmail: Scalars['String']['input'];
@@ -419,7 +421,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', accessToken: string, ok: boolean } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', accessToken: string, refreshToken: string, accessTokenExpiry: number, ok: boolean } };
 
 export type CreateBlogMutationVariables = Exact<{
   blogInput: BlogInput;
@@ -435,11 +437,11 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type RefreshTokenMutationVariables = Exact<{
-  userId?: InputMaybe<Scalars['String']['input']>;
+  refreshToken: Scalars['String']['input'];
 }>;
 
 
-export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'UserResponse', ok: boolean, accessToken: string } };
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'LoginResponse', accessToken: string, accessTokenExpiry: number, refreshToken: string, ok: boolean } };
 
 export type EditProfileMutationVariables = Exact<{
   about?: InputMaybe<Scalars['String']['input']>;
@@ -525,7 +527,7 @@ export type UnFollowMutationVariables = Exact<{
 export type UnFollowMutation = { __typename?: 'Mutation', unFollow: boolean };
 
 export type CreateConversationMutationVariables = Exact<{
-  participantIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  participantUserIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
 }>;
 
 
@@ -689,6 +691,8 @@ export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email) {
     accessToken
+    refreshToken
+    accessTokenExpiry
     ok
   }
 }
@@ -706,10 +710,12 @@ export const LogoutDocument = gql`
 }
     `;
 export const RefreshTokenDocument = gql`
-    mutation RefreshToken($userId: String) {
-  refreshToken(userId: $userId) {
-    ok
+    mutation RefreshToken($refreshToken: String!) {
+  refreshToken(refreshToken: $refreshToken) {
     accessToken
+    accessTokenExpiry
+    refreshToken
+    ok
   }
 }
     `;
@@ -771,8 +777,8 @@ export const UnFollowDocument = gql`
 }
     `;
 export const CreateConversationDocument = gql`
-    mutation CreateConversation($participantIds: [String!]!) {
-  createConversation(participantIds: $participantIds)
+    mutation CreateConversation($participantUserIds: [String!]!) {
+  createConversation(participantUserIds: $participantUserIds)
 }
     `;
 export const DeleteConversationDocument = gql`
@@ -1192,7 +1198,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Logout(variables?: LogoutMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<LogoutMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutation>(LogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Logout', 'mutation');
     },
-    RefreshToken(variables?: RefreshTokenMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<RefreshTokenMutation> {
+    RefreshToken(variables: RefreshTokenMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<RefreshTokenMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RefreshTokenMutation>(RefreshTokenDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshToken', 'mutation');
     },
     EditProfile(variables?: EditProfileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<EditProfileMutation> {

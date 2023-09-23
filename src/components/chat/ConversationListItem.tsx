@@ -1,39 +1,46 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { MdDeleteOutline } from 'react-icons/md'
+import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 import { ConversationsQuery } from '../../generated/gql/graphql'
+import { useDeleteConversationMutation } from '../../hooks/mutation/useDeleteConversationMutation'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 interface ConversationListItemProps {
     conversation: NonNullable<ConversationsQuery['conversations'][0]>
+    selectedConversationId: string
 }
 
 export const ConversationListItem = ({
     conversation,
+    selectedConversationId,
 }: ConversationListItemProps) => {
+    const queryClient = useQueryClient()
     const curUserId = useAuthStore((state) => state.user?._id)
     const router = useRouter()
 
-    const otherParticipants = useMemo(
-        () =>
-            conversation.participants.filter((p) => p.userId !== curUserId) ||
-            [],
-        [conversation, curUserId]
+    const otherParticipants = conversation.participants.filter(
+        (p) => p.userId !== curUserId
     )
 
-    const selectConversation = (id: string) => {
-        router.push(`/conversation/${id}`)
+    const selectConversation = () => {
+        queryClient.invalidateQueries(['messages'])
+        router.push(`/conversation/${conversation._id}`)
     }
+
+    const deleteConversationMutation = useDeleteConversationMutation()
+
 
     return (
         <div
             key={conversation._id}
-            onClick={() => selectConversation(conversation._id)}
+            onClick={selectConversation}
             className={classNames('conversation-list-item', {
-                selected: conversation._id === router.query.conversationId,
+                selected: conversation._id === selectedConversationId,
             })}
         >
             <div className="avatars">
@@ -60,6 +67,15 @@ export const ConversationListItem = ({
                     </span>
                 ))}
             </div>
+            <button
+                onClick={() =>
+                    deleteConversationMutation.mutate({
+                        conversationId: conversation._id,
+                    })
+                }
+            >
+                <MdDeleteOutline fontSize={20} />
+            </button>
         </div>
     )
 }

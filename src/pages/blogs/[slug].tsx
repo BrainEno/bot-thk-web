@@ -10,14 +10,17 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import BannerImg from '../../components/BannerImg'
 import { PostMasonry, TagRow } from '../../components/blog'
+import BannerImg from '../../components/common/BannerImg'
 import { sdk } from '../../generated/sdk'
 import { IBlog } from '../../types'
 
-const DisqusThread = dynamic(() => import('../../components/DisqusThread'), {
-    ssr: false,
-})
+const DisqusThread = dynamic(
+    () => import('../../components/common/DisqusThread'),
+    {
+        ssr: false,
+    }
+)
 const ReadBlog = dynamic(() => import('../../components/blog/ReadBlog'), {
     ssr: false,
 })

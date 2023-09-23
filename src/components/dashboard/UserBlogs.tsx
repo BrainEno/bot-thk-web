@@ -7,11 +7,11 @@ import {
 } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
-import AddBtn from '../Common/AddBtn'
-import { showAlert } from '../Common/Alert'
-import Modal from '../Common/Modal'
-import { Pagination } from '../Common/Pagination'
-import MyBrand from '../MyBrand'
+import AddBtn from '../common/AddBtn'
+import { showAlert } from '../common/Alert'
+import Modal from '../common/Modal'
+import MyBrand from '../common/MyBrand'
+import { Pagination } from '../common/Pagination'
 
 import { UserBlogCard } from './UserBlogCard'
 

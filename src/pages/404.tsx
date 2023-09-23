@@ -1,4 +1,4 @@
-import MyIcon from '../components/MyIcon'
+import MyIcon from '../components/common/MyIcon'
 
 const Custom404 = () => {
     return (

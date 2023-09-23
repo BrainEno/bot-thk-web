@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 import { IBlog } from '../../types'
-import { Pagination } from '../Common/Pagination'
+import { Pagination } from '../common/Pagination'
 
 import PostInfo from './PostInfo'
 

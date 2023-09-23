@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 
-import { showAlert } from '../components/Common/Alert'
+import { showAlert } from '../components/common/Alert'
 import { DEFAULT_AVATAR } from '../components/dashboard/FollowInfoList'
 import {
     SearchBlogsDocument,

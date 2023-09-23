@@ -18,12 +18,12 @@ export const useCreateConversationMutation = (
         Error,
         CreateConversationMutationVariables
     >(
-        async ({ participantIds }) =>
+        async ({ participantUserIds }) =>
             fetcher<
                 CreateConversationMutation,
                 CreateConversationMutationVariables
             >(CreateConversationDocument, {
-                participantIds,
+                participantUserIds,
             })(),
         {
             onSuccess: (res) => {

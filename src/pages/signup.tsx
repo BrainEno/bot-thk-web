@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import SignupComponent from '../components/auth/SignupComponent'
-import MyBrand from '../components/MyBrand'
+import MyBrand from '../components/common/MyBrand'
 
 const Signup = () => {
     return (

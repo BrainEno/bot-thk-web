@@ -10,7 +10,7 @@ interface AuthState {
     user: CurrentUserQuery['currentUser'] | null
     prevName: string
     status: AuthStatus
-    auth: () => Promise<void>
+    setUser: () => Promise<void>
     logOut: () => Promise<void>
 }
 
@@ -32,13 +32,17 @@ export const useAuthStore = create(
             user: null,
             prevName: '',
             status: 'unknown' as AuthStatus,
-            auth: async () => {
-                const { currentUser } = await sdk.CurrentUser()
+            setUser: async () => {
+                try {
+                    const { currentUser } = await sdk.CurrentUser()
 
-                if (currentUser) {
-                    set({ user: currentUser })
-                    set({ prevName: currentUser.name })
-                } else {
+                    if (currentUser) {
+                        set({ user: currentUser })
+                        set({ prevName: currentUser.name })
+                    } else {
+                        set({ user: null })
+                    }
+                } catch (error) {
                     set({ user: null })
                 }
             },

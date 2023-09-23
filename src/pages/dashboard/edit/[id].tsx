@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
-import { showAlert } from '../../../components/Common/Alert'
+import { showAlert } from '../../../components/common/Alert'
 import { BlogForm } from '../../../components/crud/BlogForm'
 import {
     GetBlogByIdDocument,

@@ -12,8 +12,8 @@ import { QuillFormats, QuillModules } from '../../helpers/ToolbarOptions'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
 import { useUploadImage } from '../../hooks/useUpload'
-import BannerImg from '../BannerImg'
-import { showAlert } from '../Common/Alert'
+import { showAlert } from '../common/Alert'
+import BannerImg from '../common/BannerImg'
 
 import { TagList } from './TagList'
 
@@ -46,7 +46,7 @@ export const BlogForm = ({
     blogId,
 }: BlogFormProps) => {
     const router = useRouter()
-    const blogContainerRef = useRef(null)
+    const blogContainerRef = useRef<null | HTMLDivElement>(null)
 
     const user = useAuthStore((state) => state.user)
     const imageInput = useRef<HTMLInputElement | null>(null)
@@ -197,7 +197,9 @@ export const BlogForm = ({
                                 type="button"
                                 className="icon-btn"
                                 title="隐藏图片"
-                                onClick={() => setShowBanner(false)}
+                                onClick={() => {
+                                    setShowBanner(false)
+                                }}
                             >
                                 <BiHide />
                             </button>
@@ -206,7 +208,15 @@ export const BlogForm = ({
                                 <button
                                     type="button"
                                     className="icon-btn"
-                                    onClick={() => setShowBanner(true)}
+                                    onClick={() => {
+                                        blogContainerRef?.current?.scrollTo({
+                                            top: 0,
+                                            behavior: 'smooth',
+                                        })
+                                        setTimeout(() => {
+                                            setShowBanner(true)
+                                        }, 500)
+                                    }}
                                     title="预览图片"
                                 >
                                     <BiShow />

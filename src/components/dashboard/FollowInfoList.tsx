@@ -17,8 +17,8 @@ import { useFollowMutation } from '../../hooks/mutation/useFollowMutation'
 import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation'
 import useHover from '../../hooks/useHover'
 import { useStartConversation } from '../../hooks/useStartConversation'
-import Modal from '../Common/Modal'
-import { showAlert } from '../Common/Alert'
+import { showAlert } from '../common/Alert'
+import Modal from '../common/Modal'
 
 interface FollowInfoProps {
     user: NonNullable<GetFollowInfoQuery['getFollowInfo']>['followers'][0]

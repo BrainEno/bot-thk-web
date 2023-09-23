@@ -15,8 +15,8 @@ import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useUploadImage } from '../../hooks/useUpload'
 import useWindowSize from '../../hooks/useWindowSize'
-import Avatar from '../Avatar'
-import { showAlert } from '../Common/Alert'
+import { showAlert } from '../common/Alert'
+import Avatar from '../common/Avatar'
 
 interface UserInfoProps {
     user: NonNullable<CurrentUserQuery['currentUser']>
@@ -32,7 +32,7 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
     const [error, setError] = useState('')
 
     const [isEditing, setIsEditing] = useState(false)
-    const auth = useAuthStore((state) => state.auth)
+    const setUser = useAuthStore((state) => state.setUser)
 
     const { followers, followings } = useFollowInfo({
         enabled: !!(user && user.username),
@@ -46,7 +46,7 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
         sdk.EditProfile({ photo: imageUri })
             .then(async (success) => {
                 if (success) {
-                    await auth()
+                    await setUser()
                 }
             })
             .then((err) => {
@@ -75,7 +75,7 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
         e.preventDefault()
         sdk.EditProfile({ name, about: bio }).then((success) => {
             if (success) {
-                auth().then(() => {
+                setUser().then(() => {
                     setIsEditing(false)
                 })
             } else {

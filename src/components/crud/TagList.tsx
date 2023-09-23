@@ -16,7 +16,7 @@ import { getErrorMsg } from '../../helpers/getErrorMsg'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
 import useWindowSize from '../../hooks/useWindowSize'
-import { showAlert } from '../Common/Alert'
+import { showAlert } from '../common/Alert'
 
 interface TagListProps {
     isVisible: boolean

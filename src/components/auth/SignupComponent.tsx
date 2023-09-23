@@ -8,7 +8,7 @@ import { gqlClient } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 const SignupComponent = () => {
-    const { user, auth } = useAuthStore()
+    const { user, setUser } = useAuthStore()
     const isAuth = useMemo(() => !!user, [user])
     const router = useRouter()
     const [values, setValues] = useState({
@@ -80,7 +80,7 @@ const SignupComponent = () => {
                         })
                         gqlClient.setHeader('authorization', `Bearer ${token}`)
 
-                        await auth()
+                        await setUser()
                     }
                 })
                 .catch((err: any) => {

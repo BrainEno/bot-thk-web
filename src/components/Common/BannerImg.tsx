@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 
-import useWindowSize from '../hooks/useWindowSize'
+import useWindowSize from '../../hooks/useWindowSize'
+
 
 export interface BannerImgProps {
     imgSrc: string

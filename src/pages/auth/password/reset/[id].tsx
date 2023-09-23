@@ -2,7 +2,7 @@ import { useState } from 'react'
 import classNames from 'classnames'
 import { NextRouter, withRouter } from 'next/router'
 
-import MyBrand from '../../../../components/MyBrand'
+import MyBrand from '../../../../components/common/MyBrand'
 import { sdk } from '../../../../generated/sdk'
 
 const ResetPassword = ({ router }: { router: NextRouter }) => {
