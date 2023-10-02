@@ -17,7 +17,6 @@ export const useStartConversation = () => {
     })
 
     const createConversation = (userId: string) => {
-        console.log('in createConversation:  ', conversations, isSuccess)
         if (conversations && isSuccess) {
             const existConversation = conversations.find(
                 (c) =>

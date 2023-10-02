@@ -72,6 +72,13 @@ export type Conversation = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type ConversationUpdated = {
+  __typename?: 'ConversationUpdated';
+  addedUserIds?: Maybe<Array<Scalars['String']['output']>>;
+  conversation: Conversation;
+  removedUserIds?: Maybe<Array<Scalars['String']['output']>>;
+};
+
 export type FollowInfo = {
   __typename?: 'FollowInfo';
   followers: Array<User>;
@@ -179,7 +186,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationMarkConversationAsReadArgs = {
-  conversation: Scalars['String']['input'];
+  conversationId: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
@@ -346,21 +353,16 @@ export type QuerySearchUsersArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   blogPublished: Notification;
-  conversationCreated: Scalars['Boolean']['output'];
-  conversationDeleted: Scalars['Boolean']['output'];
-  conversationUpdated: Scalars['Boolean']['output'];
-  messageSent: Scalars['Boolean']['output'];
+  conversationCreated: Conversation;
+  conversationDeleted: Conversation;
+  conversationUpdated: ConversationUpdated;
+  messageSent: Message;
   userFollowed: Notification;
 };
 
 
 export type SubscriptionBlogPublishedArgs = {
   followingIds: Array<Scalars['String']['input']>;
-};
-
-
-export type SubscriptionMessageSentArgs = {
-  conversationId: Scalars['String']['input'];
 };
 
 
@@ -557,6 +559,14 @@ export type SendMessageMutationVariables = Exact<{
 
 export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: boolean };
 
+export type MarkConversationAsReadMutationVariables = Exact<{
+  conversationId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type MarkConversationAsReadMutation = { __typename?: 'Mutation', markConversationAsRead: boolean };
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -654,7 +664,7 @@ export type GetFollowInfoQuery = { __typename?: 'Query', getFollowInfo?: { __typ
 export type ConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, _id: any, latestMessage?: { __typename?: 'Message', sender: { __typename?: 'User', _id: any, name: string, username: string } } | null, messages: Array<{ __typename?: 'Message', body: string, createdAt: string, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }>, participants: Array<{ __typename?: 'Participant', _id: any, userId: string, user: { __typename?: 'User', _id: any, name: string, photo?: string | null } }> }> };
+export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, _id: any, latestMessage?: { __typename?: 'Message', sender: { __typename?: 'User', _id: any, name: string, username: string } } | null, messages: Array<{ __typename?: 'Message', body: string, createdAt: string, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }>, participants: Array<{ __typename?: 'Participant', _id: any, conversationId: string, userId: string, hasSeenLatestMessage: boolean, user: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }> }> };
 
 export type MessagesQueryVariables = Exact<{
   conversationId: Scalars['String']['input'];
@@ -676,6 +686,26 @@ export type UserFollowedSubscriptionVariables = Exact<{
 
 
 export type UserFollowedSubscription = { __typename?: 'Subscription', userFollowed: { __typename?: 'Notification', dateString: string, linkString: string, id: string, message: string } };
+
+export type ConversationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ConversationCreatedSubscription = { __typename?: 'Subscription', conversationCreated: { __typename?: 'Conversation', _id: any, createdAt?: string | null, participantUserIds: Array<string>, latestMessageId?: string | null, latestMessage?: { __typename?: 'Message', body: string, senderId: string } | null, participants: Array<{ __typename?: 'Participant', hasSeenLatestMessage: boolean, userId: string, conversationId: string }> } };
+
+export type ConversationDeletedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ConversationDeletedSubscription = { __typename?: 'Subscription', conversationDeleted: { __typename?: 'Conversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: any, participants: Array<{ __typename?: 'Participant', conversationId: string, hasSeenLatestMessage: boolean, userId: string, conversation: { __typename?: 'Conversation', latestMessageId?: string | null } }> } };
+
+export type ConversationUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ConversationUpdatedSubscription = { __typename?: 'Subscription', conversationUpdated: { __typename?: 'ConversationUpdated', addedUserIds?: Array<string> | null, removedUserIds?: Array<string> | null, conversation: { __typename?: 'Conversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: any, participants: Array<{ __typename?: 'Participant', hasSeenLatestMessage: boolean, conversationId: string, _id: any }> } } };
+
+export type MessageSentSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessageSentSubscription = { __typename?: 'Subscription', messageSent: { __typename?: 'Message', body: string, createdAt: string, senderId: string, updatedAt: string, _id: any, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } } };
 
 
 export const RegisterDocument = gql`
@@ -797,6 +827,11 @@ export const UpdateParticipantsDocument = gql`
 export const SendMessageDocument = gql`
     mutation SendMessage($conversationId: String!, $senderId: String!, $body: String!) {
   sendMessage(conversationId: $conversationId, senderId: $senderId, body: $body)
+}
+    `;
+export const MarkConversationAsReadDocument = gql`
+    mutation MarkConversationAsRead($conversationId: String!, $userId: String!) {
+  markConversationAsRead(conversationId: $conversationId, userId: $userId)
 }
     `;
 export const CurrentUserDocument = gql`
@@ -1135,9 +1170,12 @@ export const ConversationsDocument = gql`
       user {
         _id
         name
+        username
         photo
       }
+      conversationId
       userId
+      hasSeenLatestMessage
     }
   }
 }
@@ -1175,6 +1213,77 @@ export const UserFollowedDocument = gql`
     linkString
     id
     message
+  }
+}
+    `;
+export const ConversationCreatedDocument = gql`
+    subscription ConversationCreated {
+  conversationCreated {
+    _id
+    createdAt
+    latestMessage {
+      body
+      senderId
+    }
+    participantUserIds
+    participants {
+      hasSeenLatestMessage
+      userId
+      conversationId
+    }
+    latestMessageId
+  }
+}
+    `;
+export const ConversationDeletedDocument = gql`
+    subscription ConversationDeleted {
+  conversationDeleted {
+    participantUserIds
+    participants {
+      conversation {
+        latestMessageId
+      }
+      conversationId
+      hasSeenLatestMessage
+      userId
+    }
+    latestMessageId
+    _id
+  }
+}
+    `;
+export const ConversationUpdatedDocument = gql`
+    subscription ConversationUpdated {
+  conversationUpdated {
+    addedUserIds
+    removedUserIds
+    conversation {
+      participantUserIds
+      participants {
+        hasSeenLatestMessage
+        conversationId
+        _id
+      }
+      latestMessageId
+      _id
+    }
+  }
+}
+    `;
+export const MessageSentDocument = gql`
+    subscription MessageSent {
+  messageSent {
+    body
+    createdAt
+    sender {
+      _id
+      name
+      username
+      photo
+    }
+    senderId
+    updatedAt
+    _id
   }
 }
     `;
@@ -1246,6 +1355,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     SendMessage(variables: SendMessageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<SendMessageMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendMessageMutation>(SendMessageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendMessage', 'mutation');
     },
+    MarkConversationAsRead(variables: MarkConversationAsReadMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<MarkConversationAsReadMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MarkConversationAsReadMutation>(MarkConversationAsReadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MarkConversationAsRead', 'mutation');
+    },
     CurrentUser(variables?: CurrentUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CurrentUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQuery>(CurrentUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUser', 'query');
     },
@@ -1299,6 +1411,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UserFollowed(variables: UserFollowedSubscriptionVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UserFollowedSubscription> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserFollowedSubscription>(UserFollowedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UserFollowed', 'subscription');
+    },
+    ConversationCreated(variables?: ConversationCreatedSubscriptionVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ConversationCreatedSubscription> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ConversationCreatedSubscription>(ConversationCreatedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ConversationCreated', 'subscription');
+    },
+    ConversationDeleted(variables?: ConversationDeletedSubscriptionVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ConversationDeletedSubscription> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ConversationDeletedSubscription>(ConversationDeletedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ConversationDeleted', 'subscription');
+    },
+    ConversationUpdated(variables?: ConversationUpdatedSubscriptionVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ConversationUpdatedSubscription> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ConversationUpdatedSubscription>(ConversationUpdatedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ConversationUpdated', 'subscription');
+    },
+    MessageSent(variables?: MessageSentSubscriptionVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<MessageSentSubscription> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MessageSentSubscription>(MessageSentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MessageSent', 'subscription');
     }
   };
 }

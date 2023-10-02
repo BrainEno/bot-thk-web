@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from 'react'
+import { useState } from 'react'
+import { AiOutlineEdit } from 'react-icons/ai'
 import { MdDeleteOutline } from 'react-icons/md'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
@@ -10,35 +11,45 @@ import { useDeleteConversationMutation } from '../../hooks/mutation/useDeleteCon
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
+import { ConversationPopulated } from './ConversationList'
+
 interface ConversationListItemProps {
     conversation: NonNullable<ConversationsQuery['conversations'][0]>
     selectedConversationId: string
+    userId: string
+    onClick: () => void
+    onEditConversation: () => void
+    hasSeenLatestMessage?: boolean
+    onDeleteConversation?: (conversationId: string) => void
+    onLeaveConversation?: (conversation: ConversationPopulated) => void
 }
 
 export const ConversationListItem = ({
     conversation,
     selectedConversationId,
+    userId,
+    onClick,
+    onDeleteConversation,
+    onEditConversation,
+    onLeaveConversation,
 }: ConversationListItemProps) => {
-    const queryClient = useQueryClient()
-    const curUserId = useAuthStore((state) => state.user?._id)
-    const router = useRouter()
+    const [showOperations, setShowOperations] = useState(false)
 
     const otherParticipants = conversation.participants.filter(
-        (p) => p.userId !== curUserId
+        (p) => p.userId !== userId
     )
 
-    const selectConversation = () => {
-        queryClient.invalidateQueries(['messages'])
-        router.push(`/conversation/${conversation._id}`)
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault()
+        setShowOperations(true)
     }
-
-    const deleteConversationMutation = useDeleteConversationMutation()
 
 
     return (
         <div
             key={conversation._id}
-            onClick={selectConversation}
+            onClick={onClick}
+            onContextMenu={handleContextMenu}
             className={classNames('conversation-list-item', {
                 selected: conversation._id === selectedConversationId,
             })}
@@ -67,15 +78,49 @@ export const ConversationListItem = ({
                     </span>
                 ))}
             </div>
-            <button
-                onClick={() =>
-                    deleteConversationMutation.mutate({
-                        conversationId: conversation._id,
-                    })
-                }
-            >
-                <MdDeleteOutline fontSize={20} />
-            </button>
+            {showOperations && (
+                <div className="operations">
+                    <div
+                        className="operation-edit"
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            onEditConversation()
+                        }}
+                    >
+                        <AiOutlineEdit />
+                    </div>
+                    {conversation.participants.length > 2 ? (
+                        <div
+                            onClick={(event) => {
+                                event.stopPropagation()
+                                if (onLeaveConversation) {
+                                    onLeaveConversation(conversation)
+                                }
+                            }}
+                            className="operation-delete"
+                        >
+                            <MdDeleteOutline
+                                className="delete-icon"
+                                fontSize={20}
+                            />
+                        </div>
+                    ) : (
+                        <div
+                            onClick={(event) => {
+                                event.stopPropagation()
+                                if (onDeleteConversation)
+                                    onDeleteConversation(conversation._id)
+                            }}
+                            className="operation-delete"
+                        >
+                            <MdDeleteOutline
+                                className="delete-icon"
+                                fontSize={20}
+                            />
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

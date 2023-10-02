@@ -34,6 +34,7 @@ module.exports = withBundleAnalyzer({
             ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))
         }
 
+
         return config
     },
 })
