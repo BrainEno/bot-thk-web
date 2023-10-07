@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
-import { useSubscription } from 'urql'
+import { useClient, useSubscription } from 'urql'
 
 import {
     BlogPublishedSubscription,
@@ -42,6 +42,7 @@ const Header = () => {
     const userInLS = !isServer && secureLocalStorage.getItem('current-user')
     const prevName = deepParse(userInLS)?.state?.prevName || ''
     const isAuth = useAuth(true)
+    const client = useClient()
 
     const { pathname, query } = useRouter()
 
@@ -64,7 +65,7 @@ const Header = () => {
         }
     )
 
-    useSubscription<
+    const [userFollowedResult, userFollowedSubscription] = useSubscription<
         UserFollowedSubscription,
         Array<UserFollowedSubscription['userFollowed']>,
         SubscriptionUserFollowedArgs
@@ -74,6 +75,7 @@ const Header = () => {
             variables: {
                 name: user?.name || prevName || '',
             },
+            pause: !isAuth && !prevName,
         },
         (prev = [], data) => {
             const { dateString, message, id, linkString } = data.userFollowed
@@ -91,32 +93,36 @@ const Header = () => {
         }
     )
 
-    useSubscription<
-        BlogPublishedSubscription,
-        Array<BlogPublishedSubscription['blogPublished']>,
-        BlogPublishedSubscriptionVariables
-    >(
-        {
-            query: BlogPublishedDocument,
-            variables: {
-                followingIds: followings?.map((f) => f._id.toString()) ?? [],
+    const [blogPublishedSubscriptionResult, blogPublishedSubscription] =
+        useSubscription<
+            BlogPublishedSubscription,
+            Array<BlogPublishedSubscription['blogPublished']>,
+            BlogPublishedSubscriptionVariables
+        >(
+            {
+                query: BlogPublishedDocument,
+                variables: {
+                    followingIds:
+                        followings?.map((f) => f._id.toString()) ?? [],
+                },
+                pause: !isAuth && !prevName,
             },
-        },
-        (prev = [], data) => {
-            const { dateString, message, id, linkString } = data.blogPublished
-            const type = id.split('_')[0]
-            append({
-                message,
-                dateString,
-                id,
-                type,
-                linkString,
-                isViewed: false,
-            })
+            (prev = [], data) => {
+                const { dateString, message, id, linkString } =
+                    data.blogPublished
+                const type = id.split('_')[0]
+                append({
+                    message,
+                    dateString,
+                    id,
+                    type,
+                    linkString,
+                    isViewed: false,
+                })
 
-            return [data.blogPublished, ...prev]
-        }
-    )
+                return [data.blogPublished, ...prev]
+            }
+        )
 
     const { logOut } = useAuthStore()
     const router = useRouter()
@@ -142,7 +148,7 @@ const Header = () => {
 
     const handleLogOut = () => {
         logOut().then(() => {
-            session.data=null;
+            session.data = null
             router.push('/signin')
         })
     }
@@ -158,6 +164,30 @@ const Header = () => {
             router.events.off('routeChangeComplete', closeMenu)
         }
     })
+
+    useEffect(() => {
+        const blogSub = client
+            .subscription(BlogPublishedDocument, {
+                followingIds: followings?.map((f) => f._id.toString()) ?? [],
+            })
+            .subscribe((res) => {
+                if (res.error) {
+                    console.log(res.error)
+                    blogSub.unsubscribe()
+                }
+            })
+
+        const userSub = client
+            .subscription(UserFollowedDocument, {
+                name: user?.name || prevName || '',
+            })
+            .subscribe((res) => {
+                if (res.error) {
+                    console.log(res.error)
+                    userSub.unsubscribe()
+                }
+            })
+    }, [])
 
     return (
         <>

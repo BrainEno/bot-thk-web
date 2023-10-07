@@ -183,7 +183,6 @@ export const authOptions: AuthOptions = {
             session: Session
             token: JWT
         }) => {
-
             session.access_token = token.access_token
             session.expires_at = token.expires_at
             session.error = token.error

@@ -19,7 +19,10 @@ const useAuth = (shouldRedirect: boolean) => {
         }
 
         if (session === null) {
-            if (router.route !== '/' && router.route !== '/signin') {
+            if (
+                router.route.includes('/dashboard') ||
+                router.route.includes('/conversation')
+            ) {
                 router.replace('/signin')
             }
 
@@ -30,6 +33,7 @@ const useAuth = (shouldRedirect: boolean) => {
             if (router.route === '/signin') {
                 router.replace('/')
             }
+
             setIsAuthenticated(true)
             gqlClient.setHeaders({
                 Authrization: `Bearer ${session?.access_token}`,

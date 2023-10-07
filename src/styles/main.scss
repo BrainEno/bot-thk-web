@@ -27,9 +27,12 @@
 @import 'search.scss';
 @import 'conversation.scss';
 
+*{
+    box-sizing: border-box;
+}
+
 html,
 body {
-    box-sizing: border-box;
     font-family: 'Noto Sans SC', sans-serif;
     font-weight: 400;
     margin: 0;
