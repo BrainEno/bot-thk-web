@@ -112,7 +112,7 @@ const ConversationModal: React.FC<ConversationModalProps> = ({
                 continue
             }
 
-            let allMatchingParticipants: boolean = false
+            let allMatchingParticipants = false
             for (const participant of addedParticipants) {
                 const foundParticipant = participantIds.find(
                     (p) => p === participant.user._id

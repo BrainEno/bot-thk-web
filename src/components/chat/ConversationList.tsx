@@ -106,10 +106,12 @@ const ConversationList = ({
         closeModal()
     }
 
-    const sortedConversations = [...conversations].sort(
+    const sortedConversations = (
+        [...conversations] as unknown as Array<PopulatedConversation>
+    ).sort(
         (a, b) =>
-            transformDateFormatStringToNumber(b!.updatedAt) -
-            transformDateFormatStringToNumber(a!.updatedAt)
+            transformDateFormatStringToNumber(b!.updatedAt as string) -
+            transformDateFormatStringToNumber(a!.updatedAt as string)
     ) as Array<PopulatedConversation>
 
     return (
