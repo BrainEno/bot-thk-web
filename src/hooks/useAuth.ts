@@ -9,6 +9,7 @@ import { useAuthStore } from './store/useAuthStore'
 const useAuth = (shouldRedirect: boolean) => {
     const { data: session } = useSession()
     const router = useRouter()
+    const userId = useAuthStore((state) => state.user?._id)
     const setUser = useAuthStore((state) => state.setUser)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const logOut = useAuthStore((state) => state.logOut)
@@ -17,11 +18,11 @@ const useAuth = (shouldRedirect: boolean) => {
         if (session?.error === 'RefreshAccessTokenError') {
             signOut({ callbackUrl: '/signin', redirect: shouldRedirect })
         }
-
+        console.log(router.route)
         if (session === null) {
             if (
-                router.route.includes('/dashboard') ||
-                router.route.includes('/conversation')
+                router.route.includes('dashboard') ||
+                router.route.includes('conversation')
             ) {
                 router.replace('/signin')
             }
@@ -38,7 +39,9 @@ const useAuth = (shouldRedirect: boolean) => {
             gqlClient.setHeaders({
                 Authrization: `Bearer ${session?.access_token}`,
             })
-            setUser()
+            if (!userId || userId !== session.user.id) {
+                setUser()
+            }
         }
     }, [logOut, router, session, setUser, shouldRedirect])
 

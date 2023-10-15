@@ -12,11 +12,13 @@ import { GoogleAnalytics } from 'nextjs-google-analytics'
 import GraphqlProvider from '../components/graphql/GraphqlProvider'
 import Header from '../components/header/Header'
 import RefreshTokenHandler from '../components/RefreshTokenHandler'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            retry: 3,
+            staleTime: Infinity,
+            structuralSharing: false,
         },
     },
 })
@@ -25,13 +27,14 @@ function MyApp({
     Component,
     pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
-    const [interval, setInterval] = useState(0)
+    const [interval, setInterval] = useState(300000)
 
     return (
         <>
             <SessionProvider session={session} refetchInterval={interval}>
                 <GraphqlProvider>
                     <QueryClientProvider client={queryClient}>
+                        <ReactQueryDevtools initialIsOpen={true} />
                         <Header />
                         <GoogleAnalytics trackPageViews strategy="lazyOnload" />
                         <Component {...pageProps} />

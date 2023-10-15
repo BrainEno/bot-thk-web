@@ -195,6 +195,10 @@
             margin-bottom: 6px;
             padding: 8px 0;
 
+            &:last-of-type {
+                border-bottom: none;
+            }
+
             .followInfo-left {
                 .followInfo-avatar {
                     margin-right: 10px;

@@ -7,7 +7,10 @@ import { IBlog } from '../../types'
 
 export type ReadingStatus = 'default' | 'inited' | 'playing' | 'paused'
 
-const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
+const ReadBlog: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
+    blog,
+    backgroundColor = '#fff',
+}) => {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [selectedVoice, setSelectedVoice] = useState('')
     const [status, setStatus] = useState<ReadingStatus>('default')
@@ -72,7 +75,7 @@ const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
                 })
 
                 speakText.volume = 1
-                speakText.rate = 1
+                speakText.rate = 0.8
                 speakText.pitch = 1
 
                 if (synth.current) synth.current.cancel()
@@ -104,7 +107,7 @@ const ReadBlog: React.FC<{ blog: IBlog }> = ({ blog }) => {
     return (
         <>
             {voices.length > 0 && (
-                <div className="speaker-container">
+                <div className="speaker-container" style={{ backgroundColor }}>
                     <form onSubmit={handleRead}>
                         <select
                             value={selectedVoice}

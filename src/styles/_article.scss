@@ -16,6 +16,7 @@
 
       & p {
         font-size: 15px;
+        margin: 12px 0;
 
         .author-text {
           & a {
@@ -108,7 +109,6 @@
     .article-header-container {
       margin: 0;
       padding: 0px 30px;
-      width: calc(100% - 60px);
 
       .article-header {
         padding: 45px 0 0 !important;

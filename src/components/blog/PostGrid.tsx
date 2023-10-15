@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { IBlog } from '../../types'
 import { Pagination } from '../common/Pagination'
 
-import PostInfo from './PostInfo'
+import PostWithInfo from './PostWithInfo'
 
 const pageSize = 9
 
@@ -36,7 +36,7 @@ const PostGrid = ({ posts }: { posts: IBlog[] }) => {
         <section className="grid-pagination-container">
             <section className="post-grid" ref={firstPostRef}>
                 {paginatedPosts.map((post) => (
-                    <PostInfo post={post} key={post._id} />
+                    <PostWithInfo post={post} key={post._id} />
                 ))}
             </section>
             <Pagination

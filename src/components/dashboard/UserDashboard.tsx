@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -11,8 +11,9 @@ import {
     GetUserBlogsQuery,
     GetUserBlogsQueryVariables,
 } from '../../generated/graphql-request'
-import { fetcher } from '../../graphql/gqlClient'
+
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
+import { fetcher } from 'src/graphql/gqlClient'
 
 const FollowInfoList = dynamic(() => import('./FollowInfoList'), { ssr: false })
 const UserBlogs = dynamic(() => import('./UserBlogs'), { ssr: false })
@@ -36,7 +37,7 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
         error,
         isLoading,
     } = useQuery<GetUserBlogsQuery, Error, GetUserBlogsQuery['getUserBlogs']>(
-        ['getUserBlogs', user._id],
+        ['userBlogs', user._id],
         fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
             GetUserBlogsDocument,
             { userId: user._id }

@@ -16,6 +16,7 @@ import { showAlert } from '../common/Alert'
 import BannerImg from '../common/BannerImg'
 
 import { TagList } from './TagList'
+import { useQueryClient } from '@tanstack/react-query'
 
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
@@ -47,6 +48,7 @@ export const BlogForm = ({
 }: BlogFormProps) => {
     const router = useRouter()
     const blogContainerRef = useRef<null | HTMLDivElement>(null)
+    const queryClient = useQueryClient()
 
     const user = useAuthStore((state) => state.user)
     const imageInput = useRef<HTMLInputElement | null>(null)
@@ -109,6 +111,7 @@ export const BlogForm = ({
 
         if (formType === 'create') {
             await sdk.CreateBlog({ blogInput, tagIds: selectedTags })
+            queryClient.invalidateQueries(['userBlogs'])
         } else if (formType === 'edit') {
             if (blogId) {
                 await sdk.UpdateBlog({
@@ -116,6 +119,7 @@ export const BlogForm = ({
                     blogId: blogId,
                     tagIds: selectedTags,
                 })
+                queryClient.invalidateQueries(['userBlogs'])
             }
         }
 

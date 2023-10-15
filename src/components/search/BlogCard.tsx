@@ -12,7 +12,7 @@ interface BlogCardProps {
 
 const BlogCard = ({ blog }: BlogCardProps) => {
     return (
-        <div key={blog.slug} className="blog-card">
+        <div className="blog-card">
             <div>
                 <div className="card-info">
                     <Image

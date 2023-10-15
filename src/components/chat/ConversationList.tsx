@@ -1,24 +1,23 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useMutation } from 'urql'
 
 import {
     ConversationsQuery,
-    DeleteConversationDocument,
-    DeleteConversationMutation,
-    DeleteConversationMutationVariables,
-    UpdateParticipantsDocument,
-    UpdateParticipantsMutation,
-    UpdateParticipantsMutationVariables,
+    PopulatedConversation,
+    PopulatedParticipant,
 } from '../../generated/graphql-request'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
 import { showAlert } from '../common/Alert'
 
 import { ConversationListItem } from './ConversationListItem'
+import { useDeleteConversationMutation } from 'src/hooks/mutation/useDeleteConversationMutation'
+import { useUpdateParticipantsMuation } from 'src/hooks/mutation/useUpdateParticipantsMutation'
+import { useQueryClient } from '@tanstack/react-query'
+import Modal from '../common/Modal'
 
-export type ConversationPopulated = NonNullable<
-    ConversationsQuery['conversations']
->[0]
+import { ModalContext, IModalContext } from '../context/ModalContext'
+import { transformDateFormatStringToNumber } from 'src/helpers/transformDateFormatStringToNumber'
+import ConversationModal from './ConversationModal'
 
 interface ConversationListProps {
     userId: string
@@ -34,38 +33,50 @@ const ConversationList = ({
     conversations,
     onViewConversation,
 }: ConversationListProps) => {
+    const queryClient = useQueryClient()
+    const { modalOpen, openModal, closeModal } =
+        useContext<IModalContext>(ModalContext)
+
     const [editingConversation, setEditingConversation] =
-        useState<ConversationPopulated | null>(null)
+        useState<PopulatedConversation | null>(null)
     const [errorMsg, setErrorMsg] = useState('')
+    const [showDelModal, setShowDelModal] = useState(false)
+    const [conversationToDel, setConversationToDel] = useState('')
 
     const router = useRouter()
     const conversationId = router.query.conversationId as string
-
+    // console.log(conversationId)
     /**
      * Mutations
      */
-    const [updateParticipantsResult, updateParticipants] = useMutation<
-        UpdateParticipantsMutation,
-        UpdateParticipantsMutationVariables
-    >(UpdateParticipantsDocument)
+    const deleteConversationMutation = useDeleteConversationMutation()
+    const updateParticipantsMutation = useUpdateParticipantsMuation()
 
-    const [deleteConversationResult, deleteConversation] = useMutation<
-        DeleteConversationMutation,
-        DeleteConversationMutationVariables
-    >(DeleteConversationDocument)
+    const handleConfirmDel = () => {
+        deleteConversationMutation.mutate({
+            conversationId: conversationToDel,
+        })
+        setShowDelModal(false)
+        queryClient.invalidateQueries(['conversations', 'messages'])
+        router.push('/dashboard')
+    }
 
-    const onLeaveConversation = async (conversation: ConversationPopulated) => {
+    const handleCancelDel = () => {
+        setShowDelModal(false)
+    }
+
+    const onLeaveConversation = async (conversation: PopulatedConversation) => {
         const participantIds = conversation.participants
             .filter((p) => p.userId !== userId)
             .map((p) => p.userId)
 
         try {
-            const { data, error } = await updateParticipants({
+            const res = await updateParticipantsMutation.mutateAsync({
                 participantIds,
                 conversationId: conversation._id,
             })
 
-            if (!data || error) {
+            if (!res.updateParticipants) {
                 throw new Error('Failed to update participants')
             }
         } catch (error) {
@@ -74,33 +85,60 @@ const ConversationList = ({
         }
     }
 
-    const onDeleteConversation = async (conversationId: string) => {
-        try {
-            deleteConversation({
-                conversationId,
-            }).then((res) => {
-                if (res.data?.deleteConversation) router.push('/')
-            })
-        } catch (error) {
-            console.log('onDeleteConversation error', error)
-        }
+    const onDeleteConversation = (conversationId: string) => {
+        setConversationToDel(conversationId)
+        setShowDelModal(true)
     }
 
-    const getUserParticipantObject = (
-        conversation: ConversationsQuery['conversations'][0]
-    ) => {
-        return conversation.participants.find((p) => p.userId === userId)
+    const getUserParticipantObject = (conversation: PopulatedConversation) => {
+        return conversation.participants.find(
+            (p) => p.userId === userId
+        ) as PopulatedParticipant
     }
 
-    const onEditConversation = (conversation: ConversationPopulated) => {
+    const onEditConversation = (conversation: PopulatedConversation) => {
         setEditingConversation(conversation)
+        openModal()
     }
+
+    const toggleClose = () => {
+        setEditingConversation(null)
+        closeModal()
+    }
+
+    const sortedConversations = [...conversations].sort(
+        (a, b) =>
+            transformDateFormatStringToNumber(b!.updatedAt) -
+            transformDateFormatStringToNumber(a!.updatedAt)
+    ) as Array<PopulatedConversation>
 
     return (
         <div className="conversation-list">
             {showAlert(errorMsg, 'error')}
-            {!!conversations.length &&
-                conversations.map((conversation) => {
+            {showDelModal && (
+                <Modal
+                    onClose={() => setShowDelModal(false)}
+                    title={`删除会话`}
+                    closeOnClickOutside
+                >
+                    <p>确定要删除会话吗？</p>
+                    <div className="Modal__footer">
+                        <button onClick={handleConfirmDel}>确定</button>
+                        <button onClick={handleCancelDel}>取消</button>
+                    </div>
+                </Modal>
+            )}
+            <ConversationModal
+                conversations={sortedConversations}
+                isOpen={modalOpen}
+                onClose={toggleClose}
+                userId={userId}
+                editingConversation={editingConversation}
+                onViewConversation={onViewConversation}
+                getUserParticipantObject={getUserParticipantObject}
+            />
+            {!!sortedConversations.length &&
+                sortedConversations.map((conversation) => {
                     const participant = getUserParticipantObject(conversation!)
                     const hasSeenLatestMessage =
                         participant?.hasSeenLatestMessage || false
@@ -109,15 +147,20 @@ const ConversationList = ({
                         <ConversationListItem
                             key={conversation?._id}
                             userId={userId}
-                            conversation={conversation!}
-                            onClick={() =>
+                            conversation={
+                                conversation as unknown as PopulatedConversation
+                            }
+                            onClick={() => {
                                 onViewConversation(
                                     conversation?._id,
                                     hasSeenLatestMessage
                                 )
-                            }
+                                queryClient.invalidateQueries(['messages'])
+                            }}
                             onEditConversation={() =>
-                                onEditConversation(conversation!)
+                                onEditConversation(
+                                    conversation as unknown as PopulatedConversation
+                                )
                             }
                             onLeaveConversation={onLeaveConversation}
                             onDeleteConversation={onDeleteConversation}

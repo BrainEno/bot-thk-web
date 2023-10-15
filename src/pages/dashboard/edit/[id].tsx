@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
 import { showAlert } from '../../../components/common/Alert'
-import { BlogForm } from '../../../components/crud/BlogForm'
+import { BlogForm } from '../../../components/blog/BlogForm'
 import {
     GetBlogByIdDocument,
     GetBlogByIdQuery,

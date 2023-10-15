@@ -147,6 +147,7 @@ export const authOptions: AuthOptions = {
                     access_token: user.access_token,
                     expires_at: user.expires_at,
                     refresh_token: user.refresh_token,
+                    sub: user.id,
                 }
             }
 
@@ -183,10 +184,11 @@ export const authOptions: AuthOptions = {
             session: Session
             token: JWT
         }) => {
+            // console.log(session.access_token, token.access_token)
             session.access_token = token.access_token
             session.expires_at = token.expires_at
             session.error = token.error
-            session.user = { ...session.user }
+            session.user = { ...session.user, id: token.sub || '' }
             return Promise.resolve(session)
         },
     },

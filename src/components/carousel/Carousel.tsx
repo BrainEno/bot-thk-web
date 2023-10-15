@@ -59,7 +59,7 @@ const CarouselComponent = () => {
         setActiveIndex(newIndex)
     }
 
-    const cycleInterval = useRef<null | NodeJS.Timer>(null)
+    const cycleInterval = useRef<null | ReturnType<typeof setTimeout>>(null)
 
     const clear = useCallback(() => {
         if (cycleInterval.current) {

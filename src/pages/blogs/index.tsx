@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
 
-import PostInfo from '../../components/blog/PostInfo'
+import PostInfo from '../../components/blog/PostWithInfo'
 import {
     ListBlogsWithCatTagDocument,
     ListBlogsWithCatTagQuery,

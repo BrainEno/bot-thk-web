@@ -10,6 +10,7 @@ interface ModalProps {
     title: string
     // eslint-disable-next-line react/require-default-props
     closeOnClickOutside?: boolean
+    className?: string
 }
 
 function PortalImpl({
@@ -17,6 +18,7 @@ function PortalImpl({
     children,
     title,
     closeOnClickOutside,
+    className = 'Modal__modal',
 }: ModalProps) {
     const modalRef = useRef<HTMLDivElement>(null)
 
@@ -70,7 +72,7 @@ function PortalImpl({
 
     return (
         <div className="Modal__overlay" role="dialog">
-            <div className="Modal__modal" tabIndex={-1} ref={modalRef}>
+            <div className={className} tabIndex={-1} ref={modalRef}>
                 <h2 className="Modal__title">{title}</h2>
                 <button
                     className="Modal__closeButton"
@@ -90,12 +92,14 @@ const Modal = ({
     onClose,
     children,
     title,
+    className = 'Modal__modal',
     closeOnClickOutside = false,
 }: ModalProps): JSX.Element => {
     return createPortal(
         <PortalImpl
             onClose={onClose}
             title={title}
+            className={className}
             closeOnClickOutside={closeOnClickOutside}
         >
             {children}

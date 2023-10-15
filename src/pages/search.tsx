@@ -61,6 +61,8 @@ const SearchResult = () => {
         }
     )
 
+    console.log(blogs)
+
     const { data: users } = useQuery<
         SearchUsersQuery,
         Error,
@@ -115,6 +117,7 @@ const SearchResult = () => {
                     !!users &&
                     users.map((u) => (
                         <UserCard
+                            searchedUserId={u._id}
                             key={u.username}
                             photo={u.photo || DEFAULT_AVATAR}
                             name={u.name}

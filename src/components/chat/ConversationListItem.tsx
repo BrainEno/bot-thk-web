@@ -1,27 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { MdDeleteOutline } from 'react-icons/md'
-import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
-
-import { ConversationsQuery } from '../../generated/gql/graphql'
-import { useDeleteConversationMutation } from '../../hooks/mutation/useDeleteConversationMutation'
-import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
-
-import { ConversationPopulated } from './ConversationList'
+import { PopulatedConversation } from '../../generated/graphql-request'
 
 interface ConversationListItemProps {
-    conversation: NonNullable<ConversationsQuery['conversations'][0]>
-    selectedConversationId: string
+    conversation: PopulatedConversation
     userId: string
     onClick: () => void
-    onEditConversation: () => void
+    onEditConversation?: () => void
     hasSeenLatestMessage?: boolean
+    selectedConversationId?: string
     onDeleteConversation?: (conversationId: string) => void
-    onLeaveConversation?: (conversation: ConversationPopulated) => void
+    onLeaveConversation?: (conversation: PopulatedConversation) => void
 }
 
 export const ConversationListItem = ({
@@ -41,53 +34,97 @@ export const ConversationListItem = ({
 
     const handleContextMenu = (event: React.MouseEvent) => {
         event.preventDefault()
-        setShowOperations(true)
+        setShowOperations(!showOperations)
     }
 
+    const handleLeftClick = () => {
+        onClick()
+        if (showOperations) {
+            setShowOperations(false)
+        }
+    }
+    useEffect(() => {
+        if (selectedConversationId !== conversation._id) {
+            setShowOperations(false)
+        }
+    }, [selectedConversationId])
 
     return (
         <div
             key={conversation._id}
-            onClick={onClick}
+            onClick={handleLeftClick}
             onContextMenu={handleContextMenu}
             className={classNames('conversation-list-item', {
                 selected: conversation._id === selectedConversationId,
             })}
         >
             <div className="avatars">
-                {otherParticipants.map((p, i) => (
-                    <Image
-                        key={p._id.toString()}
-                        className="avatar"
-                        alt={p.user.name}
-                        src={p?.user?.photo || DEFAULT_AVATAR}
-                        width={30}
-                        height={30}
-                        style={{
-                            transform: `translateX(${i * 12}px)`,
-                            zIndex: (otherParticipants.length - i) * 1,
-                        }}
-                    />
-                ))}
+                {otherParticipants.length < 3 ? (
+                    otherParticipants.map((p, i) => (
+                        <Image
+                            key={p._id.toString()}
+                            className="avatar"
+                            alt={p.user.name}
+                            src={p?.user?.photo || DEFAULT_AVATAR}
+                            width={40}
+                            height={40}
+                            style={{
+                                transform: `translateX(${i * 12}px)`,
+                                zIndex: (otherParticipants.length - i) * 1,
+                            }}
+                        />
+                    ))
+                ) : (
+                    <>
+                        {otherParticipants.slice(0, 2).map((p, i) => (
+                            <Image
+                                key={p._id.toString()}
+                                className="avatar"
+                                alt={p.user.name}
+                                src={p?.user?.photo || DEFAULT_AVATAR}
+                                width={40}
+                                height={40}
+                                style={{
+                                    transform: `translateX(${i * 12}px)`,
+                                    zIndex: (otherParticipants.length - i) * 1,
+                                }}
+                            />
+                        ))}
+                        <div className="avatar-size">
+                            {otherParticipants.length}
+                        </div>
+                    </>
+                )}
             </div>
-            <div>
+            <div className="conversation-info">
                 {otherParticipants.map((p, i) => (
-                    <span key={p._id}>
+                    <span className="username" key={p._id}>
                         {p.user.name}{' '}
                         {i === otherParticipants.length - 1 ? '' : ', '}
                     </span>
                 ))}
+                {conversation.latestMessage && (
+                    <div className="latest-message">
+                        <span className="sender">
+                            {conversation.latestMessage.sender.name} :
+                        </span>
+                        <span className="content">
+                            {conversation.latestMessage.body}
+                        </span>
+                    </div>
+                )}
             </div>
+
             {showOperations && (
                 <div className="operations">
                     <div
                         className="operation-edit"
                         onClick={(event) => {
                             event.stopPropagation()
-                            onEditConversation()
+                            if (onEditConversation) onEditConversation()
                         }}
                     >
-                        <AiOutlineEdit />
+                        <AiOutlineEdit className="edit-icon" fontSize={20} />
                     </div>
                     {conversation.participants.length > 2 ? (
                         <div

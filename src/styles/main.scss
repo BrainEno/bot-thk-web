@@ -26,8 +26,11 @@
 @import 'followInfoList.scss';
 @import 'search.scss';
 @import 'conversation.scss';
+@import 'conversationModal.scss';
 
-*{
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -35,7 +38,6 @@ html,
 body {
     font-family: 'Noto Sans SC', sans-serif;
     font-weight: 400;
-    margin: 0;
     height: 100%;
     width: 100%;
     background-color: $background;
@@ -43,6 +45,7 @@ body {
 
 #__next {
     height: 100%;
+    width: 100%;
     background-color: $background;
 }
 

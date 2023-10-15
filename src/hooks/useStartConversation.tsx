@@ -34,9 +34,6 @@ export const useStartConversation = () => {
         } else if (!isSuccess) {
             console.log(isSuccess)
             setError('登录过期,请重新登录')
-            setTimeout(() => {
-                router.push('/signin')
-            }, 2000)
         } else {
             const participantUserIds = [userId, curUserId]
             createConversationMutation.mutate({ participantUserIds })

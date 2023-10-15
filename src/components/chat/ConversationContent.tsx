@@ -6,29 +6,21 @@ import { useSendMessageMutation } from '../../hooks/mutation/useSendMessageMutat
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 import { ConversationMessages } from './ConversationMessages'
-import { useMutation } from 'urql'
-import {
-    SendMessageDocument,
-    SendMessageMutation,
-} from '../../generated/gql/graphql'
-import { SendMessageMutationVariables } from '../../generated/graphql-request'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const ConversationContent = () => {
-    const curUserId = useAuthStore((state) => state.user?._id)
-    const [body, setBody] = useState('')
-    // const sendMessageMutation = useSendMessageMutation((data) => {
-    //     if (data.sendMessage) {
-    //       console.log(data)
-    //     }
-    // })
-
-    const [res, sendMessageMutation] = useMutation<
-        SendMessageMutation,
-        SendMessageMutationVariables
-    >(SendMessageDocument)
-
     const router = useRouter()
     const conversationId = router.query.conversationId as string
+
+    const queryClient = useQueryClient()
+    const curUserId = useAuthStore((state) => state.user?._id)
+    const [body, setBody] = useState('')
+
+    const sendMessageMutation = useSendMessageMutation((data) => {
+        if (data.sendMessage) {
+            console.log(data)
+        }
+    })
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setBody(e.target.value)
@@ -36,11 +28,12 @@ export const ConversationContent = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        sendMessageMutation({
+        sendMessageMutation.mutate({
             conversationId,
             senderId: curUserId,
             body,
         })
+        queryClient.invalidateQueries(['messages', conversationId])
         setBody('')
     }
 

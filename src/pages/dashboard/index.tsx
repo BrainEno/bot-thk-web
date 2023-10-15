@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+import useAuth from 'src/hooks/useAuth'
 
 const UserDashboard = dynamic(
     import('../../components/dashboard/UserDashboard'),
@@ -11,8 +12,9 @@ const UserDashboard = dynamic(
 
 const UserCenter = () => {
     const user = useAuthStore((state) => state.user)
+    const isAuth = useAuth(true)
 
-    return <>{user && <UserDashboard user={user} />}</>
+    return <>{user && isAuth && <UserDashboard user={user} />}</>
 }
 
 export default UserCenter

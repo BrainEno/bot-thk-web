@@ -120,7 +120,9 @@ export const SearchDropDown = ({
                     <div className="search-items">
                         <div className="search-status">
                             <span>搜索记录</span>
-                            <button onClick={() => clearAll()}>清空</button>
+                            {!!searchItems.length && (
+                                <button onClick={() => clearAll()}>清空</button>
+                            )}
                         </div>
                         {!!searchItems.length &&
                             searchItems.map((item) => (

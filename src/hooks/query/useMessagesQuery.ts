@@ -25,7 +25,11 @@ export const useMessagesQuery = ({
         fetcher<MessagesQuery, MessagesQueryVariables>(MessagesDocument, {
             conversationId,
         }),
-        { enabled, retry: 3, select: (res) => res.messages }
+        {
+            enabled,
+            retryDelay: 2000,
+            select: (res) => res.messages,
+        }
     )
 
     return messages ?? []

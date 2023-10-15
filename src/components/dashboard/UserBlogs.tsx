@@ -41,7 +41,7 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
                 if (res.deleteBlogById) {
                     setError('')
                     queryClient.invalidateQueries({
-                        queryKey: ['getUserBlogs'],
+                        queryKey: ['userBlogs'],
                     })
                     setShowModal(false)
                 }

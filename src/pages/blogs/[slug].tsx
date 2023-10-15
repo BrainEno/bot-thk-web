@@ -45,6 +45,8 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
             />
         )
     }, [blog])
+    const withOutImage =
+        !blog.imageUri || blog.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE
 
     const titleText = `${blog!.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
@@ -111,9 +113,18 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     return (
         <>
             {blog && head()}
-            {blog && <BannerImg imgSrc={blog.imageUri!} alt={blog!.title} />}
+            {withOutImage ? (
+                <div style={{ marginBottom: 65 }} />
+            ) : (
+                <BannerImg imgSrc={blog.imageUri!} alt={blog!.title} />
+            )}
             <main className="blog-article">
-                <article className="article-header-container">
+                <article
+                    className="article-header-container"
+                    style={{
+                        backgroundColor: withOutImage ? '#fbfbfb' : '#fff',
+                    }}
+                >
                     <section className="article-header">
                         <>
                             <h1>{blog && blog!.title}</h1>
@@ -143,8 +154,17 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                         {blog && <TagRow tags={blog.tags} />}
                     </section>
                 </article>
-                <ReadBlog blog={blog} />
-                <article className="article-content">
+
+                <ReadBlog
+                    blog={blog}
+                    backgroundColor={withOutImage ? '#fbfbfb' : '#fff'}
+                />
+                <article
+                    className="article-content"
+                    style={{
+                        backgroundColor: withOutImage ? '#fbfbfb' : '#fff',
+                    }}
+                >
                     {blog && (
                         <section
                             dangerouslySetInnerHTML={{

@@ -41,6 +41,7 @@ export const useAuthStore = create(
                         set({ prevName: currentUser.name })
                     } else {
                         set({ user: null })
+                        throw new Error('Not Authenticated Error')
                     }
                 } catch (error) {
                     set({ user: null })

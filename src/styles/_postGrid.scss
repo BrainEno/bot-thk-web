@@ -57,16 +57,21 @@
         }
 
         .author-text {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             color: $text-light;
+            margin: 16px 0 16px;
         }
 
         a {
             font-weight: 500;
             color: rgb(15, 136, 206) !important;
+            margin-right: 4px;
         }
 
         .description-text {
-            max-height: 85px;
+            height: 85px;
             font-size: 18px;
             font-weight: 400;
             color: #555;
@@ -97,21 +102,24 @@
             justify-content: center;
             align-items: center;
 
-            .post-container{
-                .post-title{
+            .post-container {
+                .post-title {
                     width: 80vw;
                     font-size: 18.5px;
                     text-overflow: ellipsis;
+                }
+
+                .description-text {
+                    height: 70px;
+                    max-width: 80vw;
+                    font-size: 16px;
+                    font-weight: 400;
+                    color: #555;
                 }
             }
         }
     }
 
 
-    .description-text {
-        max-width: 80vw;
-        font-size: 16px;
-        font-weight: 400;
-        color: #555;
-    }
+
 }

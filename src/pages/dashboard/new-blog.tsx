@@ -1,4 +1,4 @@
-import { BlogForm } from '../../components/crud/BlogForm'
+import { BlogForm } from '../../components/blog/BlogForm'
 
 const NewBlog = () => {
     return <BlogForm formType="create" />

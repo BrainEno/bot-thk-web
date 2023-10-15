@@ -85,7 +85,7 @@
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
-                margin-right: -3px;
+                    margin-right: -3px;
 
                     &:hover {
                         color: $white;
@@ -181,7 +181,7 @@
         .menu-notification {
             position: fixed;
             top: 15px;
-            right: 58px;
+            right: 50px;
             margin: 0;
             z-index: 4;
             background-color: transparent;
@@ -195,7 +195,7 @@
             .notifications {
                 position: fixed;
                 padding: 10px 0;
-                width: 100vw;
+                width: 100%;
                 transform-origin: top center;
                 left: 0;
                 top: 60px;

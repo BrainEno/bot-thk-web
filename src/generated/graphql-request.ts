@@ -75,7 +75,7 @@ export type Conversation = {
 export type ConversationUpdated = {
   __typename?: 'ConversationUpdated';
   addedUserIds?: Maybe<Array<Scalars['String']['output']>>;
-  conversation: Conversation;
+  conversation: PopulatedConversation;
   removedUserIds?: Maybe<Array<Scalars['String']['output']>>;
 };
 
@@ -271,6 +271,44 @@ export type Participant = {
   userId: Scalars['String']['output'];
 };
 
+export type PopulatedConversation = {
+  __typename?: 'PopulatedConversation';
+  _id: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  latestMessage?: Maybe<PopulatedMessage>;
+  latestMessageId?: Maybe<Scalars['String']['output']>;
+  messages: Array<PopulatedMessage>;
+  participantUserIds: Array<Scalars['String']['output']>;
+  participants: Array<PopulatedParticipant>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type PopulatedMessage = {
+  __typename?: 'PopulatedMessage';
+  _id: Scalars['String']['output'];
+  body: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  sender: PopulatedUser;
+  senderId: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type PopulatedParticipant = {
+  __typename?: 'PopulatedParticipant';
+  _id: Scalars['String']['output'];
+  hasSeenLatestMessage: Scalars['Boolean']['output'];
+  user: PopulatedUser;
+  userId: Scalars['String']['output'];
+};
+
+export type PopulatedUser = {
+  __typename?: 'PopulatedUser';
+  _id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  photo: Scalars['String']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   conversations: Array<Conversation>;
@@ -353,8 +391,8 @@ export type QuerySearchUsersArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   blogPublished: Notification;
-  conversationCreated: Conversation;
-  conversationDeleted: Conversation;
+  conversationCreated: PopulatedConversation;
+  conversationDeleted: PopulatedConversation;
   conversationUpdated: ConversationUpdated;
   messageSent: Message;
   userFollowed: Notification;
@@ -664,7 +702,7 @@ export type GetFollowInfoQuery = { __typename?: 'Query', getFollowInfo?: { __typ
 export type ConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, _id: any, latestMessage?: { __typename?: 'Message', sender: { __typename?: 'User', _id: any, name: string, username: string } } | null, messages: Array<{ __typename?: 'Message', body: string, createdAt: string, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }>, participants: Array<{ __typename?: 'Participant', _id: any, conversationId: string, userId: string, hasSeenLatestMessage: boolean, user: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }> }> };
+export type ConversationsQuery = { __typename?: 'Query', conversations: Array<{ __typename?: 'Conversation', createdAt?: string | null, updatedAt: string, _id: any, latestMessage?: { __typename?: 'Message', _id: any, senderId: string, createdAt: string, updatedAt: string, body: string, sender: { __typename?: 'User', _id: any, name: string, username: string } } | null, messages: Array<{ __typename?: 'Message', _id: any, senderId: string, body: string, createdAt: string, updatedAt: string, sender: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }>, participants: Array<{ __typename?: 'Participant', _id: any, conversationId: string, userId: string, hasSeenLatestMessage: boolean, user: { __typename?: 'User', _id: any, name: string, username: string, photo?: string | null } }> }> };
 
 export type MessagesQueryVariables = Exact<{
   conversationId: Scalars['String']['input'];
@@ -690,17 +728,17 @@ export type UserFollowedSubscription = { __typename?: 'Subscription', userFollow
 export type ConversationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationCreatedSubscription = { __typename?: 'Subscription', conversationCreated: { __typename?: 'Conversation', _id: any, createdAt?: string | null, participantUserIds: Array<string>, latestMessageId?: string | null, latestMessage?: { __typename?: 'Message', body: string, senderId: string } | null, participants: Array<{ __typename?: 'Participant', hasSeenLatestMessage: boolean, userId: string, conversationId: string }> } };
+export type ConversationCreatedSubscription = { __typename?: 'Subscription', conversationCreated: { __typename?: 'PopulatedConversation', _id: string, createdAt: string, participantUserIds: Array<string>, latestMessageId?: string | null, updatedAt?: string | null, latestMessage?: { __typename?: 'PopulatedMessage', body: string, senderId: string } | null, messages: Array<{ __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, updatedAt: string, sender: { __typename?: 'PopulatedUser', name: string, username: string, _id: string, photo: string } }>, participants: Array<{ __typename?: 'PopulatedParticipant', _id: string, hasSeenLatestMessage: boolean, userId: string }> } };
 
 export type ConversationDeletedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationDeletedSubscription = { __typename?: 'Subscription', conversationDeleted: { __typename?: 'Conversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: any, participants: Array<{ __typename?: 'Participant', conversationId: string, hasSeenLatestMessage: boolean, userId: string, conversation: { __typename?: 'Conversation', latestMessageId?: string | null } }> } };
+export type ConversationDeletedSubscription = { __typename?: 'Subscription', conversationDeleted: { __typename?: 'PopulatedConversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: string, createdAt: string, updatedAt?: string | null, participants: Array<{ __typename?: 'PopulatedParticipant', _id: string, hasSeenLatestMessage: boolean, userId: string }> } };
 
 export type ConversationUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationUpdatedSubscription = { __typename?: 'Subscription', conversationUpdated: { __typename?: 'ConversationUpdated', addedUserIds?: Array<string> | null, removedUserIds?: Array<string> | null, conversation: { __typename?: 'Conversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: any, participants: Array<{ __typename?: 'Participant', hasSeenLatestMessage: boolean, conversationId: string, _id: any }> } } };
+export type ConversationUpdatedSubscription = { __typename?: 'Subscription', conversationUpdated: { __typename?: 'ConversationUpdated', addedUserIds?: Array<string> | null, removedUserIds?: Array<string> | null, conversation: { __typename?: 'PopulatedConversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: string, updatedAt?: string | null, createdAt: string, participants: Array<{ __typename?: 'PopulatedParticipant', hasSeenLatestMessage: boolean, _id: string }>, latestMessage?: { __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, sender: { __typename?: 'PopulatedUser', _id: string, name: string, photo: string, username: string } } | null } } };
 
 export type MessageSentSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -1147,15 +1185,23 @@ export const ConversationsDocument = gql`
     query Conversations {
   conversations {
     latestMessage {
+      _id
+      senderId
+      createdAt
+      updatedAt
       sender {
         _id
         name
         username
       }
+      body
     }
     createdAt
+    updatedAt
     _id
     messages {
+      _id
+      senderId
       body
       sender {
         _id
@@ -1164,6 +1210,7 @@ export const ConversationsDocument = gql`
         photo
       }
       createdAt
+      updatedAt
     }
     participants {
       _id
@@ -1225,13 +1272,28 @@ export const ConversationCreatedDocument = gql`
       body
       senderId
     }
+    messages {
+      _id
+      body
+      senderId
+      sender {
+        name
+        username
+        _id
+        photo
+      }
+      createdAt
+      updatedAt
+    }
     participantUserIds
     participants {
+      _id
       hasSeenLatestMessage
       userId
-      conversationId
     }
     latestMessageId
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -1240,15 +1302,14 @@ export const ConversationDeletedDocument = gql`
   conversationDeleted {
     participantUserIds
     participants {
-      conversation {
-        latestMessageId
-      }
-      conversationId
+      _id
       hasSeenLatestMessage
       userId
     }
     latestMessageId
     _id
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -1261,11 +1322,24 @@ export const ConversationUpdatedDocument = gql`
       participantUserIds
       participants {
         hasSeenLatestMessage
-        conversationId
         _id
       }
       latestMessageId
+      latestMessage {
+        _id
+        body
+        senderId
+        createdAt
+        sender {
+          _id
+          name
+          photo
+          username
+        }
+      }
       _id
+      updatedAt
+      createdAt
     }
   }
 }

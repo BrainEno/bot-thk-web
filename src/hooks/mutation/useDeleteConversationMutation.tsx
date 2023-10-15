@@ -5,11 +5,10 @@ import {
     DeleteConversationMutation,
     DeleteConversationMutationVariables,
 } from '../../generated/gql/graphql'
-import {} from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
 
 export const useDeleteConversationMutation = (
-    onSuccess?: (data: DeleteConversationMutation) => void
+    onSuccess?: (data?: DeleteConversationMutation) => void
 ) => {
     const queryClient = useQueryClient()
 

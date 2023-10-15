@@ -3,13 +3,17 @@ import Image from 'next/image'
 
 import { CurrentUserQuery } from '../../generated/graphql-request'
 import { useFollowMutation } from '../../hooks/mutation/useFollowMutation'
-import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation';
+import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
-
+import Link from 'next/link'
+import { useStartConversation } from 'src/hooks/useStartConversation'
+import { BsFillChatLeftDotsFill } from 'react-icons/bs'
+import { showAlert } from '../common/Alert'
 
 export interface UserCardProps {
+    searchedUserId: string
     photo: string
     name: string
     about: string
@@ -19,6 +23,7 @@ export interface UserCardProps {
 }
 
 const UserCard = ({
+    searchedUserId,
     photo,
     name,
     about,
@@ -34,9 +39,14 @@ const UserCard = ({
         username: user!.username,
     })
 
+    const curUserId = curUser?._id
+
     const followMutation = useFollowMutation()
 
-    const unFollowMutation =useUnFollowMutation() 
+    const unFollowMutation = useUnFollowMutation()
+
+    const { createConversation, error: createConversationError } =
+        useStartConversation()
 
     const follow = (name: string) => {
         if (curUser) {
@@ -56,18 +66,32 @@ const UserCard = ({
 
     return (
         <div className="user-card">
+            {createConversationError &&
+                showAlert(createConversationError, 'error')}
             <div className="user-avatar-wrp">
-                <Image
-                    className="user-avatar"
-                    priority={true}
-                    src={photo || DEFAULT_AVATAR}
-                    alt="avatar"
-                    width={48}
-                    height={48}
-                />
+                <Link href={`/profile/${username}`}>
+                    <Image
+                        className="user-avatar"
+                        priority={true}
+                        src={photo || DEFAULT_AVATAR}
+                        alt="avatar"
+                        width={48}
+                        height={48}
+                    />
+                </Link>
             </div>
             <div className="user-info">
-                <div className="user-name">{name}</div>
+                <div className="user-name">
+                    <span>{name}</span>
+                    {curUserId !== searchedUserId && (
+                        <button
+                            className="chat-btn"
+                            onClick={() => createConversation(searchedUserId)}
+                        >
+                            <BsFillChatLeftDotsFill />
+                        </button>
+                    )}
+                </div>
                 <p className="user-about">{about}</p>
             </div>
 

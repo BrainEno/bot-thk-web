@@ -28,7 +28,8 @@ import {
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { useStartConversation } from '../../hooks/useStartConversation';
+import { useStartConversation } from '../../hooks/useStartConversation'
+import useWindowSize from '../../hooks/useWindowSize'
 
 const pageSize = 6
 
@@ -39,6 +40,12 @@ interface IUserProfileProps {
 }
 
 const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
+    const { windowWidth } = useWindowSize()
+
+    const isDesktop = useMemo(
+        () => windowWidth && windowWidth > 900,
+        [windowWidth]
+    )
     const curUserId = useAuthStore((state) => state.user?._id)
     const { data: user } = useQuery<
         GetUserInfoQuery,
@@ -129,7 +136,6 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
     )
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
     const [current, setCurrent] = useState(1)
 
     const paginatedBlogs = useMemo(() => {
@@ -139,7 +145,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         return blogs?.slice(firstIndex, lastIndex)
     }, [current, blogs])
 
-    const {createConversation,error} =useStartConversation();
+    const { createConversation, error } = useStartConversation()
 
     return (
         <>
@@ -151,8 +157,8 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                         <div className="avatar-container">
                             <Avatar
                                 title="头像"
-                                size={100}
-                                radius={100}
+                                size={isDesktop ? 100 : 90}
+                                radius={isDesktop ? 100 : 90}
                                 src={`${user.photo}`}
                             />
                         </div>
@@ -233,7 +239,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                                 : ''}
                         </div>
                     </div>
-                    {blogs && (
+                    {!!(blogs && blogs.length) && (
                         <Pagination
                             pageSize={pageSize}
                             total={blogs.length}

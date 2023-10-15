@@ -1,32 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BiLogIn, BiLogOut } from 'react-icons/bi'
 import { HiOutlineMenu } from 'react-icons/hi'
-import secureLocalStorage from 'react-secure-storage'
-import { isServer } from '@tanstack/react-query'
-import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
-import { useClient, useSubscription } from 'urql'
 
-import {
-    BlogPublishedSubscription,
-    BlogPublishedSubscriptionVariables,
-    UserFollowedSubscription,
-} from '../../generated/gql/graphql'
-import { BlogPublishedDocument } from '../../generated/gql/graphql'
-import {
-    GetFollowInfoDocument,
-    GetFollowInfoQuery,
-    GetFollowInfoQueryVariables,
-    SubscriptionUserFollowedArgs,
-    UserFollowedDocument,
-} from '../../generated/graphql-request'
-import { fetcher } from '../../graphql/gqlClient'
-import { deepParse } from '../../helpers/deepParse'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { useNotificationStore } from '../../hooks/store/useNotificationStore'
 import useAuth from '../../hooks/useAuth'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import useScrollDirection from '../../hooks/useScrollDirection'
@@ -36,96 +16,19 @@ import MyBrand from '../common/MyBrand'
 
 import { MenuNotification } from './Notification/MenuNotification'
 import MenuSearch from './Search/MenuSearch'
+import { useBlogPulished } from 'src/hooks/subscriptions/useBlogPublished'
+import { useUserFollowed } from 'src/hooks/subscriptions/useUserFollowed'
+import { useConversationCreated } from 'src/hooks/subscriptions/useConversationCreated'
+import { useConversationDeleted } from 'src/hooks/subscriptions/useConversationDeleted'
 
 const Header = () => {
-    const append = useNotificationStore((state) => state.append)
-    const userInLS = !isServer && secureLocalStorage.getItem('current-user')
-    const prevName = deepParse(userInLS)?.state?.prevName || ''
+    const logOut = useAuthStore((state) => state.logOut)
+    const router = useRouter()
     const isAuth = useAuth(true)
-    const client = useClient()
-
     const { pathname, query } = useRouter()
-
     const session = useSession()
     const user = session.data?.user
 
-    const { data: followings } = useQuery<
-        GetFollowInfoQuery,
-        Error,
-        NonNullable<GetFollowInfoQuery['getFollowInfo']>['followings']
-    >(
-        ['userGetFollowInfo'],
-        fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
-            GetFollowInfoDocument,
-            { username: user?.name }
-        ),
-        {
-            enabled: !!(user && user.name),
-            select: (data) => data.getFollowInfo!.followings,
-        }
-    )
-
-    const [userFollowedResult, userFollowedSubscription] = useSubscription<
-        UserFollowedSubscription,
-        Array<UserFollowedSubscription['userFollowed']>,
-        SubscriptionUserFollowedArgs
-    >(
-        {
-            query: UserFollowedDocument,
-            variables: {
-                name: user?.name || prevName || '',
-            },
-            pause: !isAuth && !prevName,
-        },
-        (prev = [], data) => {
-            const { dateString, message, id, linkString } = data.userFollowed
-            const type = id.split('_')[0]
-            append({
-                message,
-                dateString,
-                id,
-                type,
-                linkString,
-                isViewed: false,
-            })
-
-            return [data.userFollowed, ...prev]
-        }
-    )
-
-    const [blogPublishedSubscriptionResult, blogPublishedSubscription] =
-        useSubscription<
-            BlogPublishedSubscription,
-            Array<BlogPublishedSubscription['blogPublished']>,
-            BlogPublishedSubscriptionVariables
-        >(
-            {
-                query: BlogPublishedDocument,
-                variables: {
-                    followingIds:
-                        followings?.map((f) => f._id.toString()) ?? [],
-                },
-                pause: !isAuth && !prevName,
-            },
-            (prev = [], data) => {
-                const { dateString, message, id, linkString } =
-                    data.blogPublished
-                const type = id.split('_')[0]
-                append({
-                    message,
-                    dateString,
-                    id,
-                    type,
-                    linkString,
-                    isViewed: false,
-                })
-
-                return [data.blogPublished, ...prev]
-            }
-        )
-
-    const { logOut } = useAuthStore()
-    const router = useRouter()
     const [menuActive, setMenuActive] = useState(false)
     const { windowWidth } = useWindowSize()
 
@@ -137,9 +40,25 @@ const Header = () => {
     const menuRef = useRef<HTMLDivElement>(null)
     const btnRef = useRef<HTMLButtonElement>(null)
 
-    useClickOutside(btnRef, () => setMenuActive(false), menuRef)
     const scrollDirection = useScrollDirection()
     const showHeader = scrollDirection === 'down'
+    /**
+     * Notifiction Subscriptions
+     */
+    useBlogPulished(user)
+    useUserFollowed(user)
+
+    /**
+     * Conversation Subscriptions
+     */
+
+    useConversationCreated(isAuth)
+    useConversationDeleted(isAuth)
+
+    /**
+     * Handle mobile menu clickOutside
+     */
+    useClickOutside(btnRef, () => setMenuActive(false), menuRef)
 
     const handleMenuClick = (e: MouseEvent) => {
         e.preventDefault()
@@ -164,30 +83,6 @@ const Header = () => {
             router.events.off('routeChangeComplete', closeMenu)
         }
     })
-
-    useEffect(() => {
-        const blogSub = client
-            .subscription(BlogPublishedDocument, {
-                followingIds: followings?.map((f) => f._id.toString()) ?? [],
-            })
-            .subscribe((res) => {
-                if (res.error) {
-                    console.log(res.error)
-                    blogSub.unsubscribe()
-                }
-            })
-
-        const userSub = client
-            .subscription(UserFollowedDocument, {
-                name: user?.name || prevName || '',
-            })
-            .subscribe((res) => {
-                if (res.error) {
-                    console.log(res.error)
-                    userSub.unsubscribe()
-                }
-            })
-    }, [])
 
     return (
         <>
