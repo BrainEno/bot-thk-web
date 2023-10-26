@@ -4,22 +4,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 220px;
-        height: 45px;
-        padding: 10px;
-        box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
-        border-radius: 50px;
-        margin: 30px auto;
-
-        .ant-pagination {
-            text-align: center;
-        }
-    }
 }
 
 .post-grid {
@@ -56,6 +40,12 @@
             white-space: nowrap;
         }
 
+        @include themify($themes) {
+            .post-title {
+                color: themed('textColor');
+            }
+        }
+
         .author-text {
             display: flex;
             flex-direction: row;
@@ -71,7 +61,7 @@
         }
 
         .description-text {
-            height: 85px;
+            height: 80px;
             font-size: 18px;
             font-weight: 400;
             color: #555;

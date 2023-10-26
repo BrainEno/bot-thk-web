@@ -1,4 +1,24 @@
+.theme-dark .dashboard-right-container {
+    background: linear-gradient(89.72deg, #1f1f1f -4.95%, #252525 578.66%);
+}
+
+.theme-dark .dashboard-right-container .header-container .brand-container {
+    box-shadow: 3px 3px 7px #ffffff,
+        -3px -3px 5px rgba(224, 224, 224, 0.68);
+    filter: invert(100%);
+}
+
 .dashboard-right-container {
+    @include themify($themes) {
+
+        p,
+        h2,
+        h5 {
+            color: themed('textColor');
+        }
+
+    }
+
     background: linear-gradient(89.72deg, #f0f4f9 -4.95%, #eaebf3 578.66%);
     display: flex;
     flex: 1;
@@ -48,6 +68,11 @@
     }
 }
 
+.theme-dark .blog-card-container .blog-card {
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6),
+        -6px -6px 26px rgba(0, 0, 0, 0.25);
+}
+
 .blog-card-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -79,7 +104,7 @@
                 text-overflow: ellipsis;
 
                 &:hover {
-                    color: $text-link;
+                    color: $link-actived;
                     white-space: pre-wrap;
                     text-overflow: initial;
                 }
@@ -117,11 +142,15 @@
             width: 16px;
             height: 16px;
             margin-left: 13px;
+
+            @include themify($themes) {
+                color: themed('textColor');
+            }
         }
 
         svg:hover {
             transform: scale(1.1);
-            color: $text-link;
+            color: $link-actived;
         }
     }
 }

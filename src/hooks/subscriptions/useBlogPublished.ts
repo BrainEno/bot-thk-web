@@ -1,17 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { User } from 'next-auth'
+import { useClient } from 'urql'
+
 import {
     BlogPublishedDocument,
     GetFollowInfoDocument,
     GetFollowInfoQuery,
     GetFollowInfoQueryVariables,
-} from 'src/generated/graphql-request'
-import { fetcher } from 'src/graphql/gqlClient'
-import { useClient } from 'urql'
-import { useQuery } from '@tanstack/react-query'
-import { User } from 'next-auth'
+} from '../../generated/graphql-request'
+import { fetcher } from '../../graphql/gqlClient'
 import { useNotificationStore } from '../store/useNotificationStore'
 
 export const useBlogPulished = (user?: User) => {
+    const ref = useRef<any | null>(null)
     const client = useClient()
     const append = useNotificationStore((state) => state.append)
 
@@ -32,8 +34,10 @@ export const useBlogPulished = (user?: User) => {
     )
 
     useEffect(() => {
-        if (!user) return
-        const blogPublishedSubscription = client
+        if (!user || !ref.current) return
+        let blogPublishedSubscription = ref.current
+
+        blogPublishedSubscription = client
             .subscription(BlogPublishedDocument, {
                 followingIds: followings?.map((f) => f._id.toString()) ?? [],
             })
@@ -58,8 +62,10 @@ export const useBlogPulished = (user?: User) => {
             })
 
         return () => {
-            if (blogPublishedSubscription)
+            if (blogPublishedSubscription) {
+                console.log('blogPublishedSubscription unsubscribed')
                 blogPublishedSubscription.unsubscribe()
+            }
         }
     }, [client, user])
 }

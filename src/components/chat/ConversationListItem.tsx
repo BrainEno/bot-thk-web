@@ -3,8 +3,9 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { MdDeleteOutline } from 'react-icons/md'
 import classNames from 'classnames'
 import Image from 'next/image'
-import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
+
 import { PopulatedConversation } from '../../generated/graphql-request'
+import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 interface ConversationListItemProps {
     conversation: PopulatedConversation

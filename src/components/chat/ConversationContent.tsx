@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { BsSend } from 'react-icons/bs'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
 import { useSendMessageMutation } from '../../hooks/mutation/useSendMessageMutation'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 
 import { ConversationMessages } from './ConversationMessages'
-import { useQueryClient } from '@tanstack/react-query'
 
 export const ConversationContent = () => {
     const router = useRouter()

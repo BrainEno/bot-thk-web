@@ -114,7 +114,7 @@ export const authOptions: AuthOptions = {
                             data: { currentUser: user },
                         } = await result.json()
 
-                        console.log('credential user is:', user)
+                        // console.log('credential user is:', user)
 
                         if (user)
                             return {

@@ -3,10 +3,10 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import useWindowSize from '../../hooks/useWindowSize'
 import { IBlog } from '../../types'
 
 import { TagRow } from './index'
-import useWindowSize from 'src/hooks/useWindowSize'
 
 interface IPostCardProps {
     post: IBlog

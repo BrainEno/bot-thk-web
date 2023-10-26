@@ -72,7 +72,7 @@ const CarouselComponent = () => {
 
         cycleInterval.current = setInterval(() => {
             next()
-        }, 4000)
+        }, 3000)
     }, [clear, next])
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -102,19 +102,24 @@ const CarouselComponent = () => {
     }
 
     const hoverStart = () => {
-        clear()
+        if (animating) clear()
     }
 
     const hoverEnd = () => {
-        set()
+        if (animating) set()
     }
 
     useEffect(() => {
-        animating && set()
+        if (animating) {
+            set()
+        } else {
+            clear()
+        }
+
         return () => {
             clear()
         }
-    }, [activeIndex, animating, set, clear])
+    }, [set, clear])
 
     return (
         <div

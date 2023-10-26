@@ -1,5 +1,4 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
-
 import { GraphQLClient, RequestDocument, Variables } from 'graphql-request'
 
 const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string

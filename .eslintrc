@@ -1,35 +1,37 @@
 {
-  "root": true,
-  "extends": [
-    "next",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
-  "rules": {
-    "react/no-unescaped-entities": "off",
-    "@next/next/no-page-custom-font": "off",
-    "no-console": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-unused-expressions": "off",
-    "simple-import-sort/imports": [
-      "warn",
-      {
-        "groups": [
-          // Side effect imports.
-          ["^\\u0000"],
-          // Packages. `react` related packages come first.
-          ["^react", "^@?\\w"],
-          // Parent imports. Put `..` last.
-          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-          // Other relative imports. Put same-folder imports and `.` last.
-          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"]
-        ]
-      }
+    "root": true,
+    "extends": [
+        "next",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:testing-library/react",
+        "plugin:jest-dom/recommended"
     ],
-    "simple-import-sort/exports": "warn"
-  }
+    "plugins": ["@typescript-eslint", "simple-import-sort"],
+    "rules": {
+        "react/no-unescaped-entities": "off",
+        "@next/next/no-page-custom-font": "off",
+        "no-console": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "no-unused-expressions": "off",
+        "simple-import-sort/imports": [
+            "warn",
+            {
+                "groups": [
+                    // Side effect imports.
+                    ["^\\u0000"],
+                    // Packages. `react` related packages come first.
+                    ["^react", "^@?\\w"],
+                    // Parent imports. Put `..` last.
+                    ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+                    // Other relative imports. Put same-folder imports and `.` last.
+                    ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"]
+                ]
+            }
+        ],
+        "simple-import-sort/exports": "warn"
+    }
 }

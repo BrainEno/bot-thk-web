@@ -1,5 +1,5 @@
-import Avatar from '../common/Avatar'
 import { PopulatedUser } from '../../generated/graphql-request'
+import Avatar from '../common/Avatar'
 
 interface UserListProps {
     users: Array<PopulatedUser>

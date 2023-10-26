@@ -1,15 +1,13 @@
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 import { ConversationContent } from '../../components/chat/ConversationContent'
 import ConversationList from '../../components/chat/ConversationList'
 import SkeletonLoader from '../../components/common/SkeletonLoader'
-
-import { useConversationsQuery } from 'src/hooks/query/useConversationsQuery'
-import { useMarkConversationAsReadMutation } from 'src/hooks/mutation/useMarkConversationAsReadMutation'
-
-import { useSession } from 'next-auth/react'
-import { useConversationUpdated } from 'src/hooks/subscriptions/useConversationUpdated'
-import ConversationModalProvider from 'src/components/context/ModalContext'
+import ConversationModalProvider from '../../components/context/ModalContext'
+import { useMarkConversationAsReadMutation } from '../../hooks/mutation/useMarkConversationAsReadMutation'
+import { useConversationsQuery } from '../../hooks/query/useConversationsQuery'
+import { useConversationUpdated } from '../../hooks/subscriptions/useConversationUpdated'
 
 const Conversations = () => {
     const { data: session } = useSession()

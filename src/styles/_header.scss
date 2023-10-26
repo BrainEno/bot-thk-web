@@ -1,19 +1,38 @@
+@import './variables';
+@import './theme';
+
+.theme-dark .site-navigation .menu-title img {
+    filter: invert(100%);
+}
+
+.theme-dark .site-navigation .menu-content-container .menu-avtar-container .my-avatar {
+    background-color: $bg-dark2;
+    border: $bg-dark2 5px solid;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, .3), -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
 .site-navigation {
     height: 65px;
     width: 100%;
-    background: $white;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    color: $text-color;
     position: fixed;
     z-index: 100;
     top: 0;
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 500ms;
+    color: $font-light;
+    background-color: $white;
+
     @include hover-transition;
+
+    @include themify($themes) {
+        color: themed('textColor');
+        background-color: themed('headerBg');
+    }
 
     .menu-title {
         font-size: 24px !important;
@@ -29,6 +48,8 @@
         & a {
             text-decoration: none;
         }
+
+
     }
 
     .menu-btn {
@@ -38,8 +59,60 @@
         display: none;
     }
 
+    .menu-theme {
+        position: relative;
+        margin-left: 40px;
+
+
+        .theme-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            padding-top: 1px;
+            margin-left: 0px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            transform-origin: center;
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            position: relative;
+
+            & svg {
+                color: #999999;
+                transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            }
+
+            &:hover,
+            &.clicked {
+                background-color: #e5e5e5;
+
+            }
+
+            &.clicked svg {
+                color: $black;
+            }
+
+
+            @include themify($themes) {
+
+                &:hover,
+                &.clicked {
+                    background-color: themed('menuBtnHover');
+                }
+
+                &.clicked svg {
+                    color: themed('textColor');
+                }
+            }
+        }
+    }
+
     .menu-content-container {
-        z-index: 2;
+        z-index: 102;
         display: flex;
         align-items: center;
         padding-right: 40px;
@@ -73,10 +146,10 @@
                 border-radius: 50%;
             }
 
-            .menu-avtar-name {
+            .menu-avatar-name {
                 margin: 0;
                 font-size: 18px;
-                font-weight: 500;
+                font-weight: 600;
                 margin-left: 15px;
             }
 
@@ -106,15 +179,19 @@
             text-decoration: none;
             padding: 0 20px 0 20px;
             font-size: 20px;
-            color: $text-color;
+            color: $link-light;
+
+            @include themify($themes) {
+                color: themed('linkColor');
+            }
 
             &:hover {
-                color: $text-link;
+                color: $link-actived;
             }
         }
 
         .nav-link.active {
-            color: $text-link;
+            color: $link-actived;
         }
     }
 
@@ -135,14 +212,24 @@
             align-items: center;
             font-weight: 600;
             letter-spacing: 1.5px;
+            color: $link-light;
 
             & svg {
                 margin-right: 4px;
+                color: $link-light;
+            }
+
+            @include themify($themes) {
+                color: themed('linkColor');
+
+                & svg {
+                    color: themed('linkColor');
+                }
             }
 
             &:hover,
             &:hover svg {
-                color: $text-link;
+                color: $link-actived;
             }
         }
 
@@ -169,6 +256,10 @@
             width: 25px;
             height: 25px;
             color: black;
+
+            @include themify($themes) {
+                color: themed('textColor');
+            }
         }
 
         .menu-content-container {
@@ -185,9 +276,11 @@
             padding: 0;
             z-index: 100;
 
-            .my-avatar {
-                margin-left: 0;
+            @include themify($themes) {
+                background-color: themed('background2');
+                color: themed('textColor');
             }
+
 
             a {
                 width: 100%;
@@ -224,8 +317,11 @@
 
             .menu-avtar-container {
                 width: calc(55vw - 36px);
-                margin: 20px 0;
+                margin: 18px 0 10px;
                 padding: 10px 18px 0px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
 
                 a {
                     width: max-content;
@@ -233,11 +329,13 @@
 
                 & .my-avatar {
                     margin: 0;
-                    width: 35px;
-                    height: 35px;
+                    margin-left: 20px;
+                    margin-bottom: 20px;
                 }
 
-                .menu-avatar-name {
+                & .menu-avatar-name {
+                    margin-top: 10px;
+                    font-size: 20px;
                     margin-left: 10px;
                     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
                     font-weight: 700;
@@ -258,6 +356,23 @@
             justify-content: center;
         }
 
+        .menu-theme {
+            position: absolute;
+            top: 18px;
+            right: 28px;
+            z-index: 10;
+
+            & .theme-btn svg {
+                width: 26px;
+                height: 26px;
+
+                @include themify($themes) {
+                    color: themed('textColor');
+                }
+            }
+
+        }
+
         .log-container {
             order: -3;
             align-self: flex-start;
@@ -265,7 +380,7 @@
 
             .log-ul {
                 margin-left: 0;
-                margin: 0 0 155px;
+                margin: 0 0 255px;
                 padding: 0;
                 height: max-content;
                 width: 55vw;
@@ -281,7 +396,7 @@
                     padding: 0;
                     text-align: center;
                     margin-bottom: 10px;
-                    color: $text-link;
+                    color: $link-actived;
                 }
             }
 

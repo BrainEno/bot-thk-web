@@ -57,29 +57,24 @@ const SigninComponent = () => {
             })
         } else {
             setValues({ ...values, loading: true, message: '' })
-            console.log(email, password)
-            signIn('credentials', { email, password }).catch((err: any) => {
-                console.log('logIn Error:', err)
-                if (err.response && err.response.errors) {
-                    console.log(Object.keys(err.response))
-
-                    const errs = err.response.errors
-                    errs.forEach((err: any) => {
-                        const { code } = err.extensions
-                        if (code === 'INVALID_EMAIL') {
-                            setErrors({ ...errors, email: err.message })
-                        } else if (code === 'INVALID_PASSWORD') {
-                            setErrors({ ...errors, password: err.message })
-                        }
-                    })
-                    setValues({ ...values, loading: false, message: '' })
-                }
-                setValues({
-                    ...values,
-                    loading: false,
-                    message: '请求超时，请稍后重试',
+            signIn('credentials', { email, password, redirect: false })
+                .then((res) => {
+                    if (res?.status === 401) {
+                        setValues({
+                            ...values,
+                            loading: false,
+                            message: '邮箱或密码错误，请重试',
+                        })
+                    }
                 })
-            })
+                .catch((err: any) => {
+                    if (err)
+                        setValues({
+                            ...values,
+                            loading: false,
+                            message: '请求超时，请稍后重试',
+                        })
+                })
         }
     }
 
@@ -108,12 +103,13 @@ const SigninComponent = () => {
                 </div>
                 <div className="form-group">
                     <label
-                        htmlFor="inputEmail"
+                        htmlFor="inputPassword"
                         className={classNames({ error: !!errors.password })}
                     >
                         {errors.password || '密码'}
                     </label>
                     <input
+                        id="inputPassword"
                         type="password"
                         className={classNames('form-input', {
                             isInvalid: !!errors.password,

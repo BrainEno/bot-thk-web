@@ -18,7 +18,7 @@ const useAuth = (shouldRedirect: boolean) => {
         if (session?.error === 'RefreshAccessTokenError') {
             signOut({ callbackUrl: '/signin', redirect: shouldRedirect })
         }
-        console.log(router.route)
+
         if (session === null) {
             if (
                 router.route.includes('dashboard') ||
@@ -43,7 +43,7 @@ const useAuth = (shouldRedirect: boolean) => {
                 setUser()
             }
         }
-    }, [logOut, router, session, setUser, shouldRedirect])
+    }, [logOut, router, session, setUser, shouldRedirect, userId])
 
     return isAuthenticated
 }

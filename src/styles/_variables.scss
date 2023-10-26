@@ -1,7 +1,8 @@
 $white: #ffffff;
 $black: #000000;
 
-$text-link: #2997ff;
+$link-actived: #2997ff;
+
 $text-color: #444444;
 $background: #eff3f8;
 $border: #cccccc;
@@ -10,70 +11,45 @@ $primary: #401f7c;
 $scroll-bar: #000000;
 
 
-$bg-light:#eff3f8;
-$link-light:#444444;
-$link-hover-light:#999999;
-$link-active-light:#0071a4;
+$bg-light1: #eff3f8;
+$font-light: $black;
+$info-light: #474747;
+$link-light: #444444;
+$link-hover-light: #999999;
+$menu-btn-hover-light: #e5e5e5;
+$conversation-item-hovered-light: #e5e5e5;
+$conversation-item-selected-light: #e7f2ff;
+
+
+
+$bg-dark1: #444444;
+$bg-dark2: #1f1f1f;
+$font-dark: #efefef;
+$info-dark: #c2c2c2;
+$link-dark: #eff3f8;
+$link-hover-dark: $white;
+$menu-btn-hover-dark: #444444;
+$conversation-item-hovered-dark: #2c2c2c;
+$conversation-item-selected-dark: #29272e;
 
 $themes: (
-  dark: (
-//     backgroundColor: $bg-dark,
-//     loginBackgroundColor: $login-bg-dark,
-//     loginLabel: $login-dark-label,
-//     textColor: $font-light,
-//     formBody: $form-dark-body,
-//     formHeader: $form-dark-header,
-//     formHeaderText: $white,
-//     tableHeader: $table-dark-header,
-//     tableBody: $table-dark-body,
-//     tableBtns: $white,
-//     inputColor: $input-dark-bg,
-//     labelColor: $label-dark-color,
-//     inputTextColor: $font-light,
-//     buttonTextColor: #ffffff,
-//     buttonTextHoverColor: #cbd9eb,
-//     buttonColor: $primary-color,
-//     buttonHoverColor: lighten($primary-color, 10%),
-//     headerColor: $header-dark,
-//     headerBoxShadow: $header-border-bottom-dark,
-//     headerTextColor: $font-light,
-//     headerIconColor: $header-dark-icon,
-//     headerIconHoverColor: $header-dark-icon-hover,
-//     sideBarColor: $sidebar-dark,
-//     sideBarGradient: $sidebar-dark-gradient,
-//     sideBarBoxShadow: $sidebar-dark-box-shadow,
-//     sideBarTextColor: $font-light,
-//     sideBarTextHoverColor: $white,
-//     sideBarTextActiveColor: $primary-color,
-  ),
-  light: (
-//     backgroundColor: $bg-light,
-//     loginBackgroundColor: $login-bg-light,
-//     loginLabel: $login-light-label,
-//     textColor: $font-dark,
-//     formBody: $form-light-body,
-//     formHeader: $form-light-header,
-//     formHeaderText: $black,
-//     tableHeader: $table-light-header,
-//     tableBody: $table-light-body,
-//     tableBtns: $primary-color,
-//     inputColor: $input-light-bg,
-//     inputTextColor: $font-dark,
-//     labelColor: $label-light-color,
-//     buttonTextColor: #ffffff,
-//     buttonTextHoverColor: #cbd9eb,
-//     buttonColor: $primary-color,
-//     buttonHoverColor: lighten($primary-color, 10%),
-//     headerColor: $header-light,
-//     headerBoxShadow: $header-border-bottom-light,
-//     headerTextColor: $font-dark,
-//     headerIconColor: $header-light-icon,
-//     headerIconHoverColor: $header-light-icon-hover,
-//     sideBarColor: $sidebar-light,
-//     sideBarGradient: $sidebar-light-gradient,
-//     sideBarBoxShadow: $sidebar-light-box-shadow,
-//     sideBarTextColor: $font-dark,
-//     sideBarTextHoverColor: #202534,
-//     sideBarTextActiveColor: $primary-color,
-  ),
+  light: (background1: $bg-light1,
+    background2:$white,
+    headerBg:$white,
+    textColor: $font-light,
+    infoColor:$info-light,
+    linkColor:$link-light,
+    menuBtnHover:$menu-btn-hover-light,
+    conversationSelected:$conversation-item-selected-light,
+    conversationHovered:$conversation-item-hovered-light ),
+  dark: (background1: $bg-dark1,
+    background2:$bg-dark2,
+    headerBg:$black,
+    textColor: $font-dark,
+    infoColor:$info-dark,
+    linkColor:$link-dark,
+    menuBtnHover:$menu-btn-hover-dark,
+    conversationSelected:$conversation-item-selected-dark,
+    conversationHovered:$conversation-item-hovered-dark ),
+
 );

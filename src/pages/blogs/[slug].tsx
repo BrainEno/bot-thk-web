@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import dayjs from 'dayjs'
 import {
     GetStaticPaths,
@@ -12,7 +12,9 @@ import Link from 'next/link'
 
 import { PostMasonry, TagRow } from '../../components/blog'
 import BannerImg from '../../components/common/BannerImg'
+import { ThemeContext } from '../../components/context/ThemeContext'
 import { sdk } from '../../generated/sdk'
+import themes from '../../styles/variables.module.scss'
 import { IBlog } from '../../types'
 
 const DisqusThread = dynamic(
@@ -21,6 +23,7 @@ const DisqusThread = dynamic(
         ssr: false,
     }
 )
+
 const ReadBlog = dynamic(() => import('../../components/blog/ReadBlog'), {
     ssr: false,
 })
@@ -36,6 +39,16 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
     slug,
     relatedBlogs,
 }) => {
+    const { theme } = useContext(ThemeContext)
+    const isDark = theme === 'dark'
+    const withOutImage =
+        !blog.imageUri || blog.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE
+
+    const backgroundColor = isDark
+        ? themes.black
+        : withOutImage
+        ? '#fbfbfb'
+        : themes.white
     const blogComents = useMemo(() => {
         return (
             <DisqusThread
@@ -45,8 +58,6 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
             />
         )
     }, [blog])
-    const withOutImage =
-        !blog.imageUri || blog.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE
 
     const titleText = `${blog!.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
@@ -122,7 +133,7 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                 <article
                     className="article-header-container"
                     style={{
-                        backgroundColor: withOutImage ? '#fbfbfb' : '#fff',
+                        backgroundColor,
                     }}
                 >
                     <section className="article-header">
@@ -155,14 +166,13 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                     </section>
                 </article>
 
-                <ReadBlog
-                    blog={blog}
-                    backgroundColor={withOutImage ? '#fbfbfb' : '#fff'}
-                />
+                {blog && (
+                    <ReadBlog blog={blog} backgroundColor={backgroundColor} />
+                )}
                 <article
                     className="article-content"
                     style={{
-                        backgroundColor: withOutImage ? '#fbfbfb' : '#fff',
+                        backgroundColor,
                     }}
                 >
                     {blog && (

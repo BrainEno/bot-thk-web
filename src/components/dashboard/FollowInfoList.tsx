@@ -73,7 +73,7 @@ export const FollowInfo = ({
                     />
                 </Link>
                 <div className="followInfo-profile">
-                    <div className='followInfo-headline'>
+                    <div className="followInfo-headline">
                         <Link
                             href={`/profile/${user.username}`}
                             className="followInfo-name"
@@ -84,7 +84,7 @@ export const FollowInfo = ({
                             className="chat-btn"
                             onClick={() => createConversation(user._id)}
                         >
-                            <BsFillChatLeftDotsFill color="#444" />
+                            <BsFillChatLeftDotsFill />
                         </button>
                     </div>
                     <span className="followInfo-about">

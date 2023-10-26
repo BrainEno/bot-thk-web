@@ -6,6 +6,10 @@
         color: $text-color;
         padding: 1.5rem 0;
     }
+
+    @include themify($themes) {
+        background-color: themed("background1");
+    }
 }
 
 .featured-posts-container {
@@ -13,15 +17,31 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: $bg-light1;
+
+
 
     &>div>a {
         display: block;
         width: max-content;
+
+        & h1 {
+            color: $black;
+        }
+
+    }
+
+    @include themify($themes) {
+        background-color: themed("background1");
+
+        &>div>a>h1 {
+            color: themed("textColor");
+        }
     }
 }
 
 .bg-white {
-    background: white;
+    background-color: $white;
     display: flex;
     justify-content: center;
 
@@ -33,21 +53,52 @@
 
         & .grid-pagination-container {
             & .pagination-container {
-                background: white;
-                box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.48),
-                    -3px -3px 7px rgba(255, 255, 255, 0.8);
+                background: $white;
 
-                .ant-pagination {
-                    background-color: white;
+                .button:first-of-type,
+                .button:last-of-type {
+                    background-color: $white;
                 }
+            }
+        }
+    }
+
+
+    @include themify($themes) {
+        background-color: themed('background2');
+
+
+        & a>h1 {
+            color: themed('textColor');
+        }
+
+        & .grid-pagination-container {
+            & .pagination-container {
+                background-color: themed('background2');
+
+                & input {
+                    background-color: themed('background1');
+                    color: themed('textColor');
+                }
+
             }
         }
     }
 }
 
+
 .trending-posts-container {
     display: flex;
     justify-content: center;
+    background-color: $bg-light1;
+
+    @include themify($themes) {
+        background-color: themed("background1");
+
+        &>div>a>h1 {
+            color: themed("textColor");
+        }
+    }
 
     &>div>a {
         display: block;

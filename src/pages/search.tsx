@@ -61,7 +61,7 @@ const SearchResult = () => {
         }
     )
 
-    console.log(blogs)
+    // console.log(blogs)
 
     const { data: users } = useQuery<
         SearchUsersQuery,

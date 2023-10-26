@@ -1,10 +1,8 @@
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import Modal from '../common/Modal'
-import { ConversationListItem } from './ConversationListItem'
-import Participants from './Participants'
-import UserList from './UserList'
+import { useEffect,useState } from 'react'
+import { AiOutlineSearch } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
+
 import {
     PopulatedConversation,
     PopulatedParticipant,
@@ -12,12 +10,16 @@ import {
     SearchUsersDocument,
     SearchUsersQuery,
     SearchUsersQueryVariables,
-} from 'src/generated/graphql-request'
-import { fetcher } from 'src/graphql/gqlClient'
-import { useCreateConversationMutation } from 'src/hooks/mutation/useCreateConversationMutation'
-import { useUpdateParticipantsMuation } from 'src/hooks/mutation/useUpdateParticipantsMutation'
-import { AiOutlineSearch } from 'react-icons/ai'
+} from '../../generated/graphql-request'
+import { fetcher } from '../../graphql/gqlClient'
+import { useCreateConversationMutation } from '../../hooks/mutation/useCreateConversationMutation'
+import { useUpdateParticipantsMuation } from '../../hooks/mutation/useUpdateParticipantsMutation'
 import { showAlert } from '../common/Alert'
+import Modal from '../common/Modal'
+
+import { ConversationListItem } from './ConversationListItem'
+import Participants from './Participants'
+import UserList from './UserList'
 
 interface ConversationModalProps {
     isOpen: boolean

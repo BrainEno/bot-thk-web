@@ -1,4 +1,5 @@
 import { IoIosCloseCircleOutline } from 'react-icons/io'
+
 import { PopulatedUser } from '../../generated/graphql-request'
 
 interface ParticipantsProps {

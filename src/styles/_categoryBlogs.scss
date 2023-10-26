@@ -3,6 +3,11 @@
     display: flex;
     justify-content: center;
 
+
+    @include themify($themes) {
+        background-color: themed('background1');
+    }
+
     .category-blogs-container {
         padding: 30px 65px;
         height: max-content;
@@ -11,6 +16,10 @@
             text-align: center;
             font-size: 32px;
             margin: 30px 0;
+
+            @include themify($themes) {
+                color: themed('textColor');
+            }
         }
 
 

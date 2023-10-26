@@ -9,6 +9,10 @@
   top: 150px;
   overflow-y: scroll;
 
+  @include themify($themes) {
+    color: themed('textColor');
+  }
+
 
   .blog-form {
     width: 60%;
@@ -17,6 +21,8 @@
     flex-direction: column;
     border-radius: 15px;
     position: relative;
+
+
 
     .form-btn,
     .icon-btn {
@@ -29,10 +35,24 @@
 
       &:hover {
         box-shadow: inset -2px -2px 3px #e9eef5, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
+      }
 
+      @include themify($themes) {
+        background-color: themed('background2');
+        color: themed('textColor');
+        box-shadow: 2px 2px 2px #121212, -2px -2px 3px #303030;
+
+        & svg path {
+          fill: themed('textColor');
+        }
+
+        &:hover {
+          box-shadow: inset 2px 2px 2px #121212, inset -2px -2px 3px #303030;
+        }
       }
 
     }
+
 
     .blog-form-bottom {
       padding: 8px 0;
@@ -48,6 +68,11 @@
       bottom: 0;
       left: 0;
       right: 0;
+
+      @include themify($themes) {
+        background-color: themed('background2');
+        color: themed('textColor');
+      }
 
 
       .tags-form {
@@ -196,6 +221,11 @@
       left: 0;
       right: 0;
 
+      @include themify($themes) {
+        background-color: themed('background2');
+        color: themed('textColor');
+      }
+
 
       .separator {
         display: flex;
@@ -218,6 +248,12 @@
         outline: none;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
+
+
+        @include themify($themes) {
+          background-color: themed('background2');
+          color: themed('textColor');
+        }
       }
 
       .blog-form-icons {
@@ -247,6 +283,17 @@
 
     .body-container {
       max-height: max-content;
+
+      @include themify($themes) {
+
+        .ql-toolbar.ql-snow,
+        .ql-container.ql-snow,
+        .ql-editor {
+          background-color: themed('background2');
+          color: themed('textColor');
+        }
+
+      }
 
       & .banner-container {
         position: sticky;
@@ -278,7 +325,10 @@
 
   }
 
+}
 
+.theme-dark .blog-form-container .blog-form .title-container {
+  border-bottom: solid 1px #444;
 }
 
 @media screen and (max-width: 900px) {

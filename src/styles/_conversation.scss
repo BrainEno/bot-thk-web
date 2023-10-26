@@ -21,6 +21,11 @@
 
 .conversation-list {
     background-color: #fff;
+
+    @include themify($themes) {
+        background-color: themed('background2');
+    }
+
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -46,6 +51,19 @@
 
         &:hover {
             background-color: #e5e5e5;
+        }
+
+        @include themify($themes) {
+            background-color: themed('background2');
+            color: themed('textColor');
+
+            &:hover {
+                background-color: themed('conversationHovered');
+            }
+
+            &.selected {
+                background-color: themed('conversationSelected');
+            }
         }
 
         .avatars {
@@ -127,7 +145,7 @@
             border-radius: 12px;
 
             .edit-icon {
-                color: $text-link;
+                color: $link-actived;
             }
 
             .delete-icon {
@@ -159,6 +177,10 @@
     flex-direction: column;
     padding-top: 40px;
     z-index: 1;
+
+    @include themify($themes) {
+        background-color: themed('background2');
+    }
 
     .messages {
         position: sticky;
@@ -214,8 +236,9 @@
                     flex-direction: row-reverse;
 
                     & .message-bubble {
-                        background-color: $text-link;
+                        background-color: $link-actived;
                         color: $white;
+
                     }
                 }
 
@@ -255,7 +278,6 @@
 
         .conversation-input {
             width: 96%;
-
             border: none;
             outline: none;
             padding-left: 4px;
@@ -278,6 +300,21 @@
             background-color: transparent;
             border: none;
             margin-left: 8px;
+
+        }
+
+        @include themify($themes) {
+            background-color: themed('background2');
+            color: themed('textColor');
+
+            & .conversation-input {
+                background-color: themed('background2');
+                color: themed('textColor');
+            }
+
+            & .send-btn {
+                color: themed('textColor');
+            }
         }
     }
 }

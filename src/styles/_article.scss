@@ -1,11 +1,21 @@
 .blog-article {
+  @include themify($themes) {
+    background-color: themed('background1');
+    color: themed('textColor');
+  }
+
   .article-header-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-color: white;
+    background-color: $white;
+
+    @include themify($themes) {
+      background-color: themed('background2');
+      color: themed('textColor');
+    }
 
     .article-header {
       padding: 60px 0 0px;
@@ -69,8 +79,12 @@
   }
 
   .article-content {
-    background: white;
     padding: 50px 25%;
+
+    @include themify($themes) {
+      color: themed('textColor');
+    }
+
 
     & section {
       p {
@@ -81,6 +95,11 @@
 
   .container {
     padding: 35px;
+
+    @include themify($themes) {
+      background-color: themed('background1');
+      color: themed('textColor');
+    }
   }
 
   .container {
@@ -90,6 +109,11 @@
 
     & .related-blogs {
       margin-bottom: 80px;
+    }
+
+    @include themify($themes) {
+      background-color: themed('background1');
+      color: themed('textColor');
     }
   }
 }

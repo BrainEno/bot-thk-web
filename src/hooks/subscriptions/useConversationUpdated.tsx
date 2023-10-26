@@ -1,14 +1,15 @@
+import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import {
-    ConversationUpdatedSubscription,
-    ConversationUpdatedDocument,
-    ConversationUpdatedSubscriptionVariables,
-    ConversationsQuery,
-    MessagesQuery,
-} from 'src/generated/graphql-request'
 import { useClient } from 'urql'
+
+import {
+    ConversationsQuery,
+    ConversationUpdatedDocument,
+    ConversationUpdatedSubscription,
+    ConversationUpdatedSubscriptionVariables,
+    MessagesQuery,
+} from '../../generated/graphql-request'
 
 export const useConversationUpdated = (
     conversationId: string,
@@ -169,11 +170,10 @@ export const useConversationUpdated = (
             })
 
         return () => {
-            if (
-                conversationUpdatedSubscription &&
-                conversationUpdatedSubscription.unsubscribe
-            )
+            if (conversationUpdatedSubscription) {
+                console.log('conversationUpdatedSubscription unsubscribed')
                 conversationUpdatedSubscription.unsubscribe()
+            }
         }
-    }, [client, conversationId, userId, onViewConversation])
+    }, [client, conversationId, userId, onViewConversation, router])
 }

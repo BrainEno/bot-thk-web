@@ -1,11 +1,12 @@
-import { useClient } from 'urql'
-import { useNotificationStore } from '../store/useNotificationStore'
 import { useEffect } from 'react'
-import { UserFollowedDocument } from 'src/generated/graphql-request'
-import { isServer } from '@tanstack/react-query'
 import secureLocalStorage from 'react-secure-storage'
-import { deepParse } from 'src/helpers/deepParse'
+import { isServer } from '@tanstack/react-query'
 import { User } from 'next-auth'
+import { useClient } from 'urql'
+
+import { UserFollowedDocument } from '../../generated/graphql-request'
+import { deepParse } from '../../helpers/deepParse'
+import { useNotificationStore } from '../store/useNotificationStore'
 
 export const useUserFollowed = (user?: User) => {
     const client = useClient()
@@ -40,7 +41,10 @@ export const useUserFollowed = (user?: User) => {
             })
 
         return () => {
-            if (userFollowedSubscription) userFollowedSubscription.unsubscribe()
+            if (userFollowedSubscription) {
+                console.log('userFollowedSubscription unsubscribed')
+                userFollowedSubscription.unsubscribe()
+            }
         }
     }, [client, user])
 }

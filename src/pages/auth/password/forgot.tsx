@@ -37,7 +37,7 @@ const ForgotPassword = () => {
             setValues({ ...values, message: '', error: '' })
             sdk.ForgotPassword({ email })
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     setValues({
                         ...values,
                         message: res.forgotPassword,

@@ -5,7 +5,6 @@ import {
     ConversationsQuery,
     ConversationsQueryVariables,
 } from '../../generated/gql/graphql'
-
 import { fetcher } from '../../graphql/gqlClient'
 
 interface ConversationsParams {

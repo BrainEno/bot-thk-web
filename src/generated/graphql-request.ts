@@ -250,6 +250,7 @@ export type MutationUpdateParticipantsArgs = {
 
 export type NewBlogResponse = {
   __typename?: 'NewBlogResponse';
+  blog?: Maybe<Blog>;
   success: Scalars['Boolean']['output'];
 };
 
@@ -469,7 +470,7 @@ export type CreateBlogMutationVariables = Exact<{
 }>;
 
 
-export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'NewBlogResponse', success: boolean } };
+export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'NewBlogResponse', success: boolean, blog?: { __typename?: 'Blog', _id: any, title: string, body: string, slug: string, description?: string | null, author: { __typename?: 'User', name: string }, tags: Array<{ __typename?: 'Tag', _id: any }> } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -769,6 +770,19 @@ export const CreateBlogDocument = gql`
     mutation CreateBlog($blogInput: BlogInput!, $tagIds: [String!]) {
   createBlog(blogInput: $blogInput, tagIds: $tagIds) {
     success
+    blog {
+      _id
+      title
+      body
+      slug
+      description
+      author {
+        name
+      }
+      tags {
+        _id
+      }
+    }
   }
 }
     `;

@@ -25,7 +25,7 @@
 
             &:hover,
             &.clicked {
-                background-color: #e5e5e5;
+                background-color: $menu-btn-hover-light;
 
             }
 
@@ -33,9 +33,21 @@
                 color: $black;
             }
 
+            @include themify($themes) {
+
+                &:hover,
+                &.clicked {
+                    background-color: themed('menuBtnHover');
+                }
+
+                &.clicked svg {
+                    color: themed('textColor');
+                }
+            }
+
             & .new {
                 border-radius: 50%;
-                background-color: $text-link;
+                background-color: $link-actived;
                 width: 5px;
                 height: 5px;
                 position: absolute;
@@ -53,7 +65,6 @@
             left: -157px;
             background: $white;
             border-radius: 8px;
-            border: 0.5px solid #c9c9c9;
             height: max-content;
             max-height: 360px;
             width: 318px;
@@ -61,17 +72,31 @@
             z-index: 5;
             box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 1px 0 rgba(0, 0, 0, .02);
 
+            @include themify($themes) {
+                background-color: themed('background2');
+
+                & .checkAll {
+                    color: themed('infoColor');
+                }
+
+            }
+
             & .checkAll {
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
                 padding: 15px 14px;
-                border-bottom: 1px solid #c9c9c9;
+                border-bottom: 1px solid $menu-btn-hover-light;
                 font-size: 15px;
                 font-weight: 600;
                 letter-spacing: 0.4px;
                 color: #474747;
+
+
+                @include themify($themes) {
+                    border-bottom: 1px solid themed('menuBtnHover');
+                }
 
                 &>button {
                     border: none;
@@ -80,12 +105,16 @@
                     font-size: 12px;
                     border-radius: 3px;
                     letter-spacing: 1px;
-                    background-color: $text-link;
+                    background-color: $link-actived;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
                     margin-right: -3px;
+
+                    @include themify($themes) {
+                        color: themed('background1');
+                    }
 
                     &:hover {
                         color: $white;
@@ -110,13 +139,17 @@
                     margin-bottom: 3px;
                     font-size: 12px;
                     font-weight: 500;
-                    color: #868686;
+                    color: $link-hover-light;
                     display: flex;
                     height: 24px;
                     justify-content: space-between;
                     align-items: center;
                     flex-direction: row;
                     letter-spacing: 0.2px;
+
+                    @include themify($themes) {
+                        color: themed('linkHover');
+                    }
 
                     & p:first-child {
                         margin-right: 12px;
@@ -127,7 +160,7 @@
                     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
                     font-size: 15px;
                     font-weight: 500;
-                    color: #535353;
+                    color: $info-light;
                     margin-bottom: 8px;
                     cursor: default;
                     position: relative;
@@ -135,12 +168,15 @@
                     flex-direction: row;
                     justify-content: space-between;
 
+                    @include themify($themes) {
+                        color: themed('infoColor');
+                    }
 
                     .checkNew {
                         width: 20px;
                         height: 20px;
                         border-radius: 3px;
-                        background-color: $text-link;
+                        background-color: $link-actived;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -149,7 +185,7 @@
 
                     & .new {
                         border-radius: 50%;
-                        background-color: $text-link;
+                        background-color: $link-actived;
                         width: 5px;
                         height: 5px;
                         position: absolute;
@@ -159,7 +195,11 @@
 
                     & span {
                         margin-left: 12px;
-                        color: #999999;
+                        color: $link-hover-light;
+
+                        @include themify($themes) {
+                            color: themed('linkHover');
+                        }
                     }
 
 
@@ -167,8 +207,12 @@
                         color: #474747;
                         font-weight: 500;
 
+                        @include themify($themes) {
+                            color: themed('infoColor');
+                        }
+
                         &:hover {
-                            color: $text-link;
+                            color: $link-actived;
                             font-weight: 600;
                         }
                     }

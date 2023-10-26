@@ -1,16 +1,16 @@
 import { Dispatch, SetStateAction } from 'react'
+import { BsFillChatLeftDotsFill } from 'react-icons/bs'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { CurrentUserQuery } from '../../generated/graphql-request'
 import { useFollowMutation } from '../../hooks/mutation/useFollowMutation'
 import { useUnFollowMutation } from '../../hooks/mutation/useUnFollowMutation'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
-import Link from 'next/link'
-import { useStartConversation } from 'src/hooks/useStartConversation'
-import { BsFillChatLeftDotsFill } from 'react-icons/bs'
+import { useStartConversation } from '../../hooks/useStartConversation'
 import { showAlert } from '../common/Alert'
+import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 export interface UserCardProps {
     searchedUserId: string

@@ -7,6 +7,10 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
+import { useBlogPulished } from '../../hooks/subscriptions/useBlogPublished'
+import { useConversationCreated } from '../../hooks/subscriptions/useConversationCreated'
+import { useConversationDeleted } from '../../hooks/subscriptions/useConversationDeleted'
+import { useUserFollowed } from '../../hooks/subscriptions/useUserFollowed'
 import useAuth from '../../hooks/useAuth'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import useScrollDirection from '../../hooks/useScrollDirection'
@@ -16,10 +20,7 @@ import MyBrand from '../common/MyBrand'
 
 import { MenuNotification } from './Notification/MenuNotification'
 import MenuSearch from './Search/MenuSearch'
-import { useBlogPulished } from 'src/hooks/subscriptions/useBlogPublished'
-import { useUserFollowed } from 'src/hooks/subscriptions/useUserFollowed'
-import { useConversationCreated } from 'src/hooks/subscriptions/useConversationCreated'
-import { useConversationDeleted } from 'src/hooks/subscriptions/useConversationDeleted'
+import { MenuTheme } from './Theme/MenuTheme'
 
 const Header = () => {
     const logOut = useAuthStore((state) => state.logOut)
@@ -183,6 +184,7 @@ const Header = () => {
                             </Link>
                         </li>
                     </ul>
+                    <MenuTheme />
                     <MenuSearch isAuth={isAuth} />
                     <MenuNotification isAuth={isAuth} />
                     {isAuth && (
@@ -204,7 +206,7 @@ const Header = () => {
                             </Link>
 
                             {!!user && (
-                                <p className="menu-avtar-name">{user.name}</p>
+                                <p className="menu-avatar-name">{user.name}</p>
                             )}
                         </div>
                     )}

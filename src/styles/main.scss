@@ -16,7 +16,6 @@
 @import 'userBlogs';
 @import 'profile';
 @import 'blogForm';
-@import 'manageBlogs';
 @import 'tagBlogs';
 @import 'categoryBlogs';
 @import 'carousel.scss';
@@ -35,19 +34,23 @@
 }
 
 html,
-body {
-    font-family: 'Noto Sans SC', sans-serif;
+body,
+.theme-provider,
+#__next {
+    font-family:
+        'Noto Sans SC',
+        sans-serif;
     font-weight: 400;
     height: 100%;
     width: 100%;
-    background-color: $background;
+    background-color: $bg-light1;
+
+    @include themify($themes) {
+        background-color: themed('background1');
+    }
 }
 
-#__next {
-    height: 100%;
-    width: 100%;
-    background-color: $background;
-}
+
 
 text-center {
     text-align: center;
@@ -78,9 +81,9 @@ h5 {
 a {
     text-decoration: none;
     cursor: pointer;
-    color: $text-color;
     font-family: 'Noto Sans SC', sans-serif;
     font-weight: 400;
+    color: $link-light;
 
     &:hover {
         color: $text-light;
@@ -199,16 +202,6 @@ input[type='number'] {
 
 
 
-.dropzone {
-    border: #5a5959 dotted 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 2px;
-    height: 80px;
-    width: 120px;
-}
-
 .overlay::before {
     transition: all ease 200ms;
     z-index: 11;
@@ -244,30 +237,6 @@ input[type='number'] {
     background: transparent;
 }
 
-.skeleton {
-    position: relative;
-    overflow: hidden;
-    z-index: 11;
-    background-color: rgba(255, 255, 255, 0.13);
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
-
-    &::after {
-        z-index: 12;
-        animation: waveKeyframe 1.6s linear 0.5 infinite;
-        background-image: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.08),
-                transparent);
-        content: '';
-        position: absolute;
-        transform: translateX(-100%);
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: 0;
-    }
-}
-
 @keyframes skeleton-loading {
     0% {
         background-color: hsl(200, 20%, 70%);
@@ -290,5 +259,104 @@ input[type='number'] {
 
     100% {
         transform: translateX(100%);
+    }
+}
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    z-index: 11;
+    background-color: transparent;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+
+    &::after {
+        z-index: 12;
+        animation: waveKeyframe 1.6s linear 0.5 infinite;
+        background-image: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.08),
+                transparent);
+        content: '';
+        position: absolute;
+        transform: translateX(-100%);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+    }
+}
+
+.theme-dark {
+    .pagination-container {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.6), -3px -3px 5px rgba(0, 0, 0, 0.20);
+    }
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
+    border-radius: 50px;
+    margin: 30px auto;
+    font-size: 14px;
+
+    & input {
+        width: 8ch;
+        display: inline-block;
+        text-align: center;
+        border: 0.5px solid #ccc;
+        margin: 0 10px;
+        padding: 1.67px 0;
+        outline: none;
+
+        &:hover {
+            border-color: #1890ff;
+        }
+
+        &::-webkit-input-placeholder {
+            font-size: 14px;
+        }
+    }
+
+    & span {
+        display: flex;
+        align-items: center;
+    }
+
+    & button:first-of-type,
+    button:last-of-type {
+        border: none;
+        background: none;
+        cursor: pointer;
+
+        display: inline-flex;
+        align-items: center;
+        color: $font-light;
+
+        &:hover {
+            color: #1890ff;
+        }
+
+    }
+
+
+    @include themify($themes) {
+        background-color: themed('background2');
+
+        & span {
+            color: themed('textColor');
+        }
+
+        & input {
+            background-color: themed('background1');
+            color: themed('textColor');
+        }
+
+
+        & svg {
+            color: themed('textColor');
+        }
     }
 }

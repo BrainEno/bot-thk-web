@@ -3,6 +3,10 @@
   display: flex;
   justify-content: center;
 
+  @include themify($themes) {
+    background-color: themed('background1');
+  }
+
   .all-blogs-container {
     width: 1290px;
     margin: 45px;
@@ -14,6 +18,11 @@
     & h1 {
       margin: 50px 0;
       text-align: center;
+
+      @include themify($themes) {
+        color: themed('textColor');
+      }
+
     }
 
     & .all-blog-cards {

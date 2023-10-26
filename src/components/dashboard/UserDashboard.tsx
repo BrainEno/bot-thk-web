@@ -11,9 +11,8 @@ import {
     GetUserBlogsQuery,
     GetUserBlogsQueryVariables,
 } from '../../generated/graphql-request'
-
+import { fetcher } from '../../graphql/gqlClient'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
-import { fetcher } from 'src/graphql/gqlClient'
 
 const FollowInfoList = dynamic(() => import('./FollowInfoList'), { ssr: false })
 const UserBlogs = dynamic(() => import('./UserBlogs'), { ssr: false })

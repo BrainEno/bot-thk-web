@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { BiHide, BiShow } from 'react-icons/bi'
 import { BsTags } from 'react-icons/bs'
 import { GrImage } from 'react-icons/gr'
+import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -11,12 +12,12 @@ import { sdk } from '../../generated/sdk'
 import { QuillFormats, QuillModules } from '../../helpers/ToolbarOptions'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
+import { useIndexDB } from '../../hooks/useIndexDB'
 import { useUploadImage } from '../../hooks/useUpload'
 import { showAlert } from '../common/Alert'
 import BannerImg from '../common/BannerImg'
 
 import { TagList } from './TagList'
-import { useQueryClient } from '@tanstack/react-query'
 
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
@@ -59,10 +60,14 @@ export const BlogForm = ({
 
     const [body, setBody] = useState<string>('')
     const [msg, setMsg] = useState('')
+    const [err, setErr] = useState('')
     const { image, setImage, upload, error } = useUploadImage()
     const [showBanner, setShowBanner] = useState(!!image || false)
     const [showTags, setShowTags] = useState(!!draftTags?.length || false)
     const [selectedTags, setSelectedTags] = useState<string[]>(draftTags ?? [])
+
+    /**IndexDB */
+    const { add, get, edit } = useIndexDB()
 
     const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
@@ -90,9 +95,12 @@ export const BlogForm = ({
     }, [])
 
     const initEditData = useCallback(() => {
-        if (draftBody) setBody(draftBody)
-        if (draftActive) setActive(draftActive)
-        if (draftTitle) setTitle(draftTitle)
+        if (!blogId) return
+        const draftInIDB = get(blogId)
+        console.log('draft in IndexDB:', draftInIDB)
+        if (draftBody) setBody(draftInIDB?.body || draftBody)
+        if (draftActive) setActive(draftInIDB?.active || draftActive)
+        if (draftTitle) setTitle(draftInIDB?.title || draftTitle)
         if (draftImg) setImage(draftImg)
         if (draftTags) setSelectedTags(draftTags)
     }, [draftActive, draftBody, draftImg, draftTags, draftTitle, setImage])
@@ -110,16 +118,36 @@ export const BlogForm = ({
         }
 
         if (formType === 'create') {
-            await sdk.CreateBlog({ blogInput, tagIds: selectedTags })
+            const res = await sdk.CreateBlog({
+                blogInput,
+                tagIds: selectedTags,
+            })
+            if (!res.createBlog.success) {
+                setErr('文章发布失败，请稍后重试')
+            }
             queryClient.invalidateQueries(['userBlogs'])
         } else if (formType === 'edit') {
             if (blogId) {
-                await sdk.UpdateBlog({
+                const res = await sdk.UpdateBlog({
                     blogInput,
                     blogId: blogId,
                     tagIds: selectedTags,
                 })
+                if (!res.updateBlog.success) {
+                    setErr('文章更新失败，请稍后重试')
+                }
                 queryClient.invalidateQueries(['userBlogs'])
+                queryClient.invalidateQueries(['getBlogById', blogId])
+
+                edit(blogId, {
+                    id: blogId,
+                    title,
+                    body,
+                    tags: selectedTags,
+                    active,
+                })
+                localStorage.removeItem('draft-title')
+                localStorage.removeItem('draft-content')
             }
         }
 
@@ -129,8 +157,63 @@ export const BlogForm = ({
         setBody('')
 
         router.push('/dashboard')
-        localStorage.removeItem('draft-title')
-        localStorage.removeItem('draft-content')
+    }
+
+    const saveBlog = async () => {
+        console.log(get(title))
+        const blogInput: BlogInput = {
+            body,
+            title,
+            active: false,
+            imageUri: image,
+        }
+        if (!blogInput.imageUri) {
+            blogInput.imageUri = defaultImgUri
+        }
+
+        if (formType === 'create') {
+            const res = await sdk.CreateBlog({
+                blogInput,
+                tagIds: selectedTags,
+            })
+
+            if (!res.createBlog.success) {
+                setErr('文章保存失败，请重试')
+            }
+
+            const blogId = res.createBlog.blog?._id
+            queryClient.invalidateQueries(['userBlogs'])
+            if (blogId)
+                add({
+                    id: blogId,
+                    title,
+                    body,
+                    tags: selectedTags,
+                    active,
+                })
+
+            localStorage.setItem('draft-title', title)
+            localStorage.setItem('draft-content', body)
+        } else if (formType === 'edit') {
+            if (blogId) {
+                const res = await sdk.UpdateBlog({
+                    blogInput,
+                    blogId: blogId,
+                    tagIds: selectedTags,
+                })
+                if (!res.updateBlog.success) {
+                    setErr('文章保存失败，请重试')
+                }
+                queryClient.invalidateQueries(['userBlogs'])
+                edit(blogId, {
+                    id: blogId,
+                    title,
+                    body,
+                    tags: selectedTags,
+                    active,
+                })
+            }
+        }
     }
 
     const handleTags = () => {
@@ -168,6 +251,7 @@ export const BlogForm = ({
             onScroll={handleContainerScroll}
         >
             {msg && showAlert(msg, 'info')}
+            {err && showAlert(err, 'error')}
             {error && showAlert(error, 'error')}
             <form className="blog-form" onSubmit={publishBlog}>
                 <div className="title-container">
@@ -284,6 +368,13 @@ export const BlogForm = ({
                             onClick={publishBlog}
                         >
                             发布
+                        </button>
+                        <button
+                            type="button"
+                            className="form-btn"
+                            onClick={saveBlog}
+                        >
+                            保存
                         </button>
                     </div>
                 </div>

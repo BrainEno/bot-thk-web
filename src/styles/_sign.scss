@@ -7,6 +7,28 @@
   justify-content: center;
 }
 
+.theme-dark .sign-container {
+  box-shadow: -3px -3px 7px #494949, 3px 3px 7px #3a3a3a;
+
+  .brand-container {
+    box-shadow: -3px -3px 7px #494949, 3px 3px 7px #3a3a3a,
+      inset -3px -3px 7px #494949, inset 3px 3px 7px #3a3a3a;
+
+    img {
+      filter: invert(100%);
+    }
+  }
+
+  .sign-form .form-group input:-internal-autofill-selected,
+  .sign-form .form-group input {
+    color: $font-light !important;
+    background-color: #494949 !important;
+    border: #494949 !important;
+  }
+}
+
+
+
 .sign-container {
   display: flex;
   flex-direction: column;
@@ -20,6 +42,12 @@
   box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
   border-radius: 25px;
   padding-top: 25px;
+
+  @include themify($themes) {
+    color: themed('textColor');
+  }
+
+
 
   .brand-container {
     border-radius: 80px;
@@ -117,6 +145,7 @@
           width: 80%;
           margin-bottom: 10px;
         }
+
         .form-btn {
           width: 80%;
           margin: 20px 0 35px;

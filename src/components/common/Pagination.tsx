@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 
 interface PaginationProps {
     total: number
@@ -7,53 +6,6 @@ interface PaginationProps {
     defaultCurrent?: number
     onChange: (page: number) => void
 }
-
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
-    border-radius: 50px;
-    margin: 30px auto;
-    font-size: 14px;
-
-    & input {
-        width: 8ch;
-        display: inline-block;
-        text-align: center;
-        border: 0.5px solid #ccc;
-        margin: 0 10px;
-        padding: 1.67px 0;
-        outline: none;
-        &:hover {
-            border-color: #1890ff;
-        }
-        &::-webkit-input-placeholder {
-            font-size: 14px;
-        }
-    }
-    & span {
-        display: flex;
-        align-items: center;
-    }
-
-    & button:first-of-type,
-    button:last-of-type {
-        border: none;
-        background: none;
-        cursor: pointer;
-
-        display: inline-flex;
-        color: #ccc;
-        align-items: center;
-        color: #000000;
-
-        &:hover {
-            color: #1890ff;
-        }
-    }
-`
 
 export const Pagination: React.FC<PaginationProps> = ({
     total,
@@ -94,7 +46,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     }, [activedIndex, onChange, defaultCurrent])
 
     return (
-        <Container>
+        <div className="pagination-container">
             <button
                 onClick={prevPage}
                 style={{
@@ -119,7 +71,6 @@ export const Pagination: React.FC<PaginationProps> = ({
             <span
                 style={{
                     letterSpacing: 4,
-                    color: '#000000d9',
                     paddingBottom: '1px',
                 }}
             >
@@ -147,6 +98,6 @@ export const Pagination: React.FC<PaginationProps> = ({
                     </svg>
                 </span>
             </button>
-        </Container>
+        </div>
     )
 }

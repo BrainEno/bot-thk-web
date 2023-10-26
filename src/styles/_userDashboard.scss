@@ -176,7 +176,7 @@
       cursor: pointer;
 
       &:hover {
-        color: $text-link
+        color: $link-actived
       }
     }
   }
@@ -205,11 +205,15 @@
     width: 100%;
     position: relative;
     overflow-y: scroll;
+
+    @include themify($themes) {
+      background-color: themed('background2');
+    }
   }
 
   .userInfo-container {
     width: 100vw;
-    height: 45vh;
+    height: 47vh;
     flex-direction: column;
     justify-content: center;
     padding: 25px 0 15px;

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
-import { showAlert } from '../../../components/common/Alert'
 import { BlogForm } from '../../../components/blog/BlogForm'
+import { showAlert } from '../../../components/common/Alert'
 import {
     GetBlogByIdDocument,
     GetBlogByIdQuery,
@@ -18,7 +18,7 @@ const EditBlog = () => {
         data: blog,
         error,
     } = useQuery<GetBlogByIdQuery, Error, GetBlogByIdQuery['getBlogById']>(
-        ['GetBlogById', query.id],
+        ['getBlogById', query.id],
         fetcher(GetBlogByIdDocument, { blogId: query.id as string }),
         { enabled: !!(query && query.id), select: (res) => res.getBlogById }
     )

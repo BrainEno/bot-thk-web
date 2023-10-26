@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import useAuth from 'src/hooks/useAuth'
+import useAuth from '../../hooks/useAuth'
 
 const UserDashboard = dynamic(
     import('../../components/dashboard/UserDashboard'),

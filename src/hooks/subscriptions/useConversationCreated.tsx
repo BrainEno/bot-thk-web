@@ -1,12 +1,13 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useClient } from 'urql'
+
 import {
     ConversationCreatedDocument,
     ConversationCreatedSubscription,
     ConversationCreatedSubscriptionVariables,
     ConversationsQuery,
-} from 'src/generated/graphql-request'
-import { useClient } from 'urql'
+} from '../../generated/graphql-request'
 
 export const useConversationCreated = (isAuth: boolean) => {
     const client = useClient()
@@ -52,8 +53,10 @@ export const useConversationCreated = (isAuth: boolean) => {
             })
 
         return () => {
-            if (conversationCreatedSubscription)
+            if (conversationCreatedSubscription) {
+                console.log('conversationCreatedSubscription unsubscribed')
                 conversationCreatedSubscription.unsubscribe()
+            }
         }
-    }, [client, isAuth])
+    }, [client, queryClient, isAuth])
 }

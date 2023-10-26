@@ -4,15 +4,17 @@ import '../../node_modules/react-quill/dist/quill.snow.css'
 
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
 import type { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 
+import ThemeProvider from '../components/context/ThemeContext'
 import GraphqlProvider from '../components/graphql/GraphqlProvider'
 import Header from '../components/header/Header'
 import RefreshTokenHandler from '../components/RefreshTokenHandler'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -34,11 +36,17 @@ function MyApp({
             <SessionProvider session={session} refetchInterval={interval}>
                 <GraphqlProvider>
                     <QueryClientProvider client={queryClient}>
-                        <ReactQueryDevtools initialIsOpen={true} />
-                        <Header />
-                        <GoogleAnalytics trackPageViews strategy="lazyOnload" />
-                        <Component {...pageProps} />
-                        <RefreshTokenHandler setInterval={setInterval} />
+                        <ThemeProvider>
+                            <ReactQueryDevtools initialIsOpen={false} />
+                            <Header />
+                            <GoogleAnalytics
+                                trackPageViews
+                                strategy="lazyOnload"
+                            />
+                            <Component {...pageProps} />
+                            <Analytics />
+                            <RefreshTokenHandler setInterval={setInterval} />
+                        </ThemeProvider>
                     </QueryClientProvider>
                 </GraphqlProvider>
             </SessionProvider>

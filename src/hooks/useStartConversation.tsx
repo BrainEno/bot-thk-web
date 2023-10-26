@@ -32,7 +32,7 @@ export const useStartConversation = () => {
                 createConversationMutation.mutate({ participantUserIds })
             }
         } else if (!isSuccess) {
-            console.log(isSuccess)
+            // console.log(isSuccess)
             setError('登录过期,请重新登录')
         } else {
             const participantUserIds = [userId, curUserId]

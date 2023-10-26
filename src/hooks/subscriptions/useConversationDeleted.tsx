@@ -1,12 +1,13 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useClient } from 'urql'
+
 import {
     ConversationDeletedDocument,
     ConversationDeletedSubscription,
     ConversationDeletedSubscriptionVariables,
     ConversationsQuery,
-} from 'src/generated/graphql-request'
-import { useClient } from 'urql'
+} from '../../generated/graphql-request'
 
 export const useConversationDeleted = (isAuth: boolean) => {
     const client = useClient()
@@ -64,8 +65,10 @@ export const useConversationDeleted = (isAuth: boolean) => {
             })
 
         return () => {
-            if (conversationDeletedSubscription)
+            if (conversationDeletedSubscription) {
+                console.log('conversationDeletedSubscription unsubscribed')
                 conversationDeletedSubscription.unsubscribe()
+            }
         }
     }, [client, isAuth])
 }

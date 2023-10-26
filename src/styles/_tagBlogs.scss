@@ -3,6 +3,10 @@
   display: flex;
   justify-content: center;
 
+  @include themify($themes) {
+    background-color: themed('background1');
+  }
+
   .tagBlogs-container {
     width: 1290px;
     margin: 45px;
@@ -13,6 +17,10 @@
 
     & h1 {
       margin: 65px 0 50px;
+
+      @include themify($themes) {
+        color: themed('textColor');
+      }
     }
 
     & .tag-blog-cards {
@@ -24,6 +32,7 @@
 @media screen and (max-width: 900px) {
   .allBlogs {
     padding: 0;
+
     .tagBlogs-container {
       & h1 {
         margin-top: 0px;

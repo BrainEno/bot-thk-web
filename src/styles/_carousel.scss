@@ -99,7 +99,7 @@
         position: absolute;
         width: 100%;
         left: 0px;
-        bottom: -10px;
+        bottom: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -107,7 +107,7 @@
         padding: 0;
 
         & .carousel-indicator {
-            z-index: 100;
+            z-index: 2;
             box-sizing: content-box;
             -ms-flex: 0 1 auto;
             flex: 0 1 auto;
@@ -145,7 +145,7 @@
         height: 25px;
         color: $white;
         mix-blend-mode: screen;
-        opacity: 0.8;
+        opacity: 0.4;
         @include hover-transition;
 
         &:hover {

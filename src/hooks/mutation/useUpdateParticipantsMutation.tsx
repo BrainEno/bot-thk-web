@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import {
     UpdateParticipantsDocument,
     UpdateParticipantsMutation,
     UpdateParticipantsMutationVariables,
-} from 'src/generated/graphql-request'
-import { fetcher } from 'src/graphql/gqlClient'
+} from '../../generated/graphql-request'
+import { fetcher } from '../../graphql/gqlClient'
 
 export const useUpdateParticipantsMuation = (
     onSuccess?: (data?: UpdateParticipantsMutation) => void
