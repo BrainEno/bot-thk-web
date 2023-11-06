@@ -33,7 +33,9 @@ export const ConversationContent = () => {
             senderId: curUserId,
             body,
         })
-        queryClient.invalidateQueries(['messages', conversationId])
+        queryClient.invalidateQueries({
+            queryKey: ['messages', conversationId],
+        })
         setBody('')
     }
 

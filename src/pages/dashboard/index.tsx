@@ -6,7 +6,9 @@ import { useAuthStore } from '../../hooks/store/useAuthStore'
 import useAuth from '../../hooks/useAuth'
 
 const UserDashboard = dynamic(
-    import('../../components/dashboard/UserDashboard'),
+    import('../../components/dashboard/UserDashboard').then(
+        (mod) => mod.default
+    ),
     { ssr: false }
 )
 

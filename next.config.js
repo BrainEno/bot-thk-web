@@ -16,12 +16,15 @@ module.exports = withBundleAnalyzer({
     },
     poweredByHeader: false,
     images: {
-        domains: [
-            'bot-thk.vercel.app',
-            'res.cloudinary.com',
-            'twitter.com',
-            'localhost',
-            '[::1]',
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'bot-thk.vercel.app',
+            },
+            { protocol: 'https', hostname: 'res.cloudinary.com' },
+            { hostname: 'twitter.com' },
+            { hostname: 'localhost' },
+            { hostname: '[::1]' },
         ],
         formats: ['image/avif', 'image/webp'],
         contentSecurityPolicy:
@@ -33,7 +36,6 @@ module.exports = withBundleAnalyzer({
         if (isServer) {
             ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))
         }
-
 
         return config
     },

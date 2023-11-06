@@ -16,8 +16,8 @@ export const useSendMessageMutation = (
         SendMessageMutation,
         Error,
         SendMessageMutationVariables
-    >(
-        async ({ conversationId, senderId, body }) =>
+    >({
+        mutationFn: async ({ conversationId, senderId, body }) =>
             fetcher<SendMessageMutation, SendMessageMutationVariables>(
                 SendMessageDocument,
                 {
@@ -26,16 +26,14 @@ export const useSendMessageMutation = (
                     body,
                 }
             )(),
-        {
-            onSuccess: (res) => {
-                if (res.sendMessage) {
-                    queryClient.invalidateQueries(['messages'])
-                }
+        onSuccess: (res) => {
+            if (res.sendMessage) {
+                queryClient.invalidateQueries({ queryKey: ['messages'] })
+            }
 
-                if (onSuccess) onSuccess(res)
-            },
-        }
-    )
+            if (onSuccess) onSuccess(res)
+        },
+    })
 
     return sendMessageMutation
 }

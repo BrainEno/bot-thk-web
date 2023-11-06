@@ -18,16 +18,14 @@ export const useConversationsQuery = ({
         ConversationsQuery,
         Error,
         ConversationsQuery['conversations']
-    >(
-        ['conversations'],
-        fetcher<ConversationsQuery, ConversationsQueryVariables>(
+    >({
+        queryKey: ['conversations'],
+        queryFn: fetcher<ConversationsQuery, ConversationsQueryVariables>(
             ConversationsDocument
         ),
-        {
-            enabled,
-            select: (data) => data.conversations,
-        }
-    )
+        enabled,
+        select: (data) => data.conversations,
+    })
 
     return { conversations, isSuccess }
 }

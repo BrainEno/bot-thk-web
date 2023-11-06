@@ -44,11 +44,12 @@ export const ConversationListItem = ({
             setShowOperations(false)
         }
     }
+
     useEffect(() => {
         if (selectedConversationId !== conversation._id) {
             setShowOperations(false)
         }
-    }, [selectedConversationId])
+    }, [selectedConversationId, conversation._id])
 
     return (
         <div

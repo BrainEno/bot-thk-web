@@ -9,6 +9,7 @@ import {
 } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
 import { fetcher } from '../../graphql/gqlClient'
+import { useMemo } from 'react'
 
 type BlogsProps = {
     router: NextRouter
@@ -20,7 +21,9 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
         ListBlogsWithCatTagQuery,
         Error,
         ListBlogsWithCatTagQuery['listBlogsWithCatTag']
-    >(['ListBlogsWithCatTag'], fetcher(ListBlogsWithCatTagDocument), {
+    >({
+        queryKey: ['ListBlogsWithCatTag'],
+        queryFn: fetcher(ListBlogsWithCatTagDocument),
         initialData,
         select: (res) => res.listBlogsWithCatTag,
     })
@@ -57,6 +60,14 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
         </Head>
     )
 
+    const postInfo = useMemo(() => {
+        return error || isLoading
+            ? initialData.listBlogsWithCatTag.map((post: any) => (
+                  <PostInfo post={post} key={post._id} />
+              ))
+            : data.map((post: any) => <PostInfo post={post} key={post._id} />)
+    }, [data, error, isLoading, initialData.listBlogsWithCatTag])
+
     return (
         <>
             {head()}
@@ -64,20 +75,7 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
                 <section className="all-blogs-container">
                     <h1>All Blogs</h1>
                     <div className="all-blog-cards">
-                        <section className="post-grid">
-                            {error || isLoading
-                                ? initialData.listBlogsWithCatTag.map(
-                                      (post: any) => (
-                                          <PostInfo
-                                              post={post}
-                                              key={post._id}
-                                          />
-                                      )
-                                  )
-                                : data.map((post: any) => (
-                                      <PostInfo post={post} key={post._id} />
-                                  ))}
-                        </section>
+                        <section className="post-grid">{postInfo}</section>
                     </div>
                 </section>
             </main>

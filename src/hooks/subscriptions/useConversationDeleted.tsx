@@ -70,5 +70,5 @@ export const useConversationDeleted = (isAuth: boolean) => {
                 conversationDeletedSubscription.unsubscribe()
             }
         }
-    }, [client, isAuth])
+    }, [client, queryClient, isAuth])
 }

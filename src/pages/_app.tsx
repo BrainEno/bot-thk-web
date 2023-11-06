@@ -3,7 +3,12 @@ import '../styles/main.scss'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 
 import { useState } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+    DehydratedState,
+    HydrationBoundary,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
@@ -27,8 +32,8 @@ const queryClient = new QueryClient({
 
 function MyApp({
     Component,
-    pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) {
+    pageProps: { session, dehydratedState, ...pageProps },
+}: AppProps<{ session: Session; dehydratedState: DehydratedState }>) {
     const [interval, setInterval] = useState(300000)
 
     return (
@@ -36,17 +41,21 @@ function MyApp({
             <SessionProvider session={session} refetchInterval={interval}>
                 <GraphqlProvider>
                     <QueryClientProvider client={queryClient}>
-                        <ThemeProvider>
-                            <ReactQueryDevtools initialIsOpen={false} />
-                            <Header />
-                            <GoogleAnalytics
-                                trackPageViews
-                                strategy="lazyOnload"
-                            />
-                            <Component {...pageProps} />
-                            <Analytics />
-                            <RefreshTokenHandler setInterval={setInterval} />
-                        </ThemeProvider>
+                        <HydrationBoundary state={dehydratedState}>
+                            <ThemeProvider>
+                                <ReactQueryDevtools initialIsOpen={false} />
+                                <Header />
+                                <GoogleAnalytics
+                                    trackPageViews
+                                    strategy="lazyOnload"
+                                />
+                                <Component {...pageProps} />
+                                <Analytics />
+                                <RefreshTokenHandler
+                                    setInterval={setInterval}
+                                />
+                            </ThemeProvider>
+                        </HydrationBoundary>
                     </QueryClientProvider>
                 </GraphqlProvider>
             </SessionProvider>

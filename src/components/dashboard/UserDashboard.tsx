@@ -14,9 +14,18 @@ import {
 import { fetcher } from '../../graphql/gqlClient'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 
-const FollowInfoList = dynamic(() => import('./FollowInfoList'), { ssr: false })
-const UserBlogs = dynamic(() => import('./UserBlogs'), { ssr: false })
-const UserInfo = dynamic(() => import('./UserInfo'), { ssr: false })
+const FollowInfoList = dynamic(
+    () => import('./FollowInfoList').then((mod) => mod.default),
+    { ssr: false }
+)
+const UserBlogs = dynamic(
+    () => import('./UserBlogs').then((mod) => mod.default),
+    { ssr: false }
+)
+const UserInfo = dynamic(
+    () => import('./UserInfo').then((mod) => mod.default),
+    { ssr: false }
+)
 
 dayjs.extend(relativeTime)
 
@@ -35,18 +44,16 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
         data: userBlogs,
         error,
         isLoading,
-    } = useQuery<GetUserBlogsQuery, Error, GetUserBlogsQuery['getUserBlogs']>(
-        ['userBlogs', user._id],
-        fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
+    } = useQuery<GetUserBlogsQuery, Error, GetUserBlogsQuery['getUserBlogs']>({
+        queryKey: ['userBlogs', user._id],
+        queryFn: fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
             GetUserBlogsDocument,
             { userId: user._id }
         ),
-        {
-            enabled: !!(user && user._id),
-            refetchOnReconnect: true,
-            select: (res) => res.getUserBlogs,
-        }
-    )
+        enabled: !!(user && user._id),
+        refetchOnReconnect: true,
+        select: (res) => res.getUserBlogs,
+    })
 
     const { followers, followings } = useFollowInfo({
         enabled: !!(user && user.username),
@@ -57,7 +64,8 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
     useEffect(() => {
         if (!timer.current) {
             timer.current = setTimeout(() => {
-                if (!user && !isLoading && error) router.push('/signin')
+                if (!user && !isLoading && error)
+                    router.push({ pathname: '/signin' })
             }, 2000)
         }
 

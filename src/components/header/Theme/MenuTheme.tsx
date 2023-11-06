@@ -17,7 +17,7 @@ export const MenuTheme = () => {
             (isServerSide &&
                 (secureLocalStorage.getItem('globalTheme') as ThemeValue)) ||
             theme,
-        [isServerSide]
+        [theme]
     )
     const [, setPersistedTheme] = usePersistedState('theme', initialTheme)
     const { windowWidth } = useWindowSize()

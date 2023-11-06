@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { Suspense, useContext, useMemo } from 'react'
 import dayjs from 'dayjs'
 import {
     GetStaticPaths,
@@ -18,15 +18,21 @@ import themes from '../../styles/variables.module.scss'
 import { IBlog } from '../../types'
 
 const DisqusThread = dynamic(
-    () => import('../../components/common/DisqusThread'),
+    () =>
+        import('../../components/common/DisqusThread').then(
+            (mod) => mod.default
+        ),
     {
         ssr: false,
     }
 )
 
-const ReadBlog = dynamic(() => import('../../components/blog/ReadBlog'), {
-    ssr: false,
-})
+const BlogReader = dynamic(
+    () => import('../../components/blog/BlogReader').then((mod) => mod.default),
+    {
+        ssr: false,
+    }
+)
 
 interface SingleBlogProps {
     blog: IBlog
@@ -49,13 +55,16 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
         : withOutImage
         ? '#fbfbfb'
         : themes.white
+
     const blogComents = useMemo(() => {
         return (
-            <DisqusThread
-                id={blog!._id}
-                title={blog!.title}
-                path={`blog/${blog!.slug}`}
-            />
+            <Suspense fallback={null}>
+                <DisqusThread
+                    id={blog!._id}
+                    title={blog!.title}
+                    path={`blog/${blog!.slug}`}
+                />
+            </Suspense>
         )
     }, [blog])
 
@@ -165,10 +174,9 @@ const SingleBlog: React.FC<SingleBlogProps> = ({
                         {blog && <TagRow tags={blog.tags} />}
                     </section>
                 </article>
-
-                {blog && (
-                    <ReadBlog blog={blog} backgroundColor={backgroundColor} />
-                )}
+                <Suspense fallback={null}>
+                    <BlogReader blog={blog} backgroundColor={backgroundColor} />
+                </Suspense>
                 <article
                     className="article-content"
                     style={{

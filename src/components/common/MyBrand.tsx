@@ -1,10 +1,12 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface BrandProps {
     width: number
     height: number
     fontSize?: string
     cursor?: string
+    toHome?: boolean
 }
 
 const MyBrand: React.FC<BrandProps> = ({
@@ -12,6 +14,7 @@ const MyBrand: React.FC<BrandProps> = ({
     height,
     fontSize,
     cursor = 'default',
+    toHome = false,
 }) => (
     <div
         style={{
@@ -32,15 +35,29 @@ const MyBrand: React.FC<BrandProps> = ({
         >
             BOT THK
         </span>
-        <div style={{ cursor }}>
-            <Image
-                src="/moshIcon.svg"
-                alt="logo"
-                quality={60}
-                width={width}
-                height={height}
-            />
-        </div>
+        {toHome ? (
+            <Link href="/">
+                <div style={{ cursor }}>
+                    <Image
+                        src="/moshIcon.svg"
+                        alt="logo"
+                        quality={60}
+                        width={width}
+                        height={height}
+                    />
+                </div>
+            </Link>
+        ) : (
+            <div style={{ cursor }}>
+                <Image
+                    src="/moshIcon.svg"
+                    alt="logo"
+                    quality={60}
+                    width={width}
+                    height={height}
+                />
+            </div>
+        )}
     </div>
 )
 

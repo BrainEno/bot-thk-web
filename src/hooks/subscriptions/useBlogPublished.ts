@@ -21,17 +21,15 @@ export const useBlogPulished = (user?: User) => {
         GetFollowInfoQuery,
         Error,
         NonNullable<GetFollowInfoQuery['getFollowInfo']>['followings']
-    >(
-        ['userGetFollowInfo'],
-        fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
+    >({
+        queryKey: ['userGetFollowInfo'],
+        queryFn: fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
             GetFollowInfoDocument,
             { username: user?.name }
         ),
-        {
-            enabled: !!(user && user.name),
-            select: (data) => data.getFollowInfo!.followings,
-        }
-    )
+        enabled: !!(user && user.name),
+        select: (data) => data.getFollowInfo!.followings,
+    })
 
     useEffect(() => {
         if (!user || !ref.current) return
@@ -67,5 +65,5 @@ export const useBlogPulished = (user?: User) => {
                 blogPublishedSubscription.unsubscribe()
             }
         }
-    }, [client, user])
+    }, [client, user, append, followings])
 }

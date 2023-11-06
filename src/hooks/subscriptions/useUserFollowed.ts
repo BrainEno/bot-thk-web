@@ -46,5 +46,5 @@ export const useUserFollowed = (user?: User) => {
                 userFollowedSubscription.unsubscribe()
             }
         }
-    }, [client, user])
+    }, [client, user, append, prevName])
 }

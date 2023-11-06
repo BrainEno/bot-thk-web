@@ -7,13 +7,14 @@ import { IBlog } from '../../types'
 
 export type ReadingStatus = 'default' | 'inited' | 'playing' | 'paused'
 
-const ReadBlog: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
+const BlogReader: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
     blog,
     backgroundColor = '#fff',
 }) => {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [selectedVoice, setSelectedVoice] = useState('')
     const [status, setStatus] = useState<ReadingStatus>('default')
+
     const synth = useRef<null | SpeechSynthesis>(null)
 
     const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -95,19 +96,23 @@ const ReadBlog: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
     }, [])
 
     useEffect(() => {
-        const text = getReadContent()
         setStatus('default')
-        setContent(text)
+        setContent(getReadContent() || '')
         if (synth.current) {
             synth.current.cancel()
         }
         initVoice()
+
+        return () => {
+            setContent('')
+            setStatus('default')
+        }
     }, [getReadContent, initVoice])
 
     return (
         <>
             {voices.length > 0 && (
-                <div className="speaker-container" style={{ backgroundColor }}>
+                <div className="reader-container" style={{ backgroundColor }}>
                     <form onSubmit={handleRead}>
                         <select
                             value={selectedVoice}
@@ -120,7 +125,7 @@ const ReadBlog: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
                                     </option>
                                 ))}
                         </select>
-                        <button type="submit">
+                        <button className="reader-btn" type="submit">
                             {status === 'inited' ? (
                                 <SlEarphones />
                             ) : status === 'paused' ? (
@@ -136,4 +141,4 @@ const ReadBlog: React.FC<{ blog: IBlog; backgroundColor: string }> = ({
     )
 }
 
-export default ReadBlog
+export default BlogReader

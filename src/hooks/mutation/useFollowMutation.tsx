@@ -1,4 +1,4 @@
-import { useMutation,useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import {
     FollowDocument,
@@ -14,19 +14,17 @@ export const useFollowMutation = () => {
         FollowMutation,
         Error,
         FollowMutationVariables
-    >(
-        async ({ followName }) =>
+    >({
+        mutationFn: async ({ followName }) =>
             fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, {
                 followName,
             })(),
-        {
-            onSuccess: (res) => {
-                if (res.follow) {
-                    queryClient.invalidateQueries(['getFollowInfo'])
-                }
-            },
-        }
-    )
+        onSuccess: (res) => {
+            if (res.follow) {
+                queryClient.invalidateQueries({ queryKey: ['getFollowInfo'] })
+            }
+        },
+    })
 
     return followMutation
 }

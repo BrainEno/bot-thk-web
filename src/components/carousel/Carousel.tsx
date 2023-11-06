@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 import { ICarouselItem } from '../../types'
 
-import { CarouselItem } from './CarouselItem'
+import CarouselItem from './CarouselItem'
 
 export type SlideDirection = 'to-right' | 'to-left'
 
@@ -119,7 +119,7 @@ const CarouselComponent = () => {
         return () => {
             clear()
         }
-    }, [set, clear])
+    }, [set, clear, animating])
 
     return (
         <div

@@ -72,7 +72,6 @@ const UserCard = ({
                 <Link href={`/profile/${username}`}>
                     <Image
                         className="user-avatar"
-                        priority={true}
                         src={photo || DEFAULT_AVATAR}
                         alt="avatar"
                         width={48}

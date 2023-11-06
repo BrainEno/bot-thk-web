@@ -24,7 +24,7 @@ export const UserBlogCard = ({
 
     const handleEdit = (id: string) => {
         setSelectedId(id)
-        router.push(`/dashboard/edit/${id}`)
+        router.push({ pathname: '/dashboard/edit/[id]', query: { id } })
     }
 
     const handleDeleteClick = (id: string) => () => {
@@ -33,12 +33,15 @@ export const UserBlogCard = ({
     }
 
     const handleRead = (slug: string) => () => {
-        router.push(`/blogs/${slug}`)
+        router.push({ pathname: '/blogs/[slug]', query: { slug } })
     }
 
     return (
         <div className="blog-card">
-            <Link href={`/blogs/${blog.slug}`} className="blog-title">
+            <Link
+                href={{ pathname: '/blogs/[slug]', query: { slug: blog.slug } }}
+                className="blog-title"
+            >
                 <h5>{blog.title}</h5>
             </Link>
             <span className="desc-text">

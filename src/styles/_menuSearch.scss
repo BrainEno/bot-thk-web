@@ -235,11 +235,9 @@
             }
 
             & p {
-                color: $font-dark;
+                color: $font-light;
                 font-size: 16px;
                 letter-spacing: 0.5px;
-
-
             }
 
             @include themify($themes) {

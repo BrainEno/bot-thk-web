@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, useMemo } from 'react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,13 +14,21 @@ interface IPostCardProps {
 
 const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
     const { windowWidth } = useWindowSize()
-    const isDesktop = windowWidth && windowWidth > 900
+    const isDesktop = useMemo(
+        () => windowWidth && windowWidth > 900,
+        [windowWidth]
+    )
 
     return (
         <div className="post-container" id={post._id}>
             {!isDesktop &&
             post.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE ? null : (
-                <Link href={`/blogs/${post.slug}`}>
+                <Link
+                    href={{
+                        pathname: '/blogs/[slug]',
+                        query: { slug: post.slug },
+                    }}
+                >
                     <div className="post-img-wrapper skeleton">
                         <Image
                             src={post.imageUri!}
@@ -61,10 +69,17 @@ const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
                 </div>
             </section>
             <p className="author-text">
-                <Link href={`/blogs/${post.slug}`}>Read More...</Link>
+                <Link
+                    href={{
+                        pathname: '/blogs/[slug]',
+                        query: { slug: post.slug },
+                    }}
+                >
+                    Read More...
+                </Link>
             </p>
         </div>
     )
 }
 
-export default PostWithInfo
+export default memo(PostWithInfo)

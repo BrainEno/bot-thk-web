@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import Image from 'next/image'
@@ -27,8 +27,10 @@ const PostCard: React.FC<PostCardProps> = ({
 
     return (
         <Link
-            href="/blogs/[slug]"
-            as={`/blogs/${post.slug}`}
+            href={{
+                pathname: '/blogs/[slug]',
+                query: { slug: post.slug },
+            }}
             className={classNames('post skeleton overlay', {
                 [extraClassName]: IsExtraCls,
             })}
@@ -41,7 +43,6 @@ const PostCard: React.FC<PostCardProps> = ({
                 style={{
                     objectFit: 'cover',
                 }}
-                priority
                 alt="post image"
             />
             <div
@@ -67,4 +68,4 @@ const PostCard: React.FC<PostCardProps> = ({
     )
 }
 
-export default PostCard
+export default memo(PostCard)

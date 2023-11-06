@@ -17,11 +17,12 @@ const EditBlog = () => {
         isLoading,
         data: blog,
         error,
-    } = useQuery<GetBlogByIdQuery, Error, GetBlogByIdQuery['getBlogById']>(
-        ['getBlogById', query.id],
-        fetcher(GetBlogByIdDocument, { blogId: query.id as string }),
-        { enabled: !!(query && query.id), select: (res) => res.getBlogById }
-    )
+    } = useQuery<GetBlogByIdQuery, Error, GetBlogByIdQuery['getBlogById']>({
+        queryKey: ['getBlogById', query.id],
+        queryFn: fetcher(GetBlogByIdDocument, { blogId: query.id as string }),
+        enabled: !!(query && query.id),
+        select: (res) => res.getBlogById,
+    })
 
     const tagIds = blog?.tags.map((t) => t._id) ?? []
 

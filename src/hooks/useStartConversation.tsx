@@ -13,7 +13,10 @@ export const useStartConversation = () => {
 
     const createConversationMutation = useCreateConversationMutation((data) => {
         const conversationId = data.createConversation
-        router.push(`/conversation/${conversationId}`)
+        router.push({
+            pathname: '/conversation/[conversationId]',
+            query: { conversationId },
+        })
     })
 
     const createConversation = (userId: string) => {
@@ -26,7 +29,10 @@ export const useStartConversation = () => {
             )
 
             if (existConversation) {
-                router.push(`/conversation/${existConversation._id.toString()}`)
+                router.push({
+                    pathname: '/conversation/[conversationId]',
+                    query: { conversationId: existConversation._id.toString() },
+                })
             } else {
                 const participantUserIds = [userId, curUserId]
                 createConversationMutation.mutate({ participantUserIds })

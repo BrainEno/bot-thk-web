@@ -63,7 +63,12 @@ export const FollowInfo = ({
         <div className="followInfo">
             {error && showAlert(error, 'error')}
             <div className="followInfo-left">
-                <Link href={`/profile/${user.username}`}>
+                <Link
+                    href={{
+                        pathname: '/profile/[username]',
+                        query: { username: user.username },
+                    }}
+                >
                     <Image
                         src={user.photo || DEFAULT_AVATAR}
                         alt="Avatar"
@@ -75,7 +80,10 @@ export const FollowInfo = ({
                 <div className="followInfo-profile">
                     <div className="followInfo-headline">
                         <Link
-                            href={`/profile/${user.username}`}
+                            href={{
+                                pathname: '/profile/[username]',
+                                query: { username: user.username },
+                            }}
                             className="followInfo-name"
                         >
                             {user.name}

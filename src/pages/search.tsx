@@ -23,9 +23,12 @@ import { useSearchStore } from '../hooks/store/useSearchStore'
 import { useClient } from '../hooks/useClient'
 import useScrollDirection from '../hooks/useScrollDirection'
 
-const BlogCard = dynamic(import('../components/search/BlogCard'), {
-    ssr: false,
-})
+const BlogCard = dynamic(
+    import('../components/search/BlogCard').then((mod) => mod.default),
+    {
+        ssr: false,
+    }
+)
 const UserCard = dynamic(import('../components/search/UserCard'), {
     ssr: false,
 })
@@ -49,17 +52,15 @@ const SearchResult = () => {
         SearchBlogsQuery,
         Error,
         SearchBlogsQuery['searchBlogs']
-    >(
-        ['searchBlogs', keyword],
-        fetcher<SearchBlogsQuery, SearchBlogsQueryVariables>(
+    >({
+        queryKey: ['searchBlogs', keyword],
+        queryFn: fetcher<SearchBlogsQuery, SearchBlogsQueryVariables>(
             SearchBlogsDocument,
             { query: keyword! }
         ),
-        {
-            enabled: !!keyword,
-            select: (data) => data.searchBlogs,
-        }
-    )
+        enabled: !!keyword,
+        select: (data) => data.searchBlogs,
+    })
 
     // console.log(blogs)
 
@@ -67,17 +68,15 @@ const SearchResult = () => {
         SearchUsersQuery,
         Error,
         SearchUsersQuery['searchUsers']
-    >(
-        ['searchUsers', keyword],
-        fetcher<SearchUsersQuery, SearchUsersQueryVariables>(
+    >({
+        queryKey: ['searchUsers', keyword],
+        queryFn: fetcher<SearchUsersQuery, SearchUsersQueryVariables>(
             SearchUsersDocument,
             { name: keyword! }
         ),
-        {
-            enabled: !!keyword,
-            select: (data) => data.searchUsers,
-        }
-    )
+        enabled: !!keyword,
+        select: (data) => data.searchUsers,
+    })
 
     const handleSearch = (keyword: string) => {
         addSearchItem(keyword)

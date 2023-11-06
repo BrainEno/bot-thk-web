@@ -17,24 +17,22 @@ export const useCreateConversationMutation = (
         CreateConversationMutation,
         Error,
         CreateConversationMutationVariables
-    >(
-        async ({ participantUserIds }) =>
+    >({
+        mutationFn: async ({ participantUserIds }) =>
             fetcher<
                 CreateConversationMutation,
                 CreateConversationMutationVariables
             >(CreateConversationDocument, {
                 participantUserIds,
             })(),
-        {
-            onSuccess: (res) => {
-                if (res.createConversation) {
-                    queryClient.invalidateQueries(['conversations'])
-                }
+        onSuccess: (res) => {
+            if (res.createConversation) {
+                queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            }
 
-                if (onSuccess) onSuccess(res)
-            },
-        }
-    )
+            if (onSuccess) onSuccess(res)
+        },
+    })
 
     return createConversationMutation
 }

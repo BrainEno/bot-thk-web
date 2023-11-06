@@ -1,173 +1,196 @@
-.blog-article {
-  @include themify($themes) {
-    background-color: themed('background1');
-    color: themed('textColor');
+  .theme-dark .blog-article .reader-container {
+    & .reader-btn {
+      background-color: #212121;
+      box-shadow: 4px 4px 2.75px #1c1c1c, -4px -4px 2.75px #262626;
+      transition: box-shadow ease-in-out 0.3s,
+        background-color ease-in-out 0.1s,
+        letter-spacing ease-in-out 0.1s,
+        transform ease-in-out 0.1s;
+
+      &:hover,
+      &:active {
+        box-shadow: 6px 6px 3.3px #121212,
+          6px 6px 3.3px #303030;
+      }
+    }
   }
 
-  .article-header-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: $white;
-
+  .blog-article {
     @include themify($themes) {
-      background-color: themed('background2');
+      background-color: themed('background1');
       color: themed('textColor');
     }
 
-    .article-header {
-      padding: 60px 0 0px;
+    .article-header-container {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      width: 100%;
+      background-color: $white;
 
-      & p {
-        font-size: 15px;
-        margin: 12px 0;
+      @include themify($themes) {
+        background-color: themed('background2');
+        color: themed('textColor');
+      }
 
-        .author-text {
-          & a {
-            color: rgb(15, 136, 206) !important;
+      .article-header {
+        padding: 60px 0 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        & p {
+          font-size: 15px;
+          margin: 12px 0;
+
+          .author-text {
+            & a {
+              color: rgb(15, 136, 206) !important;
+            }
           }
         }
       }
     }
-  }
-
-  .speaker-container {
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px;
-
-    & select {
-      border: none;
-      margin: 0 15px;
-      border-radius: 8px;
-      padding: 5px 5px;
-      box-shadow: -2px -2px 3px #ffffff, 2px 2px 3px rgba(136, 165, 191, 0.48),
-        inset -2px -2px 3px #ffffff, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
-    }
-
-    & button {
-      border: none;
-      border-radius: 5px;
-      padding: 5px 5px 5px 6px;
-      width: 31px;
-      height: 31px;
-      border-color: #e6e7ee;
-      border: 0.0625rem solid #fafbfe !important;
-      box-shadow: 2px 2px 3px rgba(136, 165, 191, 0.78), -2px -2px 3px #fff;
-
-      &:hover,
-      &:active {
-        box-shadow: inset -2px -2px 3px #ffffff,
-          inset 2px 2px 3px rgba(136, 165, 191, 0.78);
-      }
-
-      & svg {
-        width: 18px;
-        height: 18px;
-        color: #3074bf;
-      }
-    }
-  }
-
-  .article-content {
-    padding: 50px 25%;
-
-    @include themify($themes) {
-      color: themed('textColor');
-    }
 
 
-    & section {
-      p {
-        font-size: 20px;
-      }
-    }
-  }
 
-  .container {
-    padding: 35px;
+    .reader-container {
+      background-color: $white;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      padding-top: 20px;
 
-    @include themify($themes) {
-      background-color: themed('background1');
-      color: themed('textColor');
-    }
-  }
-
-  .container {
-    & h4 {
-      margin-bottom: 60px;
-    }
-
-    & .related-blogs {
-      margin-bottom: 80px;
-    }
-
-    @include themify($themes) {
-      background-color: themed('background1');
-      color: themed('textColor');
-    }
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .blog-article {
-    .banner {
-      height: 300px !important;
-    }
-
-    .speaker-container {
       & select {
-        width: 220px;
+        border: none;
+        margin: 0 15px;
+        border-radius: 8px;
+        padding: 5px 5px;
+        box-shadow: -2px -2px 3px #ffffff, 2px 2px 3px rgba(136, 165, 191, 0.48),
+          inset -2px -2px 3px #ffffff, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
       }
-    }
 
-    .article-header-container {
-      margin: 0;
-      padding: 0px 30px;
+      & .reader-btn {
+        border: none;
+        border-radius: 5px;
+        padding: 5px 5px 5px 6px;
+        width: 31px;
+        height: 31px;
+        background-color: #e6e7ee;
+        cursor: pointer;
+        box-shadow: 2px 2px 3px rgba(136, 165, 191, 0.78), -2px -2px 3px #fff;
 
-      .article-header {
-        padding: 45px 0 0 !important;
+        &:hover,
+        &:active {
+          box-shadow: inset -2px -2px 3px #ffffff,
+            inset 2px 2px 3px rgba(136, 165, 191, 0.78);
+        }
 
-        & h1 {
-          font-size: 22px;
-          font-weight: 600;
+        & svg {
+          width: 18px;
+          height: 18px;
+          color: #3074bf;
+        }
+
+        @include themify($themes) {
+          background-color: themed('menuBtnHover');
         }
       }
     }
 
     .article-content {
-      padding: 30px;
+      padding: 50px 25%;
+
+      @include themify($themes) {
+        color: themed('textColor');
+      }
+
 
       & section {
-        & p {
-          font-size: 17px;
+        p {
+          font-size: 20px;
         }
       }
     }
 
     .container {
-      padding: 20px;
+      padding: 35px;
 
+      @include themify($themes) {
+        background-color: themed('background1');
+        color: themed('textColor');
+      }
+    }
+
+    .container {
       & h4 {
-        margin-bottom: 20px;
-        font-size: 18px;
-        font-weight: 600;
-        margin-left: 20px;
+        margin-bottom: 60px;
       }
 
       & .related-blogs {
-        padding: 18px;
-        margin-bottom: 40px;
+        margin-bottom: 80px;
+      }
+
+      @include themify($themes) {
+        background-color: themed('background1');
+        color: themed('textColor');
       }
     }
   }
-}
+
+  @media screen and (max-width: 900px) {
+    .blog-article {
+      .banner {
+        height: 300px !important;
+      }
+
+      .reader-container {
+        & select {
+          width: 220px;
+        }
+      }
+
+      .article-header-container {
+        margin: 0;
+        padding: 0px 30px;
+
+        .article-header {
+          padding: 45px 0 0 !important;
+
+          & h1 {
+            font-size: 22px;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .article-content {
+        padding: 30px;
+
+        & section {
+          & p {
+            font-size: 17px;
+          }
+        }
+      }
+
+      .container {
+        padding: 20px;
+
+        & h4 {
+          margin-bottom: 20px;
+          font-size: 18px;
+          font-weight: 600;
+          margin-left: 20px;
+        }
+
+        & .related-blogs {
+          padding: 18px;
+          margin-bottom: 40px;
+        }
+      }
+    }
+  }

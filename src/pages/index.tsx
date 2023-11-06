@@ -92,7 +92,7 @@ const Index: React.FC<IndexPageProps> = ({
                             <Link href="/categories/recent-post">
                                 <h1>Recent Post</h1>
                             </Link>
-                            {<PostGrid posts={recent} />}
+                            <PostGrid posts={recent} />
                         </div>
                     </section>
                 )}
@@ -124,7 +124,6 @@ export const getStaticProps = async () => {
     const { getCatBlogs: recent } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'recent-post',
     })
-
 
     const { getCatBlogs: featured } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'featured',

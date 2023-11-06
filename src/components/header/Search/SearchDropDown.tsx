@@ -69,7 +69,7 @@ export const SearchDropDown = ({
         close()
         router.push({
             pathname: '/search',
-            query: { keyword: `${searchText}` },
+            query: { keyword: searchText },
         })
     }
 

@@ -27,7 +27,10 @@ export const MessageItem = ({ message, sentByMe }: MessageItemProps) => {
 
             <div className={classNames('message-row', { 'by-me': sentByMe })}>
                 <Link
-                    href={`/profile/${message.sender.username}`}
+                    href={{
+                        pathname: '/profile/[username]',
+                        query: { username: message.sender.username },
+                    }}
                     title={message.sender.name}
                 >
                     <Image

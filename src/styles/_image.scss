@@ -14,15 +14,17 @@
     overflow: hidden;
     background: rgba(255, 255, 255, 0.13);
     width: 350px;
-    height: 350px;
+    height: 310px;
     border-radius: 5px;
     @include flex-center;
+
     @include smart {
         width: 305px;
         height: 305px;
     }
+
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6),
-        -6px -6px 26px rgba(255, 255, 255, 0.8);
+    -6px -6px 26px rgba(255, 255, 255, 0.8);
     background-size: cover;
     background-repeat: no-repeat;
 

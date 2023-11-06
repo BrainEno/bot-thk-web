@@ -51,49 +51,43 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         GetUserInfoQuery,
         Error,
         GetUserInfoQuery['getUserInfo']
-    >(
-        ['useGetUserInfo', query.username],
-        fetcher<GetUserInfoQuery, GetUserInfoQueryVariables>(
+    >({
+        queryKey: ['useGetUserInfo', query.username],
+        queryFn: fetcher<GetUserInfoQuery, GetUserInfoQueryVariables>(
             GetUserInfoDocument,
             { username: query.username }
         ),
-        {
-            enabled: !!(query && query.username),
-            select: (data) => data.getUserInfo,
-        }
-    )
+        enabled: !!(query && query.username),
+        select: (data) => data.getUserInfo,
+    })
 
     const { data: blogs } = useQuery<
         GetUserBlogsQuery,
         Error,
         GetUserBlogsQuery['getUserBlogs']
-    >(
-        ['useGetUserBlogs', query.username],
-        fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
+    >({
+        queryKey: ['useGetUserBlogs', query.username],
+        queryFn: fetcher<GetUserBlogsQuery, GetUserBlogsQueryVariables>(
             GetUserBlogsDocument,
             { username: query.username }
         ),
-        {
-            enabled: !!(query && query.username),
-            select: (data) => data.getUserBlogs,
-        }
-    )
+        enabled: !!(query && query.username),
+        select: (data) => data.getUserBlogs,
+    })
 
     const { data: followInfo } = useQuery<
         GetFollowInfoQuery,
         Error,
         GetFollowInfoQuery['getFollowInfo']
-    >(
-        ['userGetFollowInfo'],
-        fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
+    >({
+        queryKey: ['userGetFollowInfo'],
+        queryFn: fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
             GetFollowInfoDocument,
             { username: query.username }
         ),
-        {
-            enabled: !!(query && query.username),
-            select: (data) => data.getFollowInfo,
-        }
-    )
+        enabled: !!(query && query.username),
+        select: (data) => data.getFollowInfo,
+    })
 
     const titleText = `${user?.name} | ${process.env.NEXT_PUBLIC_APP_NAME}`
 

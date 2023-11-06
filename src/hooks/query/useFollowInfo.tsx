@@ -16,7 +16,11 @@ interface UseFollowInfoParams {
 
 type Users = NonNullable<GetFollowInfoQuery['getFollowInfo']>['followers']
 
-export const useFollowInfo = ({ enabled, username,tag }: UseFollowInfoParams) => {
+export const useFollowInfo = ({
+    enabled,
+    username,
+    tag,
+}: UseFollowInfoParams) => {
     const [followers, setFollowers] = useState<Users>([])
     const [followings, setFollowings] = useState<Users>([])
 
@@ -24,14 +28,15 @@ export const useFollowInfo = ({ enabled, username,tag }: UseFollowInfoParams) =>
         GetFollowInfoQuery,
         Error,
         GetFollowInfoQuery['getFollowInfo']
-    >(
-        ['getFollowInfo', tag],
-        fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
+    >({
+        queryKey: ['getFollowInfo', tag],
+        queryFn: fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
             GetFollowInfoDocument,
             { username }
         ),
-        { enabled, select: (res) => res.getFollowInfo }
-    )
+        enabled,
+        select: (res) => res.getFollowInfo,
+    })
 
     useEffect(() => {
         if (isSuccess && followInfo) {

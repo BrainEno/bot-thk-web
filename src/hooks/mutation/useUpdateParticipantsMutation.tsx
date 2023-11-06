@@ -16,8 +16,8 @@ export const useUpdateParticipantsMuation = (
         UpdateParticipantsMutation,
         Error,
         UpdateParticipantsMutationVariables
-    >(
-        async ({
+    >({
+        mutationFn: async ({
             conversationId,
             participantIds,
         }: UpdateParticipantsMutationVariables) =>
@@ -25,16 +25,14 @@ export const useUpdateParticipantsMuation = (
                 UpdateParticipantsMutation,
                 UpdateParticipantsMutationVariables
             >(UpdateParticipantsDocument, { conversationId, participantIds })(),
-        {
-            onSuccess: (res) => {
-                if (res.updateParticipants) {
-                    queryClient.invalidateQueries(['conversations'])
-                }
+        onSuccess: (res) => {
+            if (res.updateParticipants) {
+                queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            }
 
-                if (onSuccess) onSuccess(res)
-            },
-        }
-    )
+            if (onSuccess) onSuccess(res)
+        },
+    })
 
     return updateParticipantsMutation
 }

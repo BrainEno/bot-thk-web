@@ -1,4 +1,4 @@
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
@@ -60,18 +60,16 @@ const ConversationModal: React.FC<ConversationModalProps> = ({
         refetch: searchUsers,
         data: searchUsersData,
         error: searchUsersError,
-    } = useQuery<SearchUsersQuery, Error, SearchUsersQuery['searchUsers']>(
-        ['searchUsers'],
-        fetcher<SearchUsersQuery, SearchUsersQueryVariables>(
+    } = useQuery<SearchUsersQuery, Error, SearchUsersQuery['searchUsers']>({
+        queryKey: ['searchUsers', username],
+        queryFn: fetcher<SearchUsersQuery, SearchUsersQueryVariables>(
             SearchUsersDocument,
             { name: username }
         ),
-        {
-            enabled: !userId && startSearch,
-            refetchOnWindowFocus: false,
-            select: (data) => data.searchUsers,
-        }
-    )
+        enabled: !userId && startSearch,
+        refetchOnWindowFocus: false,
+        select: (data) => data.searchUsers,
+    })
 
     const createConversationMutation = useCreateConversationMutation()
 
@@ -153,7 +151,10 @@ const ConversationModal: React.FC<ConversationModalProps> = ({
             }
 
             const { createConversation: conversationId } = data
-            router.push(`/conversation/${conversationId}`)
+            router.push({
+                pathname: '/conversation/[conversationId]',
+                query: { conversationId },
+            })
 
             /**
              * Clear state and close modal

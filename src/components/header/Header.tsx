@@ -69,7 +69,7 @@ const Header = () => {
     const handleLogOut = () => {
         logOut().then(() => {
             session.data = null
-            router.push('/signin')
+            router.push({ pathname: '/signin' })
         })
     }
 
@@ -104,6 +104,7 @@ const Header = () => {
                         height={45}
                         fontSize={'24px'}
                         cursor="pointer"
+                        toHome
                     />
                 </div>
 
@@ -128,7 +129,7 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: pathname === '/',
                                 })}
-                                href="/"
+                                href={{ pathname: '/' }}
                             >
                                 首页
                             </Link>
@@ -138,7 +139,7 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: pathname === '/blogs',
                                 })}
-                                href="/blogs"
+                                href={{ pathname: '/blogs' }}
                             >
                                 全部
                             </Link>
@@ -148,7 +149,10 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: query?.slug === 'novel',
                                 })}
-                                href="/tags/novel"
+                                href={{
+                                    pathname: '/tags/[slug]',
+                                    query: { slug: 'novel' },
+                                }}
                             >
                                 小说
                             </Link>
@@ -158,7 +162,10 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: query.slug === 'poetry',
                                 })}
-                                href="/tags/poetry"
+                                href={{
+                                    pathname: '/tags/[slug]',
+                                    query: { slug: 'poetry' },
+                                }}
                             >
                                 诗歌
                             </Link>
@@ -168,7 +175,10 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: query.slug === 'original',
                                 })}
-                                href="/tags/original"
+                                href={{
+                                    pathname: '/tags/[slug]',
+                                    query: { slug: 'original' },
+                                }}
                             >
                                 原创
                             </Link>
@@ -178,7 +188,10 @@ const Header = () => {
                                 className={classNames('nav-link', {
                                     active: query.slug === 'else',
                                 })}
-                                href="/tags/else"
+                                href={{
+                                    pathname: '/tags/[slug]',
+                                    query: { slug: 'else' },
+                                }}
                             >
                                 其他
                             </Link>

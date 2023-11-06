@@ -13,8 +13,8 @@ export const useMarkConversationAsReadMutation = () => {
         MarkConversationAsReadMutation,
         Error,
         MarkConversationAsReadMutationVariables
-    >(
-        async ({ conversationId, userId }) =>
+    >({
+        mutationFn: async ({ conversationId, userId }) =>
             fetcher<
                 MarkConversationAsReadMutation,
                 MarkConversationAsReadMutationVariables
@@ -22,14 +22,12 @@ export const useMarkConversationAsReadMutation = () => {
                 conversationId,
                 userId,
             })(),
-        {
-            onSuccess: (res) => {
-                if (res.markConversationAsRead) {
-                    queryClient.invalidateQueries(['conversations'])
-                }
-            },
-        }
-    )
+        onSuccess: (res) => {
+            if (res.markConversationAsRead) {
+                queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            }
+        },
+    })
 
     return markConversationAsReadMutation
 }

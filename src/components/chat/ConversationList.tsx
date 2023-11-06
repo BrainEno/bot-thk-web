@@ -13,7 +13,7 @@ import { useDeleteConversationMutation } from '../../hooks/mutation/useDeleteCon
 import { useUpdateParticipantsMuation } from '../../hooks/mutation/useUpdateParticipantsMutation'
 import { showAlert } from '../common/Alert'
 import Modal from '../common/Modal'
-import { IModalContext,ModalContext } from '../context/ModalContext'
+import { IModalContext, ModalContext } from '../context/ModalContext'
 
 import { ConversationListItem } from './ConversationListItem'
 import ConversationModal from './ConversationModal'
@@ -56,8 +56,10 @@ const ConversationList = ({
             conversationId: conversationToDel,
         })
         setShowDelModal(false)
-        queryClient.invalidateQueries(['conversations', 'messages'])
-        router.push('/dashboard')
+        queryClient.invalidateQueries({
+            queryKey: ['conversations', 'messages'],
+        })
+        router.push({ pathname: '/dashboard' })
     }
 
     const handleCancelDel = () => {
@@ -156,7 +158,9 @@ const ConversationList = ({
                                     conversation?._id,
                                     hasSeenLatestMessage
                                 )
-                                queryClient.invalidateQueries(['messages'])
+                                queryClient.invalidateQueries({
+                                    queryKey: ['messages'],
+                                })
                             }}
                             onEditConversation={() =>
                                 onEditConversation(

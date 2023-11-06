@@ -16,24 +16,22 @@ export const useDeleteConversationMutation = (
         DeleteConversationMutation,
         Error,
         DeleteConversationMutationVariables
-    >(
-        async ({ conversationId }) =>
+    >({
+        mutationFn: async ({ conversationId }) =>
             fetcher<
                 DeleteConversationMutation,
                 DeleteConversationMutationVariables
             >(DeleteConversationDocument, {
                 conversationId,
             })(),
-        {
-            onSuccess: (res) => {
-                if (res.deleteConversation) {
-                    queryClient.invalidateQueries(['conversations'])
-                }
+        onSuccess: (res) => {
+            if (res.deleteConversation) {
+                queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            }
 
-                if (onSuccess) onSuccess(res)
-            },
-        }
-    )
+            if (onSuccess) onSuccess(res)
+        },
+    })
 
     return deleteConversationMutation
 }

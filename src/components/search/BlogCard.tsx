@@ -17,7 +17,6 @@ const BlogCard = ({ blog }: BlogCardProps) => {
                 <div className="card-info">
                     <Image
                         className="card-avatar"
-                        priority={true}
                         src={blog?.author?.photo || DEFAULT_AVATAR}
                         alt="avatar"
                         width={24}

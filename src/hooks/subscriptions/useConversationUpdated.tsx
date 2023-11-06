@@ -80,7 +80,7 @@ export const useConversationUpdated = (
                             }
 
                             if (conversationId === updatedConversationId) {
-                                router.push(`/dashboard`)
+                                router.push({ pathname: '/dashboard' })
                             }
 
                             return
@@ -158,8 +158,12 @@ export const useConversationUpdated = (
                         }
                     }
 
-                    queryClient.invalidateQueries(['messages', conversationId])
-                    queryClient.invalidateQueries(['conversations'])
+                    queryClient.invalidateQueries({
+                        queryKey: ['messages', conversationId],
+                    })
+                    queryClient.invalidateQueries({
+                        queryKey: ['conversations'],
+                    })
                 }
                 if (res.error) {
                     console.log(
@@ -175,5 +179,12 @@ export const useConversationUpdated = (
                 conversationUpdatedSubscription.unsubscribe()
             }
         }
-    }, [client, conversationId, userId, onViewConversation, router])
+    }, [
+        client,
+        conversationId,
+        userId,
+        onViewConversation,
+        queryClient,
+        router,
+    ])
 }

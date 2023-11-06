@@ -24,7 +24,10 @@ const Conversations = () => {
         conversationId: string,
         hasSeenLatestMessage: boolean
     ) => {
-        router.push(`/conversation/${conversationId}`)
+        router.push({
+            pathname: '/conversation/[conversationId]',
+            query: { conversationId },
+        })
         if (hasSeenLatestMessage) return
         try {
             await markConversationAsReadMutation.mutateAsync({

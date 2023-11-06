@@ -20,17 +20,18 @@ export const useMessagesQuery = ({
         MessagesQuery,
         Error,
         MessagesQuery['messages']
-    >(
-        ['messages', conversationId],
-        fetcher<MessagesQuery, MessagesQueryVariables>(MessagesDocument, {
-            conversationId,
-        }),
-        {
-            enabled,
-            retryDelay: 2000,
-            select: (res) => res.messages,
-        }
-    )
+    >({
+        queryKey: ['messages', conversationId],
+        queryFn: fetcher<MessagesQuery, MessagesQueryVariables>(
+            MessagesDocument,
+            {
+                conversationId,
+            }
+        ),
+        enabled,
+        retryDelay: 2000,
+        select: (res) => res.messages,
+    })
 
     return messages ?? []
 }

@@ -14,21 +14,19 @@ export const useUnFollowMutation = () => {
         UnFollowMutation,
         Error,
         UnFollowMutationVariables
-    >(
-        async ({ name }) =>
+    >({
+        mutationFn: async ({ name }) =>
             fetcher<UnFollowMutation, UnFollowMutationVariables>(
                 UnFollowDocument,
                 {
                     name,
                 }
             )(),
-        {
-            onSuccess: (res) => {
-                if (res.unFollow) {
-                    queryClient.invalidateQueries(['getFollowInfo'])
-                }
-            },
-        }
-    )
+        onSuccess: (res) => {
+            if (res.unFollow) {
+                queryClient.invalidateQueries({ queryKey: ['getFollowInfo'] })
+            }
+        },
+    })
     return unFollowMutation
 }

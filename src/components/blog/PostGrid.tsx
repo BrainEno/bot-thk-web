@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
 import { IBlog } from '../../types'
 import { Pagination } from '../common/Pagination'
@@ -52,4 +52,4 @@ const PostGrid = ({ posts }: { posts: IBlog[] }) => {
     )
 }
 
-export default PostGrid
+export default memo(PostGrid)

@@ -9,6 +9,7 @@
         "plugin:jest-dom/recommended"
     ],
     "plugins": ["@typescript-eslint", "simple-import-sort"],
+    "ignorePatterns": ["**/generated/**/*.ts"],
     "rules": {
         "react/no-unescaped-entities": "off",
         "@next/next/no-page-custom-font": "off",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { BiHide, BiShow } from 'react-icons/bi'
 import { BsTags } from 'react-icons/bs'
 import { GrImage } from 'react-icons/gr'
@@ -22,9 +22,12 @@ import { TagList } from './TagList'
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
 
-const ReactQuill = dynamic(() => import('react-quill'), {
-    ssr: false,
-})
+const ReactQuill = dynamic(
+    () => import('react-quill').then((mod) => mod.default),
+    {
+        ssr: false,
+    }
+)
 
 export type FormType = 'create' | 'edit'
 
@@ -80,7 +83,7 @@ export const BlogForm = ({
             localStorage.setItem('draft-title', title)
         }
 
-        router.push('/dashboard')
+        router.push({ pathname: '/dashboard' })
     }
 
     const handleContainerScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
@@ -103,7 +106,16 @@ export const BlogForm = ({
         if (draftTitle) setTitle(draftInIDB?.title || draftTitle)
         if (draftImg) setImage(draftImg)
         if (draftTags) setSelectedTags(draftTags)
-    }, [draftActive, draftBody, draftImg, draftTags, draftTitle, setImage])
+    }, [
+        blogId,
+        get,
+        draftActive,
+        draftBody,
+        draftImg,
+        draftTags,
+        draftTitle,
+        setImage,
+    ])
 
     const publishBlog = async () => {
         const blogInput: BlogInput = { body, title, active, imageUri: image }
@@ -125,7 +137,7 @@ export const BlogForm = ({
             if (!res.createBlog.success) {
                 setErr('文章发布失败，请稍后重试')
             }
-            queryClient.invalidateQueries(['userBlogs'])
+            queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
         } else if (formType === 'edit') {
             if (blogId) {
                 const res = await sdk.UpdateBlog({
@@ -136,8 +148,10 @@ export const BlogForm = ({
                 if (!res.updateBlog.success) {
                     setErr('文章更新失败，请稍后重试')
                 }
-                queryClient.invalidateQueries(['userBlogs'])
-                queryClient.invalidateQueries(['getBlogById', blogId])
+                queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
+                queryClient.invalidateQueries({
+                    queryKey: ['getBlogById', blogId],
+                })
 
                 edit(blogId, {
                     id: blogId,
@@ -156,7 +170,7 @@ export const BlogForm = ({
         setActive(false)
         setBody('')
 
-        router.push('/dashboard')
+        router.push({ pathname: '/dashboard' })
     }
 
     const saveBlog = async () => {
@@ -182,7 +196,7 @@ export const BlogForm = ({
             }
 
             const blogId = res.createBlog.blog?._id
-            queryClient.invalidateQueries(['userBlogs'])
+            queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
             if (blogId)
                 add({
                     id: blogId,
@@ -204,7 +218,7 @@ export const BlogForm = ({
                 if (!res.updateBlog.success) {
                     setErr('文章保存失败，请重试')
                 }
-                queryClient.invalidateQueries(['userBlogs'])
+                queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
                 edit(blogId, {
                     id: blogId,
                     title,
@@ -222,7 +236,7 @@ export const BlogForm = ({
 
     useEffect(() => {
         if (!user) {
-            router.push('/signin')
+            router.push({ pathname: '/signin' })
         }
     }, [router, user])
 
@@ -327,14 +341,15 @@ export const BlogForm = ({
                             inEditor={true}
                         />
                     )}
-
-                    <ReactQuill
-                        modules={QuillModules}
-                        formats={QuillFormats}
-                        value={body}
-                        placeholder="开始创作..."
-                        onChange={setBody}
-                    />
+                    <Suspense fallback="loading...">
+                        <ReactQuill
+                            modules={QuillModules}
+                            formats={QuillFormats}
+                            value={body}
+                            placeholder="开始创作..."
+                            onChange={setBody}
+                        />
+                    </Suspense>
                 </div>
                 <div className="blog-form-bottom">
                     <div className="tags-form">

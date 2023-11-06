@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 
@@ -18,7 +18,7 @@ const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity
 }
 
-export const CarouselItem: React.FC<ICarouselItemProps> = ({
+const CarouselItem: React.FC<ICarouselItemProps> = ({
     item,
     direction,
     previous,
@@ -92,3 +92,5 @@ export const CarouselItem: React.FC<ICarouselItemProps> = ({
         </AnimatePresence>
     )
 }
+
+export default memo(CarouselItem)
