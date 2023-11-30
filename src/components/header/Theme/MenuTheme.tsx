@@ -19,7 +19,7 @@ export const MenuTheme = () => {
             theme,
         [theme]
     )
-    const [, setPersistedTheme] = usePersistedState('theme', initialTheme)
+    const [, setPersistedTheme] = usePersistedState('globalTheme', initialTheme)
     const { windowWidth } = useWindowSize()
     const isMobile = windowWidth && windowWidth < 900
 

@@ -15,12 +15,14 @@ import useAuth from '../../hooks/useAuth'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import useScrollDirection from '../../hooks/useScrollDirection'
 import useWindowSize from '../../hooks/useWindowSize'
-import Avatar from '../common/Avatar'
 import MyBrand from '../common/MyBrand'
 
 import { MenuNotification } from './Notification/MenuNotification'
 import MenuSearch from './Search/MenuSearch'
 import { MenuTheme } from './Theme/MenuTheme'
+import dynamic from 'next/dynamic'
+
+const Avatar = dynamic(() => import('../common/Avatar'), { ssr: false })
 
 const Header = () => {
     const logOut = useAuthStore((state) => state.logOut)

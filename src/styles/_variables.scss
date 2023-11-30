@@ -12,6 +12,7 @@ $scroll-bar: #000000;
 
 
 $bg-light1: #eff3f8;
+$bg-light2: #ffffff;
 $font-light: $black;
 $info-light: #474747;
 $link-light: #444444;
@@ -22,7 +23,7 @@ $conversation-item-selected-light: #e7f2ff;
 
 
 
-$bg-dark1: #444444;
+$bg-dark1: #2c2f33;
 $bg-dark2: #1f1f1f;
 $font-dark: #efefef;
 $info-dark: #c2c2c2;
@@ -33,7 +34,7 @@ $conversation-item-selected-dark: #29272e;
 
 $themes: (
   light: (background1: $bg-light1,
-    background2:$white,
+    background2:$bg-light2,
     headerBg:$white,
     textColor: $font-light,
     infoColor:$info-light,

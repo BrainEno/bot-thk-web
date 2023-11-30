@@ -37,6 +37,14 @@ module.exports = withBundleAnalyzer({
             ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))
         }
 
+        config.module.rules.push({
+            test: /\.ttf/,
+            use: [
+                {
+                    loader: 'url-loader',
+                },
+            ],
+        })
         return config
     },
 })

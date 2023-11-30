@@ -5,7 +5,13 @@ import React, {
     useRef,
     useState,
 } from 'react'
-import { FiUsers } from 'react-icons/fi'
+import {
+    FiBookmark,
+    FiHome,
+    FiList,
+    FiUserCheck,
+    FiUsers,
+} from 'react-icons/fi'
 import dayjs from 'dayjs'
 
 import { CurrentUserQuery } from '../../generated/graphql-request'
@@ -16,16 +22,18 @@ import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useUploadImage } from '../../hooks/useUpload'
 import useWindowSize from '../../hooks/useWindowSize'
 import { showAlert } from '../common/Alert'
-import Avatar from '../common/Avatar'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { RightSideStatus } from './UserDashboard'
+
+const Avatar = dynamic(() => import('../common/Avatar'), { ssr: false })
 
 interface UserInfoProps {
     user: NonNullable<CurrentUserQuery['currentUser']>
-    setFollowStatus: Dispatch<
-        SetStateAction<'HIDDEN' | 'FOLLOWER' | 'FOLLOWING'>
-    >
+    setStatus: Dispatch<SetStateAction<RightSideStatus>>
 }
 
-const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
+const UserInfo = ({ user, setStatus }: UserInfoProps) => {
     const [name, setName] = useState(user.name)
     const [bio, setBio] = useState(user.about ?? '')
     const avatarInput = useRef<HTMLInputElement | null>(null)
@@ -183,16 +191,43 @@ const UserInfo = ({ user, setFollowStatus }: UserInfoProps) => {
                             <FiUsers />
                             <span
                                 className="userInfo-link"
-                                onClick={() => setFollowStatus('FOLLOWING')}
+                                onClick={() => setStatus('FOLLOWING')}
                             >{` 关注 ${followings.length} `}</span>{' '}
                             ·
                             <span
                                 className="userInfo-link"
-                                onClick={() => setFollowStatus('FOLLOWER')}
+                                onClick={() => setStatus('FOLLOWER')}
                             >{` 被关注 ${followers.length}`}</span>
                         </span>
                     </div>
                 )}
+            </div>
+            <div className="userInfo-nav">
+                <button
+                    className="userInfo-nav-btn"
+                    onClick={() => setStatus('SELF')}
+                >
+                    <FiList />
+                    {isDesktop && '我的博客'}
+                </button>
+                <button
+                    className="userInfo-nav-btn"
+                    onClick={() => setStatus('FOLLOWER')}
+                >
+                    <FiUserCheck />
+                    {isDesktop && '我的关注'}
+                </button>
+                <button
+                    className="userInfo-nav-btn"
+                    onClick={() => setStatus('LIKED')}
+                >
+                    <FiBookmark />
+                    {isDesktop && '我的收藏'}
+                </button>
+                <Link className="userInfo-nav-btn" href="/">
+                    <FiHome />
+                    {isDesktop && '返回首页'}
+                </Link>
             </div>
         </div>
     )

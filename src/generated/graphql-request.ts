@@ -28,7 +28,7 @@ export type Blog = {
   categories: Array<Category>;
   comments?: Maybe<Array<Comment>>;
   createdAt: Scalars['DateTime']['output'];
-  description?: Maybe<Scalars['String']['output']>;
+  description: Scalars['String']['output'];
   imageUri?: Maybe<Scalars['String']['output']>;
   likedBy?: Maybe<Array<User>>;
   mtitle: Scalars['String']['output'];
@@ -55,9 +55,13 @@ export type Category = {
 export type Comment = {
   __typename?: 'Comment';
   _id: Scalars['ObjectId']['output'];
-  atBlog: Blog;
+  atBlog?: Maybe<Blog>;
   by: User;
   content: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  replies: Array<Comment>;
+  replyTo?: Maybe<Comment>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Conversation = {
@@ -109,6 +113,7 @@ export type Mutation = {
   createConversation: Scalars['String']['output'];
   deleteBlogById: Scalars['Boolean']['output'];
   deleteCat: Scalars['Boolean']['output'];
+  deleteComment: Scalars['Boolean']['output'];
   deleteConversation: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   editProfile: Scalars['Boolean']['output'];
@@ -118,12 +123,15 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   markConversationAsRead: Scalars['Boolean']['output'];
   newCat: Scalars['Boolean']['output'];
+  newComment: Comment;
   newTag: Scalars['Boolean']['output'];
   refreshToken: LoginResponse;
   register: Scalars['String']['output'];
+  replyComment: Comment;
   resetPassword: Scalars['Boolean']['output'];
   revokeRefreshTokensForUser: Scalars['Boolean']['output'];
   sendMessage: Scalars['Boolean']['output'];
+  toggleLike: Scalars['Boolean']['output'];
   unFollow: Scalars['Boolean']['output'];
   updateBlog: NewBlogResponse;
   updateParticipants: Scalars['Boolean']['output'];
@@ -148,6 +156,11 @@ export type MutationDeleteBlogByIdArgs = {
 
 export type MutationDeleteCatArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['String']['input'];
 };
 
 
@@ -196,6 +209,12 @@ export type MutationNewCatArgs = {
 };
 
 
+export type MutationNewCommentArgs = {
+  blogId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+};
+
+
 export type MutationNewTagArgs = {
   tagName: Scalars['String']['input'];
 };
@@ -210,6 +229,12 @@ export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationReplyCommentArgs = {
+  commentId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
 };
 
 
@@ -228,6 +253,11 @@ export type MutationSendMessageArgs = {
   body: Scalars['String']['input'];
   conversationId: Scalars['String']['input'];
   senderId: Scalars['String']['input'];
+};
+
+
+export type MutationToggleLikeArgs = {
+  blogId: Scalars['String']['input'];
 };
 
 
@@ -250,7 +280,7 @@ export type MutationUpdateParticipantsArgs = {
 
 export type NewBlogResponse = {
   __typename?: 'NewBlogResponse';
-  blog?: Maybe<Blog>;
+  blog?: Maybe<PopulatedCardBlog>;
   success: Scalars['Boolean']['output'];
 };
 
@@ -270,6 +300,52 @@ export type Participant = {
   hasSeenLatestMessage: Scalars['Boolean']['output'];
   user: User;
   userId: Scalars['String']['output'];
+};
+
+export type PopulatedBlog = {
+  __typename?: 'PopulatedBlog';
+  _id: Scalars['String']['output'];
+  active?: Maybe<Scalars['Boolean']['output']>;
+  author: PopulatedUser;
+  body: Scalars['String']['output'];
+  categories?: Maybe<Array<PopulatedCategory>>;
+  comments?: Maybe<Array<PopulatedComment>>;
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  imageUri?: Maybe<Scalars['String']['output']>;
+  likedBy?: Maybe<Array<PopulatedUser>>;
+  mtitle: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  tags?: Maybe<Array<PopulatedTag>>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PopulatedCardBlog = {
+  __typename?: 'PopulatedCardBlog';
+  _id: Scalars['String']['output'];
+  author: PopulatedUser;
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  imageUri?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
+  tags: Array<PopulatedTag>;
+  title: Scalars['String']['output'];
+};
+
+export type PopulatedCategory = {
+  __typename?: 'PopulatedCategory';
+  _id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
+export type PopulatedComment = {
+  __typename?: 'PopulatedComment';
+  _id: Scalars['String']['output'];
+  atBlog: PopulatedBlog;
+  by: PopulatedUser;
+  content: Scalars['String']['output'];
 };
 
 export type PopulatedConversation = {
@@ -302,32 +378,47 @@ export type PopulatedParticipant = {
   userId: Scalars['String']['output'];
 };
 
+export type PopulatedTag = {
+  __typename?: 'PopulatedTag';
+  _id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
 export type PopulatedUser = {
   __typename?: 'PopulatedUser';
   _id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   photo: Scalars['String']['output'];
-  username: Scalars['String']['output'];
+  profile: Scalars['String']['output'];
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  blogComments: Array<Comment>;
   conversations: Array<Conversation>;
   currentUser?: Maybe<User>;
-  getBlogById: Blog;
-  getBlogBySlug: Blog;
+  getBlogById: PopulatedBlog;
+  getBlogBySlug: PopulatedBlog;
   getCatBlogs: Array<Blog>;
   getFollowInfo?: Maybe<FollowInfo>;
-  getRelatedBlogs: Array<Blog>;
+  getRelatedBlogs: Array<PopulatedCardBlog>;
   getTagBlogs: Array<Blog>;
-  getUserBlogs: Array<Blog>;
+  getUserBlogs: Array<PopulatedBlog>;
   getUserInfo: UserInfoResponse;
-  listBlogsWithCatTag: Array<Blog>;
+  getUserLikedBlogs: Array<PopulatedBlog>;
+  listBlogsWithCatTag: Array<PopulatedCardBlog>;
   listCats: Array<Category>;
   listTags: Array<Tag>;
   messages: Array<Message>;
-  searchBlogs: Array<Blog>;
+  searchBlogs: Array<PopulatedCardBlog>;
   searchUsers?: Maybe<Array<User>>;
+};
+
+
+export type QueryBlogCommentsArgs = {
+  blogId: Scalars['String']['input'];
 };
 
 
@@ -372,6 +463,11 @@ export type QueryGetUserBlogsArgs = {
 
 export type QueryGetUserInfoArgs = {
   username: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserLikedBlogsArgs = {
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -427,6 +523,7 @@ export type User = {
   followers: Array<User>;
   followingIds: Array<Scalars['String']['output']>;
   followings: Array<User>;
+  likedBlogs: Array<Blog>;
   name: Scalars['String']['output'];
   photo?: Maybe<Scalars['String']['output']>;
   profile: Scalars['String']['output'];
@@ -470,7 +567,7 @@ export type CreateBlogMutationVariables = Exact<{
 }>;
 
 
-export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'NewBlogResponse', success: boolean, blog?: { __typename?: 'Blog', _id: any, title: string, body: string, slug: string, description?: string | null, author: { __typename?: 'User', name: string }, tags: Array<{ __typename?: 'Tag', _id: any }> } | null } };
+export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'NewBlogResponse', success: boolean, blog?: { __typename?: 'PopulatedCardBlog', _id: string, title: string, slug: string, tags: Array<{ __typename?: 'PopulatedTag', _id: string }> } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -606,6 +703,36 @@ export type MarkConversationAsReadMutationVariables = Exact<{
 
 export type MarkConversationAsReadMutation = { __typename?: 'Mutation', markConversationAsRead: boolean };
 
+export type ToggleLikeMutationVariables = Exact<{
+  blogId: Scalars['String']['input'];
+}>;
+
+
+export type ToggleLikeMutation = { __typename?: 'Mutation', toggleLike: boolean };
+
+export type NewCommentMutationVariables = Exact<{
+  blogId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+}>;
+
+
+export type NewCommentMutation = { __typename?: 'Mutation', newComment: { __typename?: 'Comment', _id: any, content: string, createdAt: string, updatedAt?: string | null, by: { __typename?: 'User', name: string }, atBlog?: { __typename?: 'Blog', title: string } | null, replies: Array<{ __typename?: 'Comment', _id: any }>, replyTo?: { __typename?: 'Comment', _id: any } | null } };
+
+export type ReplyCommentMutationVariables = Exact<{
+  content: Scalars['String']['input'];
+  commentId: Scalars['String']['input'];
+}>;
+
+
+export type ReplyCommentMutation = { __typename?: 'Mutation', replyComment: { __typename?: 'Comment', _id: any, content: string, createdAt: string, updatedAt?: string | null, atBlog?: { __typename?: 'Blog', title: string } | null, by: { __typename?: 'User', _id: any, name: string, photo?: string | null }, replyTo?: { __typename?: 'Comment', _id: any } | null } };
+
+export type DeleteCommentMutationVariables = Exact<{
+  commentId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: boolean };
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -616,26 +743,26 @@ export type GetCatBlogsQueryVariables = Exact<{
 }>;
 
 
-export type GetCatBlogsQuery = { __typename?: 'Query', getCatBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
+export type GetCatBlogsQuery = { __typename?: 'Query', getCatBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description: string, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
 
 export type GetTagBlogsQueryVariables = Exact<{
   getTagBlogsSlug: Scalars['String']['input'];
 }>;
 
 
-export type GetTagBlogsQuery = { __typename?: 'Query', getTagBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description?: string | null, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
+export type GetTagBlogsQuery = { __typename?: 'Query', getTagBlogs: Array<{ __typename?: 'Blog', _id: any, createdAt: string, updatedAt: string, imageUri?: string | null, mtitle: string, description: string, slug: string, title: string, author: { __typename?: 'User', username: string, name: string, profile: string }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }>, categories: Array<{ __typename?: 'Category', name: string, slug: string }> }> };
 
 export type GetBlogBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetBlogBySlugQuery = { __typename?: 'Query', getBlogBySlug: { __typename?: 'Blog', title: string, slug: string, description?: string | null, body: string, mtitle: string, imageUri?: string | null, active?: boolean | null, _id: any, createdAt: string, updatedAt: string, likedBy?: Array<{ __typename?: 'User', username: string, name: string }> | null, comments?: Array<{ __typename?: 'Comment', content: string, by: { __typename?: 'User', name: string, username: string }, atBlog: { __typename?: 'Blog', slug: string, title: string } }> | null, author: { __typename?: 'User', name: string, username: string }, tags: Array<{ __typename?: 'Tag', _id: any, slug: string, name: string }>, categories: Array<{ __typename?: 'Category', _id: any, slug: string, name: string }> } };
+export type GetBlogBySlugQuery = { __typename?: 'Query', getBlogBySlug: { __typename?: 'PopulatedBlog', title: string, slug: string, description: string, body: string, mtitle: string, imageUri?: string | null, active?: boolean | null, _id: string, createdAt: string, updatedAt: string, likedBy?: Array<{ __typename?: 'PopulatedUser', _id: string, name: string }> | null, comments?: Array<{ __typename?: 'PopulatedComment', _id: string }> | null, author: { __typename?: 'PopulatedUser', name: string, username?: string | null }, tags?: Array<{ __typename?: 'PopulatedTag', _id: string, slug: string, name: string }> | null, categories?: Array<{ __typename?: 'PopulatedCategory', _id: string, slug: string, name: string }> | null } };
 
 export type ListBlogsWithCatTagQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListBlogsWithCatTagQuery = { __typename?: 'Query', listBlogsWithCatTag: Array<{ __typename?: 'Blog', title: string, description?: string | null, body: string, slug: string, _id: any, mtitle: string, imageUri?: string | null, active?: boolean | null, createdAt: string, updatedAt: string, author: { __typename?: 'User', name: string, profile: string }, categories: Array<{ __typename?: 'Category', slug: string, name: string }>, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
+export type ListBlogsWithCatTagQuery = { __typename?: 'Query', listBlogsWithCatTag: Array<{ __typename?: 'PopulatedCardBlog', title: string, slug: string, _id: string, imageUri?: string | null, createdAt: string, description: string, author: { __typename?: 'PopulatedUser', name: string, profile: string }, tags: Array<{ __typename?: 'PopulatedTag', slug: string, name: string }> }> };
 
 export type GetRelatedBlogsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']['input']>;
@@ -645,14 +772,14 @@ export type GetRelatedBlogsQueryVariables = Exact<{
 }>;
 
 
-export type GetRelatedBlogsQuery = { __typename?: 'Query', getRelatedBlogs: Array<{ __typename?: 'Blog', imageUri?: string | null, _id: any, slug: string, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
+export type GetRelatedBlogsQuery = { __typename?: 'Query', getRelatedBlogs: Array<{ __typename?: 'PopulatedCardBlog', title: string, imageUri?: string | null, _id: string, slug: string, createdAt: string, tags: Array<{ __typename?: 'PopulatedTag', _id: string, slug: string, name: string }> }> };
 
 export type SearchBlogsQueryVariables = Exact<{
   query: Scalars['String']['input'];
 }>;
 
 
-export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'Blog', slug: string, title: string, description?: string | null, createdAt: string, imageUri?: string | null, author: { __typename?: 'User', name: string, photo?: string | null }, tags: Array<{ __typename?: 'Tag', name: string, slug: string }> }> };
+export type SearchBlogsQuery = { __typename?: 'Query', searchBlogs: Array<{ __typename?: 'PopulatedCardBlog', slug: string, title: string, description: string, createdAt: string, imageUri?: string | null, author: { __typename?: 'PopulatedUser', name: string, photo: string }, tags: Array<{ __typename?: 'PopulatedTag', name: string, slug: string }> }> };
 
 export type GetUserBlogsQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['String']['input']>;
@@ -660,7 +787,12 @@ export type GetUserBlogsQueryVariables = Exact<{
 }>;
 
 
-export type GetUserBlogsQuery = { __typename?: 'Query', getUserBlogs: Array<{ __typename?: 'Blog', _id: any, title: string, createdAt: string, description?: string | null, imageUri?: string | null, slug: string, author: { __typename?: 'User', name: string, username: string }, categories: Array<{ __typename?: 'Category', name: string, slug: string }>, tags: Array<{ __typename?: 'Tag', slug: string, name: string }> }> };
+export type GetUserBlogsQuery = { __typename?: 'Query', getUserBlogs: Array<{ __typename?: 'PopulatedBlog', _id: string, title: string, createdAt: string, description: string, imageUri?: string | null, slug: string, author: { __typename?: 'PopulatedUser', name: string, username?: string | null }, categories?: Array<{ __typename?: 'PopulatedCategory', name: string, slug: string }> | null, tags?: Array<{ __typename?: 'PopulatedTag', slug: string, name: string }> | null }> };
+
+export type GetUserLikedBlogsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserLikedBlogsQuery = { __typename?: 'Query', getUserLikedBlogs: Array<{ __typename?: 'PopulatedBlog', _id: string, title: string, createdAt: string, description: string, imageUri?: string | null, slug: string, author: { __typename?: 'PopulatedUser', name: string, username?: string | null }, categories?: Array<{ __typename?: 'PopulatedCategory', name: string, slug: string }> | null, tags?: Array<{ __typename?: 'PopulatedTag', slug: string, name: string }> | null }> };
 
 export type ListTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -677,7 +809,7 @@ export type GetBlogByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBlogByIdQuery = { __typename?: 'Query', getBlogById: { __typename?: 'Blog', _id: any, active?: boolean | null, body: string, createdAt: string, description?: string | null, imageUri?: string | null, slug: string, title: string, updatedAt: string, mtitle: string, author: { __typename?: 'User', name: string }, categories: Array<{ __typename?: 'Category', _id: any, name: string, slug: string }>, tags: Array<{ __typename?: 'Tag', name: string, slug: string, _id: any }> } };
+export type GetBlogByIdQuery = { __typename?: 'Query', getBlogById: { __typename?: 'PopulatedBlog', _id: string, active?: boolean | null, body: string, createdAt: string, description: string, imageUri?: string | null, slug: string, title: string, updatedAt: string, mtitle: string, author: { __typename?: 'PopulatedUser', name: string }, categories?: Array<{ __typename?: 'PopulatedCategory', _id: string, name: string, slug: string }> | null, tags?: Array<{ __typename?: 'PopulatedTag', name: string, slug: string, _id: string }> | null, likedBy?: Array<{ __typename?: 'PopulatedUser', name: string }> | null } };
 
 export type SearchUsersQueryVariables = Exact<{
   name: Scalars['String']['input'];
@@ -729,7 +861,7 @@ export type UserFollowedSubscription = { __typename?: 'Subscription', userFollow
 export type ConversationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationCreatedSubscription = { __typename?: 'Subscription', conversationCreated: { __typename?: 'PopulatedConversation', _id: string, createdAt: string, participantUserIds: Array<string>, latestMessageId?: string | null, updatedAt?: string | null, latestMessage?: { __typename?: 'PopulatedMessage', body: string, senderId: string } | null, messages: Array<{ __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, updatedAt: string, sender: { __typename?: 'PopulatedUser', name: string, username: string, _id: string, photo: string } }>, participants: Array<{ __typename?: 'PopulatedParticipant', _id: string, hasSeenLatestMessage: boolean, userId: string }> } };
+export type ConversationCreatedSubscription = { __typename?: 'Subscription', conversationCreated: { __typename?: 'PopulatedConversation', _id: string, createdAt: string, participantUserIds: Array<string>, latestMessageId?: string | null, updatedAt?: string | null, latestMessage?: { __typename?: 'PopulatedMessage', body: string, senderId: string } | null, messages: Array<{ __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, updatedAt: string, sender: { __typename?: 'PopulatedUser', name: string, username?: string | null, _id: string, photo: string } }>, participants: Array<{ __typename?: 'PopulatedParticipant', _id: string, hasSeenLatestMessage: boolean, userId: string }> } };
 
 export type ConversationDeletedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -739,7 +871,7 @@ export type ConversationDeletedSubscription = { __typename?: 'Subscription', con
 export type ConversationUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConversationUpdatedSubscription = { __typename?: 'Subscription', conversationUpdated: { __typename?: 'ConversationUpdated', addedUserIds?: Array<string> | null, removedUserIds?: Array<string> | null, conversation: { __typename?: 'PopulatedConversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: string, updatedAt?: string | null, createdAt: string, participants: Array<{ __typename?: 'PopulatedParticipant', hasSeenLatestMessage: boolean, _id: string }>, latestMessage?: { __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, sender: { __typename?: 'PopulatedUser', _id: string, name: string, photo: string, username: string } } | null } } };
+export type ConversationUpdatedSubscription = { __typename?: 'Subscription', conversationUpdated: { __typename?: 'ConversationUpdated', addedUserIds?: Array<string> | null, removedUserIds?: Array<string> | null, conversation: { __typename?: 'PopulatedConversation', participantUserIds: Array<string>, latestMessageId?: string | null, _id: string, updatedAt?: string | null, createdAt: string, participants: Array<{ __typename?: 'PopulatedParticipant', hasSeenLatestMessage: boolean, _id: string }>, latestMessage?: { __typename?: 'PopulatedMessage', _id: string, body: string, senderId: string, createdAt: string, sender: { __typename?: 'PopulatedUser', _id: string, name: string, photo: string, username?: string | null } } | null } } };
 
 export type MessageSentSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -773,12 +905,7 @@ export const CreateBlogDocument = gql`
     blog {
       _id
       title
-      body
       slug
-      description
-      author {
-        name
-      }
       tags {
         _id
       }
@@ -886,6 +1013,59 @@ export const MarkConversationAsReadDocument = gql`
   markConversationAsRead(conversationId: $conversationId, userId: $userId)
 }
     `;
+export const ToggleLikeDocument = gql`
+    mutation ToggleLike($blogId: String!) {
+  toggleLike(blogId: $blogId)
+}
+    `;
+export const NewCommentDocument = gql`
+    mutation NewComment($blogId: String!, $content: String!) {
+  newComment(blogId: $blogId, content: $content) {
+    _id
+    content
+    createdAt
+    by {
+      name
+    }
+    atBlog {
+      title
+    }
+    replies {
+      _id
+    }
+    replyTo {
+      _id
+    }
+    updatedAt
+  }
+}
+    `;
+export const ReplyCommentDocument = gql`
+    mutation ReplyComment($content: String!, $commentId: String!) {
+  replyComment(content: $content, commentId: $commentId) {
+    _id
+    atBlog {
+      title
+    }
+    by {
+      _id
+      name
+      photo
+    }
+    content
+    createdAt
+    replyTo {
+      _id
+    }
+    updatedAt
+  }
+}
+    `;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($commentId: String!) {
+  deleteComment(commentId: $commentId)
+}
+    `;
 export const CurrentUserDocument = gql`
     query CurrentUser {
   currentUser {
@@ -969,19 +1149,11 @@ export const GetBlogBySlugDocument = gql`
     imageUri
     active
     likedBy {
-      username
+      _id
       name
     }
     comments {
-      content
-      by {
-        name
-        username
-      }
-      atBlog {
-        slug
-        title
-      }
+      _id
     }
     _id
     createdAt
@@ -1007,22 +1179,14 @@ export const ListBlogsWithCatTagDocument = gql`
     query ListBlogsWithCatTag {
   listBlogsWithCatTag {
     title
-    description
-    body
     slug
     _id
-    mtitle
     imageUri
-    active
     createdAt
-    updatedAt
+    description
     author {
       name
       profile
-    }
-    categories {
-      slug
-      name
     }
     tags {
       slug
@@ -1039,13 +1203,16 @@ export const GetRelatedBlogsDocument = gql`
     catIds: $catIds
     slug: $getRelatedBlogsSlug
   ) {
+    title
     imageUri
     _id
     slug
     tags {
+      _id
       slug
       name
     }
+    createdAt
   }
 }
     `;
@@ -1071,6 +1238,30 @@ export const SearchBlogsDocument = gql`
 export const GetUserBlogsDocument = gql`
     query GetUserBlogs($userId: String, $username: String) {
   getUserBlogs(userId: $userId, username: $username) {
+    _id
+    author {
+      name
+      username
+    }
+    categories {
+      name
+      slug
+    }
+    tags {
+      slug
+      name
+    }
+    title
+    createdAt
+    description
+    imageUri
+    slug
+  }
+}
+    `;
+export const GetUserLikedBlogsDocument = gql`
+    query GetUserLikedBlogs {
+  getUserLikedBlogs {
     _id
     author {
       name
@@ -1136,6 +1327,9 @@ export const GetBlogByIdDocument = gql`
     title
     updatedAt
     mtitle
+    likedBy {
+      name
+    }
   }
 }
     `;
@@ -1446,6 +1640,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     MarkConversationAsRead(variables: MarkConversationAsReadMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<MarkConversationAsReadMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<MarkConversationAsReadMutation>(MarkConversationAsReadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MarkConversationAsRead', 'mutation');
     },
+    ToggleLike(variables: ToggleLikeMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ToggleLikeMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleLikeMutation>(ToggleLikeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ToggleLike', 'mutation');
+    },
+    NewComment(variables: NewCommentMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<NewCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NewCommentMutation>(NewCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NewComment', 'mutation');
+    },
+    ReplyComment(variables: ReplyCommentMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ReplyCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ReplyCommentMutation>(ReplyCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ReplyComment', 'mutation');
+    },
+    DeleteComment(variables: DeleteCommentMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteCommentMutation>(DeleteCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteComment', 'mutation');
+    },
     CurrentUser(variables?: CurrentUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CurrentUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQuery>(CurrentUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUser', 'query');
     },
@@ -1469,6 +1675,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetUserBlogs(variables?: GetUserBlogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserBlogsQuery>(GetUserBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserBlogs', 'query');
+    },
+    GetUserLikedBlogs(variables?: GetUserLikedBlogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserLikedBlogsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserLikedBlogsQuery>(GetUserLikedBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserLikedBlogs', 'query');
     },
     ListTags(variables?: ListTagsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ListTagsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ListTagsQuery>(ListTagsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListTags', 'query');

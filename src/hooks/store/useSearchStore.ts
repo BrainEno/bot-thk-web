@@ -1,9 +1,10 @@
 import { produce } from 'immer'
 import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
+import { StateStorage, createJSONStorage, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
 import { makeId } from '../../helpers/makeId'
+import localforage from 'localforage'
 
 export interface ISearchItem {
     id: string
@@ -16,6 +17,18 @@ interface SearchState {
     add: (text: string) => void
     remove: (text: string) => void
     clear: () => void
+}
+
+export const localforageStorage: StateStorage = {
+    getItem: async (name: string): Promise<string | null> => {
+        return (await localforage.getItem(name)) || null
+    },
+    setItem: async (name: string, value: string) => {
+        await localforage.setItem(name, value)
+    },
+    removeItem: async (name: string) => {
+        await localforage.removeItem(name)
+    },
 }
 
 export const useSearchStore = create(
@@ -60,7 +73,7 @@ export const useSearchStore = create(
         })),
         {
             name: 'search-cache',
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => localforageStorage),
         }
     )
 )

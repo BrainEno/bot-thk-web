@@ -179,7 +179,7 @@ const FollowInfoList = ({
                     </div>
                 </Modal>
             )}
-            {users.length && (
+            {!!users.length && (
                 <div className="followInfo-back">
                     <button onClick={hideFollowInfo}>
                         <IoMdArrowBack size={32} />
@@ -188,7 +188,7 @@ const FollowInfoList = ({
                 </div>
             )}
             <div className="followInfo-list">
-                {users.length &&
+                {!!users.length &&
                     users.map((u) => (
                         <FollowInfo
                             followed={followed(u._id)}

@@ -31,6 +31,7 @@ const MyBrand: React.FC<BrandProps> = ({
                 fontFamily: '-apple-system',
                 marginRight: '10px',
                 cursor: 'default',
+                display: 'block',
             }}
         >
             BOT THK

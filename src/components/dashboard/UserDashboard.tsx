@@ -10,9 +10,13 @@ import {
     GetUserBlogsDocument,
     GetUserBlogsQuery,
     GetUserBlogsQueryVariables,
+    GetUserLikedBlogsDocument,
+    GetUserLikedBlogsQuery,
+    GetUserLikedBlogsQueryVariables,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
+import LikedBlogs from './LikedBlogs'
 
 const FollowInfoList = dynamic(
     () => import('./FollowInfoList').then((mod) => mod.default),
@@ -34,10 +38,11 @@ interface UserDashboardProps {
     user: NonNullable<CurrentUserQuery['currentUser']>
 }
 
+export type RightSideStatus = 'SELF' | 'FOLLOWER' | 'FOLLOWING' | 'LIKED'
+
 const UserDashboard = ({ user, router }: UserDashboardProps) => {
-    const [followStatus, setFollowStatus] = useState<
-        'HIDDEN' | 'FOLLOWER' | 'FOLLOWING'
-    >('HIDDEN')
+    const [status, setStatus] = useState<RightSideStatus>('SELF')
+
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const {
@@ -53,6 +58,21 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
         enabled: !!(user && user._id),
         refetchOnReconnect: true,
         select: (res) => res.getUserBlogs,
+    })
+
+    const { data: userLikedBlogs } = useQuery<
+        GetUserLikedBlogsQuery,
+        Error,
+        GetUserLikedBlogsQuery['getUserLikedBlogs']
+    >({
+        queryKey: ['userLikedBlogs', user._id],
+        queryFn: fetcher<
+            GetUserLikedBlogsQuery,
+            GetUserLikedBlogsQueryVariables
+        >(GetUserLikedBlogsDocument),
+        enabled: !!(user && user._id),
+        refetchOnReconnect: true,
+        select: (res) => res.getUserLikedBlogs,
     })
 
     const { followers, followings } = useFollowInfo({
@@ -76,18 +96,22 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
 
     return (
         <div className="user-dashboard">
-            <UserInfo user={user} setFollowStatus={setFollowStatus} />
-            {followStatus === 'HIDDEN' && userBlogs && (
-                <UserBlogs blogs={userBlogs} user={user} />
+            <UserInfo user={user} setStatus={setStatus} />
+            {status === 'SELF' && userBlogs && (
+                <UserBlogs blogs={userBlogs} username={user.name} />
             )}
-            {followStatus !== 'HIDDEN' && (
-                <FollowInfoList
-                    type={followStatus}
-                    followers={followers}
-                    followings={followings}
-                    hideFollowInfo={() => setFollowStatus('HIDDEN')}
-                />
+            {status === 'LIKED' && userLikedBlogs && (
+                <LikedBlogs blogs={userLikedBlogs} username={user.name} />
             )}
+            {status === 'FOLLOWING' ||
+                (status === 'FOLLOWER' && (
+                    <FollowInfoList
+                        type={status}
+                        followers={followers}
+                        followings={followings}
+                        hideFollowInfo={() => setStatus('SELF')}
+                    />
+                ))}
         </div>
     )
 }

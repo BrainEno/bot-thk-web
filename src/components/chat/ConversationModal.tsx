@@ -265,6 +265,8 @@ const ConversationModal: React.FC<ConversationModalProps> = ({
         <>
             {info && showAlert(info, 'info')}
             {error && showAlert(error, 'error')}
+            {updateParticipantsMutation.isPending &&
+                showAlert('Updating...', 'info')}
             {isOpen && (
                 <Modal onClose={onClose} title="编辑聊天成员">
                     <div className="conversation-modal-body">

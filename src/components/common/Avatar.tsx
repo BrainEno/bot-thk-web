@@ -1,4 +1,8 @@
+'use client'
+
 import React from 'react'
+import useIsValidSrc from '../../hooks/useIsValiadSrc'
+import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 const Avatar = ({
     src,
@@ -13,6 +17,8 @@ const Avatar = ({
     title?: string
     char?: string
 }) => {
+    const isValiadSrc = useIsValidSrc({ source: src })
+
     return (
         <div
             title={title}
@@ -20,7 +26,9 @@ const Avatar = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundImage: src ? `url('${src}')` : '',
+                backgroundImage: isValiadSrc
+                    ? `url('${src}')`
+                    : `url('${DEFAULT_AVATAR}')`,
                 width: `${size}px`,
                 height: `${size}px`,
                 borderRadius: radius ? `${radius}px` : '50%',
@@ -34,7 +42,7 @@ const Avatar = ({
                 fontWeight: 800,
             }}
         >
-            {!src && char}
+            {!isValiadSrc && char}
         </div>
     )
 }

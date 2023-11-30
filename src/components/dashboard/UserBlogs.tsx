@@ -1,10 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
-import {
-    CurrentUserQuery,
-    GetUserBlogsQuery,
-} from '../../generated/graphql-request'
+import { GetUserBlogsQuery } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
 import AddBtn from '../common/AddBtn'
@@ -17,11 +14,11 @@ import { UserBlogCard } from './UserBlogCard'
 
 const PAGE_SIZE = 6
 
-interface IUserBlogsProps {
+interface UserBlogsProps {
     blogs: GetUserBlogsQuery['getUserBlogs']
-    user: CurrentUserQuery['currentUser']
+    username: string
 }
-const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
+const UserBlogs: React.FC<UserBlogsProps> = ({ blogs, username }) => {
     const [current, setCurrent] = useState(1)
     const [selectedId, setSelectedId] = useState('')
     const [showModal, setShowModal] = useState(false)
@@ -80,7 +77,7 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
                     <MyBrand width={45} height={45} />
                 </div>
                 <div className="info-container">
-                    <h2>{user?.name}</h2>
+                    <h2>{username}</h2>
                     {blogs && blogs?.length > 0 ? (
                         <h5 className="userInfo-text">
                             在 BOT THK 一共发布了 {blogs.length} 篇文章
@@ -101,10 +98,11 @@ const UserBlogs: React.FC<IUserBlogsProps> = ({ blogs, user }) => {
                     paginatedBlogs.map((b) => (
                         <UserBlogCard
                             setSelectedId={setSelectedId}
-                            key={b.slug}
-                            username={user?.name || 'unkwnown'}
+                            key={b._id}
+                            username={username || 'unkwnown'}
                             blog={b}
                             setShowModal={setShowModal}
+                            type="SELF"
                         />
                     ))}
             </div>

@@ -1,51 +1,40 @@
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import useWindowSize from '../../hooks/useWindowSize'
-import { IBlog } from '../../types'
-
 import { TagRow } from './index'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface IPostCardProps {
-    post: IBlog
+    post: PopulatedCardBlog
 }
 
 const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
-    const { windowWidth } = useWindowSize()
-    const isDesktop = useMemo(
-        () => windowWidth && windowWidth > 900,
-        [windowWidth]
-    )
-
     return (
         <div className="post-container" id={post._id}>
-            {!isDesktop &&
-            post.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE ? null : (
-                <Link
-                    href={{
-                        pathname: '/blogs/[slug]',
-                        query: { slug: post.slug },
-                    }}
-                >
-                    <div className="post-img-wrapper skeleton">
-                        <Image
-                            src={post.imageUri!}
-                            alt={post.slug}
-                            sizes="(max-width: 900px) 305px,
+            <Link
+                href={{
+                    pathname: '/blogs/[slug]',
+                    query: { slug: post.slug },
+                }}
+            >
+                <div className="post-img-wrapper skeleton">
+                    <Image
+                        src={post.imageUri!}
+                        alt={post.slug}
+                        sizes="(max-width: 900px) 305px,
                                350px"
-                            fill
-                            style={{
-                                objectFit: 'cover',
-                            }}
-                            loading="lazy"
-                            className="post-img"
-                            quality={70}
-                        />
-                    </div>
-                </Link>
-            )}
+                        fill
+                        style={{
+                            objectFit: 'cover',
+                        }}
+                        loading="lazy"
+                        className="post-img"
+                        quality={70}
+                    />
+                </div>
+            </Link>
             <TagRow tags={post.tags} />
             <section>
                 <p className="post-title">{post.title}</p>
@@ -65,7 +54,7 @@ const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
                     </span>
                 </div>
                 <div className="description-text">
-                    {post.description.replace(/<[^>]+>/g, '')}
+                    {post.description?.replace(/<[^>]+>/g, '')}
                 </div>
             </section>
             <p className="author-text">

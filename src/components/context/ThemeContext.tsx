@@ -36,7 +36,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const { theme } = useContext(ThemeContext)
     const [globalTheme] = usePersistedState('globalTheme', theme) as [
         ThemeValue,
-        React.Dispatch<React.SetStateAction<ThemeValue>>
+        React.Dispatch<React.SetStateAction<ThemeValue>>,
     ]
     const [isClient, setIsClient] = useState(false)
 

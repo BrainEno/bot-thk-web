@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
-import secureLocalStorage from 'react-secure-storage'
+import localforage from 'localforage'
 
-type PersistedStateResult = [
-    string,
-    React.Dispatch<React.SetStateAction<string>>
-]
+type PersistedStateResult = [any, React.Dispatch<React.SetStateAction<string>>]
 
 const usePersistedState = (
     name: string,
-    defaultValue: string
+    defaultValue: any
 ): PersistedStateResult => {
     const [value, setValue] = useState(defaultValue)
     const nameRef = useRef(name)
 
     useEffect(() => {
         try {
-            const storedValue = secureLocalStorage.getItem(name)
-            if (storedValue !== null) {
-                setValue(JSON.stringify(storedValue))
-            } else {
-                secureLocalStorage.setItem(name, defaultValue)
-            }
+            localforage.getItem(name).then((storedValue) => {
+                if (storedValue !== null) {
+                    setValue(storedValue)
+                } else {
+                    localforage.setItem(name, defaultValue).then(() => {
+                        return
+                    })
+                }
+            })
         } catch {
             setValue(defaultValue)
         }
@@ -30,7 +30,9 @@ const usePersistedState = (
 
     useEffect(() => {
         try {
-            secureLocalStorage.setItem(nameRef.current, value)
+            localforage.setItem(nameRef.current, value).then(() => {
+                return
+            })
         } catch {
             return
         }
@@ -40,14 +42,19 @@ const usePersistedState = (
         const lastName = nameRef.current
         if (name !== lastName) {
             try {
-                secureLocalStorage.setItem(name, value)
-                nameRef.current = name
-                secureLocalStorage.removeItem(lastName)
+                localforage.setItem(name, value).then(() => {
+                    nameRef.current = name
+                    localforage.removeItem(lastName).then(() => {
+                        return
+                    })
+                })
             } catch {
                 return
             }
         } else {
-            secureLocalStorage.setItem(name, value)
+            localforage.setItem(name, value).then(() => {
+                return
+            })
         }
     }, [name, value])
 

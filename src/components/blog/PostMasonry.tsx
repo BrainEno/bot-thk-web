@@ -1,5 +1,4 @@
-import { IBlog } from '../../types'
-
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 import PostCard from './PostCard'
 
 export type ImgUseFor =
@@ -9,13 +8,13 @@ export type ImgUseFor =
     | 'trending'
     | 'related'
 
-interface IPostMasonryProps {
-    posts: IBlog[]
+interface PostMasonryProps {
+    posts: Omit<PopulatedCardBlog, 'author' | 'description'>[]
     columns: number
     tagsOnTop: boolean
     imgFor?: ImgUseFor
 }
-const PostMasonry: React.FC<IPostMasonryProps> = ({
+const PostMasonry: React.FC<PostMasonryProps> = ({
     posts,
     columns,
     tagsOnTop,

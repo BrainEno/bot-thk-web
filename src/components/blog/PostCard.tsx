@@ -4,13 +4,12 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { IBlog } from '../../types'
-
 import { TagRow } from './index'
 import { ImgUseFor } from './PostMasonry'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface PostCardProps {
-    post: IBlog
+    post: Omit<PopulatedCardBlog, 'author' | 'description'>
     tagsOnTop: boolean
     index?: number
     imgFor?: ImgUseFor
@@ -51,7 +50,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     justifyContent: tagsOnTop ? 'space-between' : 'flex-end',
                 }}
             >
-                <TagRow tags={post.tags} />
+                <TagRow tags={post.tags || []} />
                 <div>
                     <h2 className="image-title">{post.title}</h2>
                     <span className="image-date">

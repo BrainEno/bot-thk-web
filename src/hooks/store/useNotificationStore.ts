@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { localforageStorage } from './useSearchStore'
 
 export interface INotification {
     id: string
@@ -54,7 +55,7 @@ export const useNotificationStore = create(
         })),
         {
             name: 'notifications',
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => localforageStorage),
             partialize: (state) => state,
         }
     )

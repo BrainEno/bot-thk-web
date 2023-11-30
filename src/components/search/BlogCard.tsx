@@ -2,12 +2,12 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { SearchBlogsQuery } from '../../generated/graphql-request'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 import { DEFAULT_IMAGE } from '../../pages/search'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 interface BlogCardProps {
-    blog: NonNullable<SearchBlogsQuery['searchBlogs'][0]>
+    blog: PopulatedCardBlog
 }
 
 const BlogCard = ({ blog }: BlogCardProps) => {

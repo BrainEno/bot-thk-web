@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import useWindowSize from '../../hooks/useWindowSize'
 
-
 export interface BannerImgProps {
     imgSrc: string
     alt?: string
@@ -46,15 +45,11 @@ const BannerImg = ({
                     <Image
                         className="banner-img"
                         priority={true}
-                        src={imgSrc}
                         sizes="(max-width: 900px) 305px,
                                350px"
                         fill
                         alt={alt || 'banner'}
-                        style={{
-                            objectFit: 'cover',
-                            objectPosition: 'center',
-                        }}
+                        src={imgSrc}
                         quality={windowWidth! > 900 ? 75 : 45}
                     />
                 </motion.div>

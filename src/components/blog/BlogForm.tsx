@@ -18,6 +18,7 @@ import { showAlert } from '../common/Alert'
 import BannerImg from '../common/BannerImg'
 
 import { TagList } from './TagList'
+import localforage from 'localforage'
 
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
@@ -79,8 +80,8 @@ export const BlogForm = ({
 
     const handleCancel = () => {
         if (formType === 'create') {
-            localStorage.setItem('draft-content', body)
-            localStorage.setItem('draft-title', title)
+            localforage.setItem('draft-content', body)
+            localforage.setItem('draft-title', title)
         }
 
         router.push({ pathname: '/dashboard' })
@@ -90,9 +91,13 @@ export const BlogForm = ({
         if (e.currentTarget.scrollTop > 10) setShowBanner(false)
     }
 
-    const initCreateData = useCallback(() => {
-        const draftTitleLS = localStorage.getItem('draft-title')
-        const draftBodyLS = localStorage.getItem('draft-content')
+    const initCreateData = useCallback(async () => {
+        const draftTitleLS = (await localforage.getItem(
+            'draft-title'
+        )) as string
+        const draftBodyLS = (await localforage.getItem(
+            'draft-content'
+        )) as string
         if (draftBodyLS) setBody(draftBodyLS)
         if (draftTitleLS) setTitle(draftTitleLS)
     }, [])
@@ -100,7 +105,6 @@ export const BlogForm = ({
     const initEditData = useCallback(() => {
         if (!blogId) return
         const draftInIDB = get(blogId)
-        console.log('draft in IndexDB:', draftInIDB)
         if (draftBody) setBody(draftInIDB?.body || draftBody)
         if (draftActive) setActive(draftInIDB?.active || draftActive)
         if (draftTitle) setTitle(draftInIDB?.title || draftTitle)
@@ -160,8 +164,8 @@ export const BlogForm = ({
                     tags: selectedTags,
                     active,
                 })
-                localStorage.removeItem('draft-title')
-                localStorage.removeItem('draft-content')
+                localforage.removeItem('draft-title')
+                localforage.removeItem('draft-content')
             }
         }
 
@@ -206,8 +210,8 @@ export const BlogForm = ({
                     active,
                 })
 
-            localStorage.setItem('draft-title', title)
-            localStorage.setItem('draft-content', body)
+            localforage.setItem('draft-title', title)
+            localforage.setItem('draft-content', body)
         } else if (formType === 'edit') {
             if (blogId) {
                 const res = await sdk.UpdateBlog({
@@ -256,7 +260,7 @@ export const BlogForm = ({
             setTitle('')
             setActive(false)
         }
-    }, [formType, initCreateData, initEditData])
+    }, [])
 
     return (
         <div
@@ -341,7 +345,7 @@ export const BlogForm = ({
                             inEditor={true}
                         />
                     )}
-                    <Suspense fallback="loading...">
+                    <Suspense>
                         <ReactQuill
                             modules={QuillModules}
                             formats={QuillFormats}
