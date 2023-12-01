@@ -1,13 +1,13 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
-import { IBlog } from '../../types'
 import { Pagination } from '../common/Pagination'
 
 import PostWithInfo from './PostWithInfo'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 const pageSize = 9
 
-const PostGrid = ({ posts }: { posts: IBlog[] }) => {
+const PostGrid = ({ posts }: { posts: PopulatedCardBlog[] }) => {
     const [current, setCurrent] = useState(1)
 
     const firstPostRef = useRef<null | HTMLDivElement>(null)

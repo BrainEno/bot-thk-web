@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useRef } from 'react'
+import React, { Suspense, useRef } from 'react'
 import dayjs from 'dayjs'
 import {
     GetStaticPaths,
@@ -83,27 +83,11 @@ const Article: React.FC<ArticleProps> = ({
     const withOutImage =
         !blog.imageUri || blog.imageUri === process.env.NEXT_PUBLIC_DEFULT_IMAGE
 
-    const isLiked = useMemo(
-        () =>
-            blog &&
+    const isLiked = Boolean(
+        blog &&
             blog.likedBy &&
-            blog.likedBy.map((l) => l._id).includes(user?._id),
-        [blog]
+            blog.likedBy.map((l) => l._id).includes(user?._id)
     )
-
-    const blogComents = useMemo(() => {
-        return (
-            <Suspense fallback={null}>
-                {blog && (
-                    <DisqusThread
-                        id={blog._id}
-                        title={blog.title}
-                        path={`blog/${blog.slug}`}
-                    />
-                )}
-            </Suspense>
-        )
-    }, [blog])
 
     const titleText = `${blog!.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
@@ -207,18 +191,16 @@ const Article: React.FC<ArticleProps> = ({
                             )}
                         </article>
                         <Suspense>
-                            {blog && (
-                                <ArticleActions
-                                    isLiked={isLiked!}
-                                    blogId={blog._id}
-                                    blogTitle={blog.title}
-                                    blogBody={blog.body}
-                                    title={blog.title}
-                                    description={blog.description}
-                                    pathname={pathname}
-                                    htmlRef={htmlRef}
-                                />
-                            )}
+                            <ArticleActions
+                                isLiked={isLiked}
+                                blogId={blog._id}
+                                blogTitle={blog.title}
+                                blogBody={blog.body}
+                                title={blog.title}
+                                description={blog.description}
+                                pathname={pathname}
+                                htmlRef={htmlRef}
+                            />
                         </Suspense>
                     </div>
                 </main>
@@ -231,7 +213,13 @@ const Article: React.FC<ArticleProps> = ({
                     catIds={blog.categories!.map((c) => c._id.toString())}
                 />
                 <div className="contaienr" style={{ padding: '35px' }}>
-                    {blog! && blogComents}
+                    <Suspense>
+                        <DisqusThread
+                            id={blog._id}
+                            title={blog.title}
+                            path={`blog/${blog.slug}`}
+                        />
+                    </Suspense>
                 </div>
             </div>
         </>

@@ -7,7 +7,7 @@ import { DEFAULT_IMAGE } from '../../pages/search'
 import { DEFAULT_AVATAR } from '../dashboard/FollowInfoList'
 
 interface BlogCardProps {
-    blog: PopulatedCardBlog
+    blog: Omit<PopulatedCardBlog, '_id'>
 }
 
 const BlogCard = ({ blog }: BlogCardProps) => {

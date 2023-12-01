@@ -7,13 +7,13 @@ import { PostGrid, PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/common/Footer'
 import { sdk } from '../generated/sdk'
-import { IBlog } from '../types'
+import { PopulatedCardBlog } from '../generated/graphql-request'
 
 interface IndexPageProps {
     router: NextRouter
-    recent: IBlog[]
-    trending: IBlog[]
-    featured: IBlog[]
+    recent: PopulatedCardBlog[]
+    trending: PopulatedCardBlog[]
+    featured: PopulatedCardBlog[]
 }
 
 const Index: React.FC<IndexPageProps> = ({

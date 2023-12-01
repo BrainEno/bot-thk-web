@@ -24,7 +24,7 @@ const EditBlog = () => {
         select: (res) => res.getBlogById,
     })
 
-    const tagIds = blog?.tags.map((t) => t._id) ?? []
+    const tagIds = blog?.tags?.map((t) => t._id) ?? []
 
     return (
         <>

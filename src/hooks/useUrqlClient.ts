@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
-import { devtoolsExchange } from '@urql/devtools'
+// import { devtoolsExchange } from '@urql/devtools'
 import { AuthConfig, authExchange, AuthUtilities } from '@urql/exchange-auth'
 import { cacheExchange } from '@urql/exchange-graphcache'
 import { createClient as createSSEClient, RequestParams } from 'graphql-sse'
 import { useSession } from 'next-auth/react'
 import {
     createClient,
+    Exchange,
     fetchExchange,
     ssrExchange,
     subscriptionExchange,
@@ -48,8 +49,8 @@ const useUrqlClient = (options?: RequestInit) => {
         const client = createClient({
             url: GRAPHQL_ENDPOINT,
             exchanges: [
-                devtoolsExchange,
-                cacheExchange({}),
+                // devtoolsExchange,
+                cacheExchange({}) as Exchange,
                 authExchange(async (utils: AuthUtilities) => {
                     return {
                         addAuthToOperation(operation) {
@@ -61,7 +62,7 @@ const useUrqlClient = (options?: RequestInit) => {
                             })
                         },
                     } as AuthConfig
-                }),
+                }) as Exchange,
                 fetchExchange,
                 ssr,
                 subscriptionExchange({

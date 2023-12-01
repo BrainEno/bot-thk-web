@@ -9,7 +9,7 @@ import { ImgUseFor } from './PostMasonry'
 import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface PostCardProps {
-    post: Omit<PopulatedCardBlog, 'author' | 'description'>
+    post: Omit<PopulatedCardBlog, '_id' | 'author' | 'description'>
     tagsOnTop: boolean
     index?: number
     imgFor?: ImgUseFor

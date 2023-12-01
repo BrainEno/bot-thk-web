@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { showAlert } from '../components/common/Alert'
 import { DEFAULT_AVATAR } from '../components/dashboard/FollowInfoList'
 import {
+    PopulatedCardBlog,
     SearchBlogsDocument,
     SearchBlogsQuery,
     SearchBlogsQueryVariables,
@@ -111,7 +112,9 @@ const SearchResult = () => {
 
                 {viewType === 'BLOG' &&
                     !!blogs &&
-                    blogs.map((b) => <BlogCard key={b.slug} blog={b} />)}
+                    blogs.map((b) => (
+                        <BlogCard key={b.slug} blog={b as PopulatedCardBlog} />
+                    ))}
                 {viewType === 'USER' &&
                     !!users &&
                     users.map((u) => (

@@ -94,7 +94,13 @@
 
                 @include themify($themes) {
                     color: themed('infoColor');
-                    border: 1px solid themed('textColor');
+                    border: 1px solid themed('infoColor');
+
+                    &:hover {
+                        color: themed('textColor');
+                        border-color: themed('textColor');
+                        border-width: 1.05;
+                    }
                 }
 
                 &:hover {

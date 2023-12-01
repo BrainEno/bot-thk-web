@@ -3,16 +3,16 @@ import Head from 'next/head'
 
 import { PostMasonry } from '../../components/blog'
 import { sdk } from '../../generated/sdk'
-import { IBlog } from '../../types'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface ICategoryProps {
     catName: string
-    catBlogs: IBlog[]
+    catBlogs: PopulatedCardBlog[]
     catSlug: string
 }
 const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
     const titleText = `${catName} | ${process.env.NEXT_PUBLIC_APP_NAME}`
-    
+
     const head = () => (
         <Head>
             <title>{titleText}</title>
@@ -73,7 +73,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     const catName = catSlug
         .replace(matchFirst, (match) => match.toUpperCase())
         .replace(/-/g, ' ')
-
 
     const { getCatBlogs: catBlogs } = await sdk.GetCatBlogs({
         getCatBlogsSlug: catSlug,

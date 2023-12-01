@@ -3,12 +3,12 @@ import Head from 'next/head'
 
 import { PostGrid } from '../../components/blog'
 import { sdk } from '../../generated/sdk'
-import { IBlog } from '../../types'
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface IBlogsWithTagProps {
     tagName: string
     tagSlug: string
-    tagBlogs: IBlog[]
+    tagBlogs: PopulatedCardBlog[]
 }
 const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({
     tagBlogs,
@@ -76,7 +76,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 
         .replace(matchFirst, (match) => match.toUpperCase())
         .replace(/-/g, ' ')
-
 
     const { getTagBlogs: tagBlogs } = await sdk.GetTagBlogs({
         getTagBlogsSlug: tagSlug,

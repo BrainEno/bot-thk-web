@@ -46,7 +46,7 @@ export const ArticleActions = ({
     const toggleLikeMutation = useToggleLikeMutation()
     const toggleLike = useCallback(() => {
         toggleLikeMutation.mutate({ blogId })
-    }, [blogId])
+    }, [blogId, toggleLikeMutation])
 
     const [showScreenshot, setShowScreenshot] = useState(false)
     const { windowWidth } = useWindowSize()
@@ -59,21 +59,25 @@ export const ArticleActions = ({
         {}
     )
 
-    const is4k = canvasWidth > 2000
-
     const imgWidth = useMemo(() => {
         if (windowWidth && windowWidth < 900 && canvasWidth > 0) {
             return canvasWidth / 3.35
+        } else {
+            return canvasWidth > 2000 && canvasWidth > 0
+                ? canvasWidth / 2
+                : canvasWidth
         }
-        return is4k && canvasWidth > 0 ? canvasWidth / 2 : canvasWidth
-    }, [canvasWidth])
+    }, [canvasWidth, windowWidth])
 
     const imgHeight = useMemo(() => {
         if (windowWidth && windowWidth < 900 && canvasWidth > 0) {
             return canvasHeight / 3.35
+        } else {
+            return canvasWidth > 2000 && canvasWidth > 0
+                ? canvasHeight / 2
+                : canvasHeight
         }
-        return is4k && canvasWidth > 0 ? canvasHeight / 2 : canvasHeight
-    }, [canvasWidth])
+    }, [canvasWidth, canvasHeight, windowWidth])
 
     const toggleMore = () => {
         setShowMore(!showMore)
@@ -198,7 +202,7 @@ export const ArticleActions = ({
                         closeOnClickOutside
                         className="screenshot-modal"
                     >
-                        {!!image ? (
+                        {image ? (
                             <div className="screenshot-wrapper">
                                 <Image
                                     width={imgWidth}

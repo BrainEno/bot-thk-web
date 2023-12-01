@@ -103,7 +103,7 @@ export const SearchDropDown = ({
                             <input
                                 type="text"
                                 value={searchText}
-                                className={'search-input'}
+                                className="search-input"
                                 onChange={handleChange}
                                 placeholder="搜索内容"
                             />
