@@ -281,6 +281,16 @@
       }
     }
 
+    .comments-container {
+      padding: 35px;
+      background-color: $bg-light1;
+
+      @include themify($themes) {
+        background-color: themed('background1');
+        color: themed('textColor');
+      }
+    }
+
   }
 
 
@@ -321,6 +331,9 @@
       }
 
 
+      .article-actions {
+        padding: 45px 30px;
+      }
     }
 
     .article-page-bottom {

@@ -55,7 +55,7 @@ const RelatedBlogs = ({
     return (
         <div className="related-blogs-container">
             <h4 className="text-center">相关推荐</h4>
-            <div className="related-blogs">{relatedBlogs && blogs}</div>
+            <div className="related-blogs">{blogs}</div>
         </div>
     )
 }

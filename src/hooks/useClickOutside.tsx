@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 export const useClickOutside = (
     ref: React.RefObject<HTMLElement>,
-    callback: () => void,
+    callback: (e: any) => void,
     exceptRef?: React.RefObject<HTMLElement>
 ) => {
     const handleClick = (e: any) => {
@@ -12,19 +12,19 @@ export const useClickOutside = (
                 !ref.current.contains(e.target) &&
                 !exceptRef.current.contains(e.target)
             ) {
-                callback()
+                callback(e)
             }
         } else {
             if (ref.current && !ref.current.contains(e.target)) {
-                callback()
+                callback(e)
             }
         }
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClick,true)
+        document.addEventListener('click', handleClick, true)
         return () => {
-            document.removeEventListener('click', handleClick,true)
+            document.removeEventListener('click', handleClick, true)
         }
     })
 }

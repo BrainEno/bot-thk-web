@@ -21,7 +21,7 @@
 
   .sign-form .form-group input:-internal-autofill-selected,
   .sign-form .form-group input {
-    color: $font-light !important;
+    color: $font-light;
     background-color: #494949 !important;
     border: #494949 !important;
   }
@@ -104,6 +104,10 @@
         &:hover {
           border: 1px solid #0879bf;
         }
+
+        @include themify($themes) {
+          color: themed('textColor');
+        }
       }
     }
 
@@ -141,9 +145,13 @@
       }
 
       .sign-form {
+        margin-top: 50px;
+
+
         .form-group {
           width: 80%;
           margin-bottom: 10px;
+
         }
 
         .form-btn {

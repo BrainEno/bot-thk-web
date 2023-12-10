@@ -1,6 +1,13 @@
 'use client'
 
-import React, { RefObject, useCallback, useMemo, useRef, useState } from 'react'
+import React, {
+    RefObject,
+    memo,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import {
     MdOutlineBookmarkAdd,
     MdOutlineBookmarkAdded,
@@ -32,7 +39,7 @@ interface ArticleActionsProps {
     htmlRef: RefObject<HTMLElement>
 }
 
-export const ArticleActions = ({
+const ArticleActions = ({
     isLiked,
     blogId,
     blogTitle,
@@ -53,7 +60,11 @@ export const ArticleActions = ({
 
     const dropdownRef = useRef<HTMLDivElement | null>(null)
 
-    useClickOutside(dropdownRef, () => setShowMore(false))
+    useClickOutside(dropdownRef, (e) => {
+        if (showMore) e.preventDefault()
+
+        setShowMore(false)
+    })
 
     const { image, takeScreenshot, canvasWidth, canvasHeight } = useScreenshot(
         {}
@@ -162,7 +173,7 @@ export const ArticleActions = ({
                     {!isLiked ? (
                         <MdOutlineBookmarkAdd size={24} />
                     ) : (
-                        <MdOutlineBookmarkAdded size={24} />
+                        <MdOutlineBookmarkAdded color="#1876d2" size={24} />
                     )}
                 </button>
                 <RWebShare
@@ -229,3 +240,5 @@ export const ArticleActions = ({
         </div>
     )
 }
+
+export default memo(ArticleActions)

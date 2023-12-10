@@ -90,7 +90,14 @@ export const Notifications = ({
     menuBtnRef,
 }: NotificationsProps) => {
     const ref = useRef<HTMLDivElement | null>(null)
-    useClickOutside(ref, close, menuBtnRef)
+    useClickOutside(
+        ref,
+        (e) => {
+            if (isVisible) e.preventDefault()
+            close()
+        },
+        menuBtnRef
+    )
     const checkAll = useNotificationStore((state) => state.checkAll)
     const isAnyNew = notifications.some((n) => !n.isViewed)
 

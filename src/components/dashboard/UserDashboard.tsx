@@ -103,15 +103,14 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
             {status === 'LIKED' && userLikedBlogs && (
                 <LikedBlogs blogs={userLikedBlogs} username={user.name} />
             )}
-            {status === 'FOLLOWING' ||
-                (status === 'FOLLOWER' && (
-                    <FollowInfoList
-                        type={status}
-                        followers={followers}
-                        followings={followings}
-                        hideFollowInfo={() => setStatus('SELF')}
-                    />
-                ))}
+            {(status === 'FOLLOWING' || status === 'FOLLOWER') && (
+                <FollowInfoList
+                    type={status}
+                    followers={followers}
+                    followings={followings}
+                    hideFollowInfo={() => setStatus('SELF')}
+                />
+            )}
         </div>
     )
 }

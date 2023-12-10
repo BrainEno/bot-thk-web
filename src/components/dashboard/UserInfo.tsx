@@ -112,7 +112,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                         />
                         <Avatar
                             title="更换头像"
-                            size={isDesktop ? 100 : 80}
+                            size={isDesktop ? 100 : 60}
                             radius={100}
                             src={image}
                             char={user.name[0].toUpperCase()}
@@ -212,7 +212,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                 </button>
                 <button
                     className="userInfo-nav-btn"
-                    onClick={() => setStatus('FOLLOWER')}
+                    onClick={() => setStatus('FOLLOWING')}
                 >
                     <FiUserCheck />
                     {isDesktop && '我的关注'}

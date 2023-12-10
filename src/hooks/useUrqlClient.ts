@@ -41,6 +41,8 @@ const useUrqlClient = (options?: RequestInit) => {
                 headers: {
                     Authorization: token ? `Bearer ${token}` : '',
                 },
+                singleConnection: true,
+                lazy: true,
             }),
         [token]
     )

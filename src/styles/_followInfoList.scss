@@ -218,10 +218,14 @@
 @media screen and (max-width: 900px) {
     .dashboard-followInfo {
         width: 100vw;
+        position: absolute;
+        top: 53vh;
         padding: 10px 0;
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
+        border: none;
+        padding: 0;
     }
 
     .followInfo-back {
@@ -269,6 +273,14 @@
                         font-size: 12px;
 
                     }
+                }
+            }
+
+            .followInfo-right {
+                & button {
+                    font-weight: 500;
+                    width: 70px;
+                    font-size: 12px;
                 }
             }
         }

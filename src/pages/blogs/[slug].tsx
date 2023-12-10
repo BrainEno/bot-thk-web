@@ -15,7 +15,7 @@ import { TagRow } from '../../components/blog'
 import BannerImg from '../../components/common/BannerImg'
 import { sdk } from '../../generated/sdk'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
-import { ArticleActions } from '../../components/article/ArticleActions'
+import ArticleActions from '../../components/article/ArticleActions'
 import { useQuery } from '@tanstack/react-query'
 import {
     GetBlogBySlugDocument,
@@ -25,6 +25,7 @@ import {
     PopulatedTag,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
+import { ParsedUrlQuery } from 'querystring'
 
 const DisqusThread = dynamic(
     () =>
@@ -90,55 +91,44 @@ const Article: React.FC<ArticleProps> = ({
     )
 
     const titleText = `${blog!.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`
+
     const head = () => (
-        <>
-            {blog && (
-                <Head>
-                    <title>{titleText}</title>
-                    <meta name="description" content={blog!.description!} />
-                    <link
-                        rel="canonical"
-                        href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
-                    />
-                    <meta
-                        property="og:title"
-                        content={`${blog!.title}| ${
-                            process.env.NEXT_PUBLIC_APP_NAME
-                        }`}
-                    />
-                    <meta
-                        property="og:description"
-                        content={blog!.description!}
-                    />
-                    <meta property="og:type" content="webiste" />
-                    <meta
-                        property="og:url"
-                        content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
-                    />
-                    <meta
-                        property="og:site_name"
-                        content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
-                    />
-                    <meta
-                        property="og:image"
-                        content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
-                            blog!._id
-                        }`}
-                    />
-                    <meta
-                        property="og:image:secure_url"
-                        content={`${blog.imageUri}`}
-                    />
-                    <meta property="og:image:type" content="image/jpg" />
-                    <meta name="theme-color" content="#eff3f8" />
-                </Head>
-            )}
-        </>
+        <Head>
+            <title>{titleText}</title>
+            <meta name="description" content={blog!.description!} />
+            <link
+                rel="canonical"
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
+            />
+            <meta
+                property="og:title"
+                content={`${blog!.title}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
+            <meta property="og:description" content={blog!.description!} />
+            <meta property="og:type" content="webiste" />
+            <meta
+                property="og:url"
+                content={`${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`}
+            />
+            <meta
+                property="og:site_name"
+                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+            />
+            <meta
+                property="og:image"
+                content={`${process.env.NEXT_PUBLIC_API}/blog/image/${
+                    blog!._id
+                }`}
+            />
+            <meta property="og:image:secure_url" content={`${blog.imageUri}`} />
+            <meta property="og:image:type" content="image/jpg" />
+            <meta name="theme-color" content="#eff3f8" />
+        </Head>
     )
 
     return (
         <>
-            {blog && head()}
+            {head()}
             <div ref={htmlRef} className="article-container">
                 {withOutImage ? (
                     <div style={{ marginBottom: 65 }} />
@@ -212,7 +202,7 @@ const Article: React.FC<ArticleProps> = ({
                     tagIds={blog.tags!.map((t) => t._id.toString())}
                     catIds={blog.categories!.map((c) => c._id.toString())}
                 />
-                <div className="contaienr" style={{ padding: '35px' }}>
+                <div className="comments-contaienr">
                     <Suspense>
                         <DisqusThread
                             id={blog._id}
@@ -245,42 +235,28 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<
 export const getStaticProps: GetStaticProps = async ({
     params,
 }: GetStaticPropsContext) => {
-    let slug: string = ''
+    const slug = (params as ParsedUrlQuery).slug as string
 
-    if (params && params.slug) {
-        slug = params.slug as string
+    const initialData = await sdk.GetBlogBySlug({
+        slug,
+    })
 
-        const initialData = await sdk.GetBlogBySlug({
-            slug,
-        })
+    const catIds = initialData.getBlogBySlug.categories!.map((cat) => cat._id)
+    const tagIds = initialData.getBlogBySlug.tags!.map((tag) => tag._id)
 
-        const catIds = initialData.getBlogBySlug.categories!.map(
-            (cat) => cat._id
-        )
-        const tagIds = initialData.getBlogBySlug.tags!.map((tag) => tag._id)
-
-        const relatedBlogsInitialData = await sdk.GetRelatedBlogs({
-            getRelatedBlogsSlug: slug,
-            tagIds,
-            catIds,
-        })
-
-        return {
-            props: {
-                initialData,
-                relatedBlogsInitialData,
-                slug: params!.slug!,
-            },
-            revalidate: 10,
-        }
-    }
+    const relatedBlogsInitialData = await sdk.GetRelatedBlogs({
+        getRelatedBlogsSlug: slug,
+        tagIds,
+        catIds,
+    })
 
     return {
         props: {
-            initialData: null,
-            RelatedBlogsInitialData: null,
-            slug: params?.slug,
+            initialData,
+            relatedBlogsInitialData,
+            slug: params!.slug!,
         },
+        revalidate: 10,
     }
 }
 

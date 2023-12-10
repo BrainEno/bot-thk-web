@@ -40,8 +40,8 @@ export const useFollowInfo = ({
 
     useEffect(() => {
         if (isSuccess && followInfo) {
-            setFollowers(followInfo?.followers)
-            setFollowings(followInfo?.followings)
+            setFollowers(followInfo.followers)
+            setFollowings(followInfo.followings)
         }
     }, [followInfo, isSuccess])
 

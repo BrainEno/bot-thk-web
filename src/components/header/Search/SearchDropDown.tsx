@@ -77,7 +77,14 @@ export const SearchDropDown = ({
         setSearchText(e.target.value)
     }
 
-    useClickOutside(ref, close, menuBtnRef)
+    useClickOutside(
+        ref,
+        (e) => {
+            if (visible) e.preventDefault()
+            close()
+        },
+        menuBtnRef
+    )
 
     return (
         <AnimatePresence>

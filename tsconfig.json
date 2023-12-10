@@ -49,6 +49,7 @@
         "**/*.ts",
         "**/*.tsx",
         "utils/gtag.ts",
-        ".next/types/**/*.ts"
+        ".next/types/**/*.ts",
+        "public/sw.js"
     ]
 }

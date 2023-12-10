@@ -35,7 +35,7 @@
     }
 
     .menu-title {
-        font-size: 24px !important;
+        font-size: 24px;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -312,7 +312,11 @@
             }
 
             .nav {
-                padding-top: 30px;
+                padding-top: 10px;
+
+                &.no-user {
+                    margin-top: 70px;
+                }
             }
 
             .menu-avtar-container {
@@ -330,10 +334,11 @@
                 & .my-avatar {
                     margin: 0;
                     margin-left: 20px;
-                    margin-bottom: 20px;
+                    margin-bottom: 10px;
                 }
 
                 & .menu-avatar-name {
+                    display: contents;
                     margin-top: 10px;
                     font-size: 20px;
                     margin-left: 10px;

@@ -80,7 +80,7 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         Error,
         GetFollowInfoQuery['getFollowInfo']
     >({
-        queryKey: ['userGetFollowInfo'],
+        queryKey: ['userFollowInfo', query.username],
         queryFn: fetcher<GetFollowInfoQuery, GetFollowInfoQueryVariables>(
             GetFollowInfoDocument,
             { username: query.username }
@@ -91,42 +91,48 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
 
     const titleText = `${user?.name} | ${process.env.NEXT_PUBLIC_APP_NAME}`
 
-    const head = () => (
-        <Head>
-            <title>{titleText}</title>
-            <meta name="description" content={`Blogs by ${user?.username}`} />
-            <link
-                rel="canonical"
-                href={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
-            />
-            <meta
-                property="og:title"
-                content={`${user?.username}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
-            />
-            <meta
-                property="og:description"
-                content={`Blogs by ${user?.username}`}
-            />
-            <meta property="og:type" content="webiste" />
-            <meta
-                property="og:url"
-                content={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
-            />
-            <meta
-                property="og:site_name"
-                content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
-            />
+    const head = useMemo(
+        () => (
+            <Head>
+                <title>{titleText}</title>
+                <meta
+                    name="description"
+                    content={`Blogs by ${user?.username}`}
+                />
+                <link
+                    rel="canonical"
+                    href={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
+                />
+                <meta
+                    property="og:title"
+                    content={`${user?.username}| ${process.env.NEXT_PUBLIC_APP_NAME}`}
+                />
+                <meta
+                    property="og:description"
+                    content={`Blogs by ${user?.username}`}
+                />
+                <meta property="og:type" content="webiste" />
+                <meta
+                    property="og:url"
+                    content={`${process.env.NEXT_PUBLIC_DOMAIN}/profile/${query.username}`}
+                />
+                <meta
+                    property="og:site_name"
+                    content={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+                />
 
-            <meta
-                property="og:image"
-                content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
-            />
-            <meta
-                property="og:image:secure_url"
-                content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
-            />
-            <meta property="og:image:type" content="image/jpg" />
-        </Head>
+                <meta
+                    property="og:image"
+                    content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
+                />
+                <meta
+                    property="og:image:secure_url"
+                    content={`${process.env.NEXT_PUBLIC_DOMAIN}/public/pic3.jpg`}
+                />
+                <meta property="og:image:type" content="image/jpg" />
+            </Head>
+        ),
+        [user, query, titleText]
     )
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -136,14 +142,14 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
         const lastIndex = pageSize * current
         const firstIndex = lastIndex - pageSize
 
-        return blogs?.slice(firstIndex, lastIndex)
+        return blogs ? blogs.slice(firstIndex, lastIndex) : []
     }, [current, blogs])
 
     const { createConversation, error } = useStartConversation()
 
     return (
         <>
-            {user && head()}
+            {head}
             {showAlert(error, 'error')}
             {user && (
                 <div className="profile-container">
@@ -207,30 +213,29 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
                             </h4>
                         </div>
                         <div className="blogs-container">
-                            {blogs && blogs.length > 0 && paginatedBlogs
-                                ? paginatedBlogs.map((b, i: number) => (
-                                      <a href={`/blogs/${b.slug}`} key={i}>
-                                          <div className="blog-card">
-                                              <h5>{b.title}</h5>
-                                              <span className="desc-text">
-                                                  By: {user.name} |{' '}
-                                                  {dayjs(
-                                                      b.createdAt,
-                                                      'zh'
-                                                  ).format('MMMM,DD,YYYY')}
-                                              </span>
-                                              <div>
-                                                  <p>
-                                                      {b?.description?.replace(
-                                                          /<[^>]+>/g,
-                                                          ''
-                                                      )}
-                                                  </p>
-                                              </div>
-                                          </div>
-                                      </a>
-                                  ))
-                                : ''}
+                            {paginatedBlogs &&
+                                paginatedBlogs.map((b, i: number) => (
+                                    <a href={`/blogs/${b.slug}`} key={i}>
+                                        <div className="blog-card">
+                                            <h5>{b.title}</h5>
+                                            <span className="desc-text">
+                                                By: {user.name} |{' '}
+                                                {dayjs(
+                                                    b.createdAt,
+                                                    'zh'
+                                                ).format('MMMM,DD,YYYY')}
+                                            </span>
+                                            <div>
+                                                <p>
+                                                    {b?.description?.replace(
+                                                        /<[^>]+>/g,
+                                                        ''
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                ))}
                         </div>
                     </div>
                     {!!(blogs && blogs.length) && (

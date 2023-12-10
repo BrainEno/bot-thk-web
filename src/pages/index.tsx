@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
@@ -23,7 +23,7 @@ const Index: React.FC<IndexPageProps> = ({
     featured,
 }) => {
     const titleText = `Home | ${process.env.NEXT_PUBLIC_APP_NAME}`
-    const head = useCallback(() => {
+    const head = useMemo(() => {
         return (
             <Head>
                 <title>{titleText}</title>
@@ -67,9 +67,36 @@ const Index: React.FC<IndexPageProps> = ({
         )
     }, [router.pathname, titleText])
 
+    // const [isSubscribed, setIsSubscribed] = useState(false)
+    // const [subscription, setSubscription] = useState<PushSubscription | null>(
+    //     null
+    // )
+    // const [registration, setRegistration] =
+    //     useState<ServiceWorkerRegistration | null>(null)
+
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+    //         navigator.serviceWorker.ready.then((reg) => {
+    //             reg.pushManager.getSubscription().then((sub) => {
+    //                 if (
+    //                     sub &&
+    //                     !(
+    //                         sub.expirationTime &&
+    //                         Date.now() > sub.expirationTime - 5 * 60 * 100
+    //                     )
+    //                 ) {
+    //                     setSubscription(sub)
+    //                     setIsSubscribed(true)
+    //                 }
+    //             })
+    //             setRegistration(reg)
+    //         })
+    //     }
+    // }, [])
+
     return (
         <>
-            {process.env && head()}
+            {head}
             <main className="home">
                 <Carousel />
                 <section className="featured-posts-container">

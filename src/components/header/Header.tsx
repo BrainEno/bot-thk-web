@@ -61,7 +61,14 @@ const Header = () => {
     /**
      * Handle mobile menu clickOutside
      */
-    useClickOutside(btnRef, () => setMenuActive(false), menuRef)
+    useClickOutside(
+        btnRef,
+        (e) => {
+            if (menuActive) e.preventDefault()
+            setMenuActive(false)
+        },
+        menuRef
+    )
 
     const handleMenuClick = (e: MouseEvent) => {
         e.preventDefault()
@@ -125,7 +132,7 @@ const Header = () => {
                     onMouseLeave={() => setMenuActive(false)}
                     ref={menuRef}
                 >
-                    <ul className="nav">
+                    <ul className={classNames('nav', { 'no-user': !user })}>
                         <li>
                             <Link
                                 className={classNames('nav-link', {

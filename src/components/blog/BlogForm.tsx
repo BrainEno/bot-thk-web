@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { BiHide, BiShow } from 'react-icons/bi'
-import { BsTags } from 'react-icons/bs'
+import { BsSend, BsTags } from 'react-icons/bs'
 import { GrImage } from 'react-icons/gr'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
@@ -12,13 +12,16 @@ import { sdk } from '../../generated/sdk'
 import { QuillFormats, QuillModules } from '../../helpers/ToolbarOptions'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
-import { useIndexDB } from '../../hooks/useIndexDB'
 import { useUploadImage } from '../../hooks/useUpload'
 import { showAlert } from '../common/Alert'
 import BannerImg from '../common/BannerImg'
 
 import { TagList } from './TagList'
 import localforage from 'localforage'
+import { Switch } from '../common/Switch'
+import { MdOutlinePublic, MdOutlinePublicOff } from 'react-icons/md'
+import { IoArrowBackCircleOutline, IoSaveOutline } from 'react-icons/io5'
+import useWindowSize from '../../hooks/useWindowSize'
 
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
@@ -29,6 +32,14 @@ const ReactQuill = dynamic(
         ssr: false,
     }
 )
+
+type DraftPayload = {
+    id: string
+    title: string
+    body: string
+    tags: string[]
+    active: boolean
+}
 
 export type FormType = 'create' | 'edit'
 
@@ -59,19 +70,23 @@ export const BlogForm = ({
     const imageInput = useRef<HTMLInputElement | null>(null)
     const [title, setTitle] = useState('')
     const [active, setActive] = useState(false)
+    const { windowWidth } = useWindowSize()
+    const isMobile = windowWidth && windowWidth < 900
 
     const listTags = useTagStore((state) => state.list)
 
     const [body, setBody] = useState<string>('')
     const [msg, setMsg] = useState('')
     const [err, setErr] = useState('')
-    const { image, setImage, upload, error } = useUploadImage()
+    const { image, setImage, upload, error } = useUploadImage(
+        defaultImgUri,
+        () => {
+            if (image !== defaultImgUri) setShowBanner(true)
+        }
+    )
     const [showBanner, setShowBanner] = useState(!!image || false)
     const [showTags, setShowTags] = useState(!!draftTags?.length || false)
     const [selectedTags, setSelectedTags] = useState<string[]>(draftTags ?? [])
-
-    /**IndexDB */
-    const { add, get, edit } = useIndexDB()
 
     const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
@@ -80,8 +95,8 @@ export const BlogForm = ({
 
     const handleCancel = () => {
         if (formType === 'create') {
-            localforage.setItem('draft-content', body)
-            localforage.setItem('draft-title', title)
+            localforage.setItem('temp-draft-content', body)
+            localforage.setItem('temp-draft-title', title)
         }
 
         router.push({ pathname: '/dashboard' })
@@ -92,27 +107,36 @@ export const BlogForm = ({
     }
 
     const initCreateData = useCallback(async () => {
-        const draftTitleLS = (await localforage.getItem(
-            'draft-title'
+        const tempDraftTitle = (await localforage.getItem(
+            'temp-draft-title'
         )) as string
-        const draftBodyLS = (await localforage.getItem(
-            'draft-content'
+        const tempDraftBody = (await localforage.getItem(
+            'temp-draft-content'
         )) as string
-        if (draftBodyLS) setBody(draftBodyLS)
-        if (draftTitleLS) setTitle(draftTitleLS)
+        if (tempDraftBody) setBody(tempDraftBody)
+        if (tempDraftTitle) setTitle(tempDraftTitle)
     }, [])
 
-    const initEditData = useCallback(() => {
-        if (!blogId) return
-        const draftInIDB = get(blogId)
-        if (draftBody) setBody(draftInIDB?.body || draftBody)
-        if (draftActive) setActive(draftInIDB?.active || draftActive)
-        if (draftTitle) setTitle(draftInIDB?.title || draftTitle)
-        if (draftImg) setImage(draftImg)
-        if (draftTags) setSelectedTags(draftTags)
+    const initEditData = useCallback(async (): Promise<DraftPayload | null> => {
+        if (!blogId) return null
+        console.log(blogId)
+        try {
+            const draftInIDB = (await localforage.getItem(
+                `draft_${blogId}`
+            )) as DraftPayload
+
+            if (draftBody) setBody(draftBody)
+            if (draftActive) setActive(draftActive)
+            if (draftTitle) setTitle(draftTitle)
+            if (draftImg) setImage(draftImg)
+            if (draftTags) setSelectedTags(draftTags)
+            return draftInIDB
+        } catch (error) {
+            console.log(error)
+        }
+        return null
     }, [
         blogId,
-        get,
         draftActive,
         draftBody,
         draftImg,
@@ -122,6 +146,7 @@ export const BlogForm = ({
     ])
 
     const publishBlog = async () => {
+        setActive(true)
         const blogInput: BlogInput = { body, title, active, imageUri: image }
         if (!blogInput.imageUri) {
             blogInput.imageUri = defaultImgUri
@@ -157,15 +182,15 @@ export const BlogForm = ({
                     queryKey: ['getBlogById', blogId],
                 })
 
-                edit(blogId, {
+                await localforage.setItem(`draft_${blogId}`, {
                     id: blogId,
                     title,
                     body,
                     tags: selectedTags,
                     active,
                 })
-                localforage.removeItem('draft-title')
-                localforage.removeItem('draft-content')
+                localforage.removeItem('temp-draft-title')
+                localforage.removeItem('temp-draft-content')
             }
         }
 
@@ -178,13 +203,13 @@ export const BlogForm = ({
     }
 
     const saveBlog = async () => {
-        console.log(get(title))
         const blogInput: BlogInput = {
             body,
             title,
-            active: false,
+            active,
             imageUri: image,
         }
+
         if (!blogInput.imageUri) {
             blogInput.imageUri = defaultImgUri
         }
@@ -202,7 +227,7 @@ export const BlogForm = ({
             const blogId = res.createBlog.blog?._id
             queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
             if (blogId)
-                add({
+                await localforage.setItem(`draft_${blogId}`, {
                     id: blogId,
                     title,
                     body,
@@ -210,8 +235,8 @@ export const BlogForm = ({
                     active,
                 })
 
-            localforage.setItem('draft-title', title)
-            localforage.setItem('draft-content', body)
+            localforage.setItem('temp-draft-title', title)
+            localforage.setItem('temp-draft-content', body)
         } else if (formType === 'edit') {
             if (blogId) {
                 const res = await sdk.UpdateBlog({
@@ -219,11 +244,14 @@ export const BlogForm = ({
                     blogId: blogId,
                     tagIds: selectedTags,
                 })
+
                 if (!res.updateBlog.success) {
                     setErr('文章保存失败，请重试')
                 }
+
                 queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
-                edit(blogId, {
+
+                await localforage.setItem(`draft_${blogId}`, {
                     id: blogId,
                     title,
                     body,
@@ -252,7 +280,14 @@ export const BlogForm = ({
         if (formType === 'create') {
             initCreateData()
         } else if (formType === 'edit') {
-            initEditData()
+            initEditData().then((draftInIDB) => {
+                if (draftInIDB) {
+                    setTitle(draftInIDB.title)
+                    setBody(draftInIDB.body)
+                    setActive(draftInIDB.active)
+                    setSelectedTags(draftInIDB.tags)
+                }
+            })
         }
 
         return () => {
@@ -356,6 +391,22 @@ export const BlogForm = ({
                     </Suspense>
                 </div>
                 <div className="blog-form-bottom">
+                    <div className="switch-group">
+                        {active ? (
+                            <MdOutlinePublic size={24} />
+                        ) : (
+                            <MdOutlinePublicOff
+                                className="unpublic"
+                                size={24}
+                            />
+                        )}
+                        <Switch
+                            isOn={active}
+                            handleToggle={() => setActive(!active)}
+                            colorOne="#1876d2"
+                            colorTwo="#8eb8e8"
+                        />
+                    </div>
                     <div className="tags-form">
                         <button
                             type="button"
@@ -379,21 +430,25 @@ export const BlogForm = ({
                             type="button"
                             onClick={handleCancel}
                         >
-                            退出
+                            {isMobile ? (
+                                <IoArrowBackCircleOutline size={20} />
+                            ) : (
+                                '退出'
+                            )}
                         </button>
                         <button
                             type="button"
                             className="form-btn"
                             onClick={publishBlog}
                         >
-                            发布
+                            {isMobile ? <BsSend size={16} /> : '发布'}
                         </button>
                         <button
                             type="button"
                             className="form-btn"
                             onClick={saveBlog}
                         >
-                            保存
+                            {isMobile ? <IoSaveOutline size={18} /> : '保存'}
                         </button>
                     </div>
                 </div>

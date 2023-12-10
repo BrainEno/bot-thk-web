@@ -27,7 +27,9 @@ const MenuSearch = ({ isAuth }: { isAuth: boolean }) => {
                 visible={showDropdown}
                 searchText={searchText}
                 setSearchText={setSearchText}
-                close={() => setShowDropdown(false)}
+                close={() => {
+                    setShowDropdown(false)
+                }}
                 menuBtnRef={ref}
             />
         </div>

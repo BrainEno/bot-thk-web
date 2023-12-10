@@ -29,16 +29,15 @@ const MyBrand: React.FC<BrandProps> = ({
                 fontSize: fontSize ?? '28px',
                 fontWeight: 700,
                 fontFamily: '-apple-system',
-                marginRight: '10px',
                 cursor: 'default',
-                display: 'block',
+                display: 'contents',
             }}
         >
             BOT THK
         </span>
         {toHome ? (
             <Link href="/">
-                <div style={{ cursor }}>
+                <div style={{ cursor, marginLeft: 8 }}>
                     <Image
                         src="/moshIcon.svg"
                         alt="logo"

@@ -20,6 +20,7 @@ import ThemeProvider from '../components/context/ThemeContext'
 import GraphqlProvider from '../components/graphql/GraphqlProvider'
 import Header from '../components/header/Header'
 import RefreshTokenHandler from '../components/RefreshTokenHandler'
+import Head from 'next/head'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -38,6 +39,36 @@ function MyApp({
 
     return (
         <>
+            <Head>
+                <meta charSet="UTF-8" />
+                <meta
+                    name="viewport"
+                    content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1,minimum-scale=1,target-densitydpi=device-dpi"
+                />
+                <meta
+                    name="description"
+                    content="A cruel literature blog publishing platform"
+                />
+                <meta name="theme-color" content="#eff3f8" />
+                <meta
+                    name="apple-mobile-web-app-status-bar"
+                    content="#90cdf4"
+                />
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:url" content="https://bot-thk.vercel.app" />
+                <meta property="og:type" content="website" />
+                <meta
+                    property="og:title"
+                    content="A cruel literature blog publishing platform"
+                />
+                <meta
+                    property="og:description"
+                    content="A cruel literature blog publishing platform"
+                />
+                <meta property="og:site_name" content="BOT THK" />
+                <meta property="og:url" content="https://bot-thk.vercel.app" />
+                <meta property="og:image" content="/logo.svg" />
+            </Head>
             <SessionProvider session={session} refetchInterval={interval}>
                 <GraphqlProvider>
                     <QueryClientProvider client={queryClient}>
