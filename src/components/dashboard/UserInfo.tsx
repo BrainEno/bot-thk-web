@@ -5,6 +5,7 @@ import React, {
     useRef,
     useState,
 } from 'react'
+import { useTranslation } from 'next-i18next'
 import {
     FiBookmark,
     FiHome,
@@ -12,28 +13,33 @@ import {
     FiUserCheck,
     FiUsers,
 } from 'react-icons/fi'
-import dayjs from 'dayjs'
+import classNames from 'classnames'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
 
 import { CurrentUserQuery } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
+import { getLocaleFromNow } from '../../helpers/date'
 import { getErrorMsg } from '../../helpers/getErrorMsg'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useUploadImage } from '../../hooks/useUpload'
 import useWindowSize from '../../hooks/useWindowSize'
 import { showAlert } from '../common/Alert'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
+
 import { RightSideStatus } from './UserDashboard'
 
 const Avatar = dynamic(() => import('../common/Avatar'), { ssr: false })
 
 interface UserInfoProps {
     user: NonNullable<CurrentUserQuery['currentUser']>
+    status: RightSideStatus
     setStatus: Dispatch<SetStateAction<RightSideStatus>>
 }
 
-const UserInfo = ({ user, setStatus }: UserInfoProps) => {
+const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
+    const { t, i18n } = useTranslation('dashboard')
+    const isZh = i18n.language === 'zh'
     const [name, setName] = useState(user.name)
     const [bio, setBio] = useState(user.about ?? '')
     const avatarInput = useRef<HTMLInputElement | null>(null)
@@ -99,7 +105,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                 <div className="avatar-container">
                     <label
                         className="icon-btn"
-                        title="更换头像"
+                        title={t('change-avatar')}
                         htmlFor="blog-image"
                     >
                         <input
@@ -111,7 +117,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                             onChange={upload}
                         />
                         <Avatar
-                            title="更换头像"
+                            title={t('change-avatar')}
                             size={isDesktop ? 100 : 60}
                             radius={100}
                             src={image}
@@ -126,9 +132,15 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                             <span className="userInfo-text">{user.email}</span>
                             {user && (
                                 <span className="userInfo-text">
-                                    Joined <b>BOT THK</b>
-                                    {' ' +
-                                        dayjs(user.createdAt, 'zh').fromNow()}
+                                    {!isZh
+                                        ? `Joined BOT THK ${getLocaleFromNow(
+                                            user.createdAt,
+                                            'en'
+                                        )}`
+                                        : `${getLocaleFromNow(
+                                            user.createdAt,
+                                            'zh'
+                                        )} 加入 BOT THK`}
                                 </span>
                             )}
                         </div>
@@ -137,7 +149,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                             className="userInfo-btn"
                             onClick={() => setIsEditing(!isEditing)}
                         >
-                            编辑信息
+                            {t('edit-info')}
                         </button>
                     </>
                 )}
@@ -145,7 +157,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                     <form className="userInfo-form" onSubmit={handleSave}>
                         <div className="userInfo-form-group">
                             <label className="userInfo-label" htmlFor="Name">
-                                昵称
+                                {t('name')}
                             </label>
                             <input
                                 className="userInfo-input"
@@ -156,7 +168,7 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                         </div>
                         <div className="userInfo-form-group">
                             <label className="userInfo-label" htmlFor="Bio">
-                                简介
+                                {t('bio')}
                             </label>
                             <textarea
                                 className="userInfo-input multiple-line"
@@ -169,64 +181,81 @@ const UserInfo = ({ user, setStatus }: UserInfoProps) => {
                                 type="submit"
                                 className="userInfo-btn sm submit"
                             >
-                                保存
+                                {t('save')}
                             </button>
                             <button
                                 className="userInfo-btn sm"
                                 onClick={() => setIsEditing(false)}
                             >
-                                返回
+                                {t('cancel')}
                             </button>
                         </div>
                     </form>
                 ) : (
                     <div className="userInfo-text white">
-                        {user.about ?? 'Nothing here'}
+                        {user.about ?? (isZh ? '什么也没说' : 'Nothing here')}
                     </div>
                 )}
 
                 {!isEditing && (
                     <div className="userInfo-follow">
                         <span className="userInfo-text white">
-                            <FiUsers />
+                            <FiUsers style={{ marginRight: 3 }} />
                             <span
                                 className="userInfo-link"
                                 onClick={() => setStatus('FOLLOWING')}
-                            >{` 关注 ${followings.length} `}</span>{' '}
+                            >
+                                {isZh
+                                    ? ` ${t('followings')} ${followings.length
+                                    } `
+                                    : ` ${followings.length} ${t(
+                                        'followings'
+                                    )} `}
+                            </span>{' '}
                             ·
                             <span
                                 className="userInfo-link"
                                 onClick={() => setStatus('FOLLOWER')}
-                            >{` 被关注 ${followers.length}`}</span>
+                            >
+                                {isZh
+                                    ? ` ${t('followers')} ${followers.length}`
+                                    : ` ${followers.length} ${t('followers')} `}
+                            </span>
                         </span>
                     </div>
                 )}
             </div>
-            <div className="userInfo-nav">
+            <div className={'userInfo-nav'}>
                 <button
-                    className="userInfo-nav-btn"
+                    className={classNames('userInfo-nav-btn', {
+                        selected: status === 'SELF',
+                    })}
                     onClick={() => setStatus('SELF')}
                 >
                     <FiList />
-                    {isDesktop && '我的博客'}
+                    {isDesktop && <span>{t('my-blogs')}</span>}
                 </button>
                 <button
-                    className="userInfo-nav-btn"
+                    className={classNames('userInfo-nav-btn', {
+                        selected: status === 'FOLLOWING',
+                    })}
                     onClick={() => setStatus('FOLLOWING')}
                 >
                     <FiUserCheck />
-                    {isDesktop && '我的关注'}
+                    {isDesktop && <span>{t('my-followings')}</span>}
                 </button>
                 <button
-                    className="userInfo-nav-btn"
+                    className={classNames('userInfo-nav-btn', {
+                        selected: status === 'LIKED',
+                    })}
                     onClick={() => setStatus('LIKED')}
                 >
                     <FiBookmark />
-                    {isDesktop && '我的收藏'}
+                    {isDesktop && <span>{t('saved')}</span>}
                 </button>
                 <Link className="userInfo-nav-btn" href="/">
                     <FiHome />
-                    {isDesktop && '返回首页'}
+                    {isDesktop && <span>{t('home-page')}</span>}
                 </Link>
             </div>
         </div>

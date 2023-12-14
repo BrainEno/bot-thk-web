@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { BlogForm } from '../../../components/blog/BlogForm'
 import { showAlert } from '../../../components/common/Alert'
@@ -9,6 +11,7 @@ import {
 } from '../../../generated/graphql-request'
 import { fetcher } from '../../../graphql/gqlClient'
 import { getErrorMsg } from '../../../helpers/getErrorMsg'
+import { ServerSideTranslations } from '../../../types'
 
 const EditBlog = () => {
     const { query } = useRouter()
@@ -45,3 +48,16 @@ const EditBlog = () => {
 }
 
 export default EditBlog
+
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', [
+                'common',
+                'dashboard',
+            ])),
+        },
+    }
+}

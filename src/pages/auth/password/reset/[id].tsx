@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import classNames from 'classnames'
+import { GetServerSideProps } from 'next'
 import { NextRouter, withRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
+import { showAlert } from '../../../../components/common/Alert'
 import MyBrand from '../../../../components/common/MyBrand'
 import { sdk } from '../../../../generated/sdk'
+import { ServerSideTranslations } from '../../../../types'
 
 const ResetPassword = ({ router }: { router: NextRouter }) => {
+    const { t, i18n } = useTranslation('account')
+    const isZh = i18n.language === 'zh'
+
     const [values, setValues] = useState({
         newPassword: '',
         error: '',
@@ -24,14 +32,18 @@ const ResetPassword = ({ router }: { router: NextRouter }) => {
             if (!success) {
                 setValues({
                     ...values,
-                    error: '重置密码失败，请重试',
+                    error: isZh
+                        ? '重置密码失败，请重试'
+                        : 'Reset failed,please try again',
                     showForm: false,
                     newPassword: '',
                 })
             } else {
                 setValues({
                     ...values,
-                    message: '密码已重置',
+                    message: isZh
+                        ? '密码已重置'
+                        : 'Your password has been reset successfully',
                     showForm: false,
                     newPassword: '',
                     error: '',
@@ -53,30 +65,13 @@ const ResetPassword = ({ router }: { router: NextRouter }) => {
                         isInvalid: error,
                     })}
                     value={newPassword}
-                    placeholder="请输入新的密码"
+                    placeholder={isZh ? '请输入新的密码' : 'New Password'}
                     required
                 />
             </div>
-            <button className="form-btn">修改密码</button>
+            <button className="form-btn">{t('Reset Password')}</button>
         </form>
     )
-
-    const showError = () => (error ? <h1 className="error">{error}</h1> : '')
-    const showMessage = () =>
-        message ? (
-            <div
-                style={{
-                    width: '70%',
-                    margin: '20px auto',
-                    wordBreak: 'break-all',
-                    textAlign: 'center',
-                }}
-            >
-                <h3>{message}</h3>
-            </div>
-        ) : (
-            ''
-        )
 
     return (
         <div className="sign">
@@ -85,10 +80,10 @@ const ResetPassword = ({ router }: { router: NextRouter }) => {
                     <MyBrand width={45} height={45} />
                 </div>
                 <h2 className="sign-title" style={{ margin: '50px auto' }}>
-                    重新设置密码
+                    {isZh ? '重新设置密码' : 'Reset my password'}
                 </h2>
-                {error && showError()}
-                {message && showMessage()}
+                {error && showAlert(error, 'error')}
+                {message && showAlert(message, 'warn')}
                 {showForm && passwordResetForm()}
             </div>
         </div>
@@ -96,3 +91,16 @@ const ResetPassword = ({ router }: { router: NextRouter }) => {
 }
 
 export default withRouter(ResetPassword)
+
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', [
+                'common',
+                'account',
+            ])),
+        },
+    }
+}

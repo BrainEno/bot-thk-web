@@ -1,9 +1,12 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { PostGrid } from '../../components/blog'
-import { sdk } from '../../generated/sdk'
 import { PopulatedCardBlog } from '../../generated/graphql-request'
+import { sdk } from '../../generated/sdk'
+import { ServerSideTranslations } from '../../types'
 
 interface IBlogsWithTagProps {
     tagName: string
@@ -15,6 +18,7 @@ const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({
     tagName,
     tagSlug,
 }) => {
+    const { t } = useTranslation('common')
     const titleText = `${tagName} | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
         <Head>
@@ -56,7 +60,7 @@ const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({
             {tagName && head()}
             <main className="tagBlogs">
                 <section className="tagBlogs-container">
-                    <h1>{tagName.toUpperCase()}</h1>
+                    <h1>{t(`${tagName.toLowerCase()}-page`)}</h1>
                     <div className="tag-blog-cards">
                         <PostGrid posts={tagBlogs} />
                     </div>
@@ -66,9 +70,9 @@ const BlogsWithTag: React.FC<IBlogsWithTagProps> = ({
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-    params,
-}: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ params, locale }: GetServerSidePropsContext) => {
     const tagSlug = params!.slug as string
     // eslint-disable-next-line no-useless-escape
     const matchFirst = /(?<=[\.!?]\s)([a-z])|^([a-z])/g
@@ -82,7 +86,12 @@ export const getServerSideProps: GetServerSideProps = async ({
     })
 
     return {
-        props: { tagBlogs, tagName, tagSlug },
+        props: {
+            tagBlogs,
+            tagName,
+            tagSlug,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
     }
 }
 

@@ -13,7 +13,7 @@ const useScrollDirection = () => {
                 document.body.parentNode ||
                 document.body
             ).scrollTop
-            
+
         curScrollY.current = getScrollY()
         const direction =
             curScrollY.current > prevScrollY.current ? 'down' : 'up'

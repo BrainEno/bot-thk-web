@@ -1,0 +1,22 @@
+{
+    "home": "首页",
+    "all": "全部",
+    "novel": "小说",
+    "poetry": "诗歌",
+    "original": "原创",
+    "else": "其他",
+    "login": "登录",
+    "logout": "退出",
+    "dashboard": "个人中心",
+    "featured": "编辑精选",
+    "recent-post": "最新发布",
+    "trending": "最受欢迎",
+    "all-page": "全部文章",
+    "novel-page": "小说类",
+    "poetry-page": "诗歌类",
+    "original-page": "原创文章",
+    "else-page": "其他类别",
+    "By": "发布 ",
+    "Read More": "阅读更多",
+    "Related Blogs": "相关文章"
+}

@@ -44,6 +44,7 @@ const MyBrand: React.FC<BrandProps> = ({
                         quality={60}
                         width={width}
                         height={height}
+                        crossOrigin="anonymous"
                     />
                 </div>
             </Link>
@@ -55,6 +56,7 @@ const MyBrand: React.FC<BrandProps> = ({
                     quality={60}
                     width={width}
                     height={height}
+                    crossOrigin="anonymous"
                 />
             </div>
         )}

@@ -1,164 +1,194 @@
 .sign {
-  height: calc(100% - 65px);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.theme-dark .sign-container {
-  box-shadow: -3px -3px 7px #494949, 3px 3px 7px #3a3a3a;
-
-  .brand-container {
-    box-shadow: -3px -3px 7px #494949, 3px 3px 7px #3a3a3a,
-      inset -3px -3px 7px #494949, inset 3px 3px 7px #3a3a3a;
-
-    img {
-      filter: invert(100%);
-    }
-  }
-
-  .sign-form .form-group input:-internal-autofill-selected,
-  .sign-form .form-group input {
-    color: $font-light;
-    background-color: #494949 !important;
-    border: #494949 !important;
-  }
-}
-
-
-
-.sign-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30%;
-  min-width: 430px;
-  height: 80%;
-  max-height: max-content;
-  min-height: max-content;
-  box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48);
-  border-radius: 25px;
-  padding-top: 25px;
-
-  @include themify($themes) {
-    color: themed('textColor');
-  }
-
-
-
-  .brand-container {
-    border-radius: 80px;
-    width: 250px;
-    height: 70px;
-    padding-top: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px rgba(136, 165, 191, 0.48),
-      inset -3px -3px 7px #ffffff, inset 3px 3px 7px rgba(136, 165, 191, 0.48);
-  }
-
-  .sign-title {
-    margin: 20px auto;
-    font-size: 32px !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: 1.5px;
-  }
-
-  .sign-form {
-    min-height: max-content;
-    width: calc(100% - 30px);
+    height: calc(100% - 65px);
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 15px;
 
-    & .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 10px;
-      width: 70%;
-
-      label {
-        display: inline-block;
-        margin-bottom: 0.5rem;
-      }
-
-      .form-input {
-        height: 45px;
-        border-radius: 0;
-        margin-bottom: 15px;
-        border: 1px solid #ced4da;
-        background-color: #e8f0fe;
-        padding: 0 12px;
-        outline: 0;
-        transition: ease-in 200mx;
-
-        &:hover {
-          border: 1px solid #0879bf;
-        }
+    .forgot-password {
+        text-decoration: underline;
+        cursor: pointer;
+        margin: 5px 0 20px;
 
         @include themify($themes) {
-          color: themed('textColor');
+            color: themed('infoColor');
         }
-      }
     }
-
-    .form-btn {
-      background-color: black;
-      height: 3.1rem;
-      color: white;
-      font-weight: 900;
-      border-radius: 0;
-      border-width: 0;
-      width: 70%;
-      padding: 0;
-      margin: 30px 0 25px;
-      cursor: pointer;
-      transition: ease-in;
-      transition-duration: 200ms;
-
-      &:hover {
-        background-color: #0879bf;
-      }
-    }
-  }
 }
 
-@media screen and (max-width: 900px) {
-  .sign {
-    .sign-container {
-      width: 100%;
-      box-shadow: none;
-      min-width: 360px;
-      padding-top: 0;
+.theme-dark .sign-container {
+    box-shadow:
+        3px 3px 7px #101010,
+        3px 3px 7px rgba(39, 38, 38, 0.68);
 
-      .brand-container {
-        display: none;
-      }
+    .brand-container {
+        box-shadow:
+            3px 3px 7px #101010,
+            3px 3px 7px rgba(39, 38, 38, 0.68),
+            inset 3px 3px 7px #101010,
+            inset 3px 3px 7px rgba(39, 38, 38, 0.68);
 
-      .sign-form {
-        margin-top: 50px;
+        img {
+            filter: invert(100%);
+        }
+    }
 
+    .sign-form .form-group input:-internal-autofill-selected,
+    .sign-form .form-group input {
+        color: $font-light;
+        background-color: #494949 !important;
+        border: #494949 !important;
+    }
+}
 
-        .form-group {
-          width: 80%;
-          margin-bottom: 10px;
+.sign-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    min-width: 430px;
+    height: 80%;
+    max-height: max-content;
+    min-height: max-content;
+    box-shadow:
+        -3px -3px 7px #ffffff,
+        3px 3px 7px rgba(136, 165, 191, 0.48);
+    border-radius: 25px;
+    padding-top: 25px;
 
+    & p {
+        margin-bottom: 12px;
+    }
+
+    @include themify($themes) {
+        color: themed('textColor');
+    }
+
+    .brand-container {
+        border-radius: 80px;
+        width: 250px;
+        height: 70px;
+        padding-top: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow:
+            -3px -3px 7px #ffffff,
+            3px 3px 7px rgba(136, 165, 191, 0.48),
+            inset -3px -3px 7px #ffffff,
+            inset 3px 3px 7px rgba(136, 165, 191, 0.48);
+    }
+
+    .sign-title {
+        margin: 20px auto;
+        font-size: 32px !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: 1.5px;
+    }
+
+    .sign-form {
+        min-height: max-content;
+        width: calc(100% - 30px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 15px;
+
+        & .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            width: 70%;
+
+            label {
+                display: inline-block;
+                margin-bottom: 0.5rem;
+            }
+
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:active {
+                border: none;
+                -webkit-box-shadow: 0 0 0 30px $bg-light1 inset !important;
+
+                @include themify($themes) {
+                    -webkit-box-shadow: 0 0 0 30px themed('background2') inset !important;
+                    -webkit-text-fill-color: themed('textColor');
+                    -webkit-text-stroke-color: themed('textColor');
+                }
+            }
+
+            .form-input,
+            input:-internal-autofill-selected,
+            input[type='email' i],
+            input[type='password' i] {
+                height: 45px;
+                border-radius: 0;
+                margin-bottom: 15px;
+                padding: 0 12px;
+                outline: 0;
+
+                @include themify($themes) {
+                    background-color: themed('background2');
+                    color: themed('textColor');
+                    caret-color: themed('textColor');
+                }
+            }
         }
 
         .form-btn {
-          width: 80%;
-          margin: 20px 0 35px;
+            background-color: black;
+            height: 3.1rem;
+            color: $white;
+            font-weight: 900;
+            border-radius: 0;
+            border-width: 0;
+            width: 70%;
+            padding: 0;
+            margin: 30px 0 25px;
+            cursor: pointer;
+            transition: ease-in;
+            transition-duration: 200ms;
+
+            &:hover {
+                background-color: #0879bf;
+            }
         }
-      }
     }
-  }
+}
+
+@media screen and (max-width: 900px) {
+    .sign {
+        .sign-container {
+            width: 100%;
+            box-shadow: none;
+            min-width: 360px;
+            padding-top: 0;
+
+            .brand-container {
+                display: none;
+            }
+
+            .sign-form {
+                margin-top: 50px;
+
+                .form-group {
+                    width: 80%;
+                    margin-bottom: 10px;
+                }
+
+                .form-btn {
+                    width: 80%;
+                    margin: 20px 0 35px;
+                }
+            }
+        }
+    }
 }

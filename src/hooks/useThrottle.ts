@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 const useThrottle = <T, U extends any[]>(
     fn: (...args: U) => T,
-    ms= 200,
+    ms = 200,
     args: U
 ) => {
     const [state, setState] = useState<T | null>(null)

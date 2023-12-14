@@ -1,4 +1,5 @@
 import { PopulatedCardBlog } from '../../generated/graphql-request'
+
 import PostCard from './PostCard'
 
 export type ImgUseFor =

@@ -1,380 +1,382 @@
-  .theme-dark .article .reader-container {
+.theme-dark .article .reader-container {
     & .reader-btn {
-      background-color: #212121;
-      box-shadow: 4px 4px 2.75px #1c1c1c, -4px -4px 2.75px #262626;
-      transition: box-shadow ease-in-out 0.3s,
-        background-color ease-in-out 0.1s,
-        letter-spacing ease-in-out 0.1s,
-        transform ease-in-out 0.1s;
-
-      &:hover,
-      &:active {
-        box-shadow: 6px 6px 3.3px #121212,
-          6px 6px 3.3px #303030;
-      }
-    }
-  }
-
-  .article {
-    @include themify($themes) {
-      background-color: themed('background1');
-      color: themed('textColor');
-    }
-
-    .article-header-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      background-color: $white;
-
-      @include themify($themes) {
-        background-color: themed('background2');
-        color: themed('textColor');
-      }
-
-      .article-header {
-        padding: 60px 0 0px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        & p {
-          font-size: 15px;
-          margin: 12px 0;
-
-          .author-text {
-            & a {
-              color: rgb(15, 136, 206);
-            }
-          }
-        }
-      }
-    }
-
-    .reader-container {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      padding-top: 20px;
-      background-color: $bg-light2;
-
-      @include themify($themes) {
-        background-color: themed('background2');
-      }
-
-      & select {
-        border: none;
-        margin: 0 15px;
-        border-radius: 8px;
-        padding: 5px 5px;
-        box-shadow: -2px -2px 3px #ffffff, 2px 2px 3px rgba(136, 165, 191, 0.48),
-          inset -2px -2px 3px #ffffff, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
-      }
-
-      & .reader-btn {
-        border: none;
-        border-radius: 5px;
-        padding: 5px 5px 5px 6px;
-        width: 31px;
-        height: 31px;
-        background-color: #e6e7ee;
-        cursor: pointer;
-        box-shadow: 2px 2px 3px rgba(136, 165, 191, 0.78), -2px -2px 3px #fff;
+        background-color: #212121;
+        box-shadow:
+            4px 4px 2.75px #1c1c1c,
+            -4px -4px 2.75px #262626;
+        transition:
+            box-shadow ease-in-out 0.3s,
+            background-color ease-in-out 0.1s,
+            letter-spacing ease-in-out 0.1s,
+            transform ease-in-out 0.1s;
 
         &:hover,
         &:active {
-          box-shadow: inset -2px -2px 3px #ffffff,
-            inset 2px 2px 3px rgba(136, 165, 191, 0.78);
+            box-shadow:
+                6px 6px 3.3px #121212,
+                6px 6px 3.3px #303030;
         }
+    }
+}
 
-        & svg {
-          width: 18px;
-          height: 18px;
-          color: #3074bf;
-        }
+.article {
+    @include themify($themes) {
+        background-color: themed('background1');
+        color: themed('textColor');
+    }
+
+    .article-header-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        background-color: $white;
 
         @include themify($themes) {
-          background-color: themed('menuBtnHover');
+            background-color: themed('background2');
+            color: themed('textColor');
         }
-      }
+
+        .article-header {
+            padding: 60px 0 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            & p {
+                font-size: 15px;
+                margin: 12px 0;
+
+                .author-text {
+                    & a {
+                        color: rgb(15, 136, 206);
+                    }
+                }
+            }
+        }
+    }
+
+    .reader-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-top: 20px;
+        background-color: $bg-light2;
+
+        @include themify($themes) {
+            background-color: themed('background2');
+        }
+
+        & select {
+            border: none;
+            margin: 0 15px;
+            border-radius: 8px;
+            padding: 5px 5px;
+            box-shadow:
+                -2px -2px 3px #ffffff,
+                2px 2px 3px rgba(136, 165, 191, 0.48),
+                inset -2px -2px 3px #ffffff,
+                inset 2px 2px 3px rgba(136, 165, 191, 0.48);
+        }
+
+        & .reader-btn {
+            border: none;
+            border-radius: 5px;
+            padding: 5px 5px 5px 6px;
+            width: 31px;
+            height: 31px;
+            background-color: #e6e7ee;
+            cursor: pointer;
+            box-shadow:
+                2px 2px 3px rgba(136, 165, 191, 0.78),
+                -2px -2px 3px #fff;
+
+            &:hover,
+            &:active {
+                box-shadow:
+                    inset -2px -2px 3px #ffffff,
+                    inset 2px 2px 3px rgba(136, 165, 191, 0.78);
+            }
+
+            & svg {
+                width: 18px;
+                height: 18px;
+                color: #3074bf;
+            }
+
+            @include themify($themes) {
+                background-color: themed('menuBtnHover');
+            }
+        }
     }
 
     .article-content {
-      padding: 50px 25%;
-      background-color: $bg-light2;
+        padding: 50px 25%;
+        background-color: $bg-light2;
 
-      @include themify($themes) {
-        background-color: themed('background2');
-        color: themed('textColor');
-      }
-
-
-      & section {
-        p {
-          font-size: 20px;
+        @include themify($themes) {
+            background-color: themed('background2');
+            color: themed('textColor');
         }
-      }
+
+        & section {
+            p {
+                font-size: 20px;
+            }
+        }
     }
 
     .article-actions {
-      display: flex;
-      background-color: $white;
-      height: 30px;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 40px 25% 70px;
-
-      &-left {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-
-        & button {
-          margin-left: 0px;
-        }
-      }
-
-      &-right {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-end;
-        position: relative;
-
-        & button {
-          margin-left: 26px;
-        }
-      }
-
-      & button {
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        width: 36px;
-        height: 36px;
-        border-radius: 36px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &:hover {
-          background-color: $menu-btn-hover-light;
-        }
-
-        & svg {
-          color: #999999;
-        }
-      }
-
-      .more-dropdown {
-        position: absolute;
-        right: -68px;
-        top: 48px;
-        border-radius: 4px;
         background-color: $white;
-        border: #e6e7ee 1px solid;
-        transform-origin: top right;
+        height: 30px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 40px 25% 70px;
 
-        @include themify($themes) {
-          border: 1px solid themed('conversationSelected');
+        &-left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+
+            & button {
+                margin-left: 0px;
+            }
         }
 
-        & .dropdown-item {
-          padding: 8px 16px;
-          margin-bottom: 0px;
-          border-top: #e6e7ee 1px solid;
-          cursor: pointer;
+        &-right {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
 
-          &:hover {
-            background-color: #e5e5e5;
-            font-weight: 600;
-          }
+            & button {
+                margin-left: 26px;
+            }
+        }
 
-          @include themify($themes) {
-            background-color: themed('menuBtnHover');
-            border-top: 1px solid themed('conversationSelected');
+        & button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             &:hover {
-              background-color: themed('conversationHovered');
+                background-color: $menu-btn-hover-light;
             }
-          }
+
+            & svg {
+                color: #999999;
+            }
         }
-      }
 
+        .more-dropdown {
+            position: absolute;
+            right: -68px;
+            top: 48px;
+            border-radius: 4px;
+            background-color: $white;
+            border: #e6e7ee 1px solid;
+            transform-origin: top right;
 
+            @include themify($themes) {
+                border: 1px solid themed('conversationSelected');
+            }
 
-      @include themify($themes) {
-        background-color: themed('background2');
-        color: themed('textColor');
+            & .dropdown-item {
+                padding: 8px 16px;
+                margin-bottom: 0px;
+                border-top: #e6e7ee 1px solid;
+                cursor: pointer;
 
-        & button:hover {
-          background-color: themed('menuBtnHover');
+                &:hover {
+                    background-color: #e5e5e5;
+                    font-weight: 600;
+                }
+
+                @include themify($themes) {
+                    background-color: themed('menuBtnHover');
+                    border-top: 1px solid themed('conversationSelected');
+
+                    &:hover {
+                        background-color: themed('conversationHovered');
+                    }
+                }
+            }
         }
-      }
+
+        @include themify($themes) {
+            background-color: themed('background2');
+            color: themed('textColor');
+
+            & button:hover {
+                background-color: themed('menuBtnHover');
+            }
+        }
     }
-  }
+}
 
-  .screenshot-modal {
+.screenshot-modal {
     overflow: scroll;
     background-color: $white;
     padding: 20px;
     position: relative;
 
     & button {
-      position: absolute;
-      top: 15px;
-      right: 20px;
+        position: absolute;
+        top: 15px;
+        right: 20px;
     }
 
     .screenshot-wrapper {
-      position: relative;
-      border: 1px solid $link-light;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        position: relative;
+        border: 1px solid $link-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     & .download-screenshot {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: rgba($bg-light2, 0.5);
-      padding: 7px 12px;
-      color: $link-light;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba($bg-light2, 0.5);
+        padding: 7px 12px;
+        color: $link-light;
 
-      &:hover {
-        color: $font-light;
-        background-color: rgba($bg-light2, 0.8);
-      }
+        &:hover {
+            color: $font-light;
+            background-color: rgba($bg-light2, 0.8);
+        }
     }
-  }
+}
 
-
-  .article-page-bottom {
+.article-page-bottom {
     .related-blogs-container {
-      padding: 35px 25%;
+        padding: 35px 25%;
 
-      @include themify($themes) {
-        background-color: themed('background1');
-        color: themed('textColor');
-      }
+        @include themify($themes) {
+            background-color: themed('background1');
+            color: themed('textColor');
+        }
     }
 
     .related-blogs-container {
-      & h4 {
-        margin-bottom: 60px;
-      }
-
-      & .related-blogs {
-        margin-bottom: 80px;
-      }
-
-      @include themify($themes) {
-        background-color: themed('background1');
-        color: themed('textColor');
-      }
-    }
-
-    .comments-container {
-      padding: 35px;
-      background-color: $bg-light1;
-
-      @include themify($themes) {
-        background-color: themed('background1');
-        color: themed('textColor');
-      }
-    }
-
-  }
-
-
-  @media screen and (max-width: 900px) {
-    .article {
-      .banner {
-        height: 300px !important;
-      }
-
-      .reader-container {
-        & select {
-          width: 220px;
-        }
-      }
-
-      .article-header-container {
-        margin: 0;
-        padding: 0px 30px;
-
-        .article-header {
-          padding: 45px 0 0 !important;
-
-          & h1 {
-            font-size: 22px;
-            font-weight: 600;
-          }
-        }
-      }
-
-      .article-content {
-        padding: 30px;
-
-        & section {
-          & p {
-            font-size: 17px;
-          }
-        }
-      }
-
-
-      .article-actions {
-        padding: 45px 30px;
-      }
-    }
-
-    .article-page-bottom {
-      .related-blogs-container {
-        padding: 20px;
-
         & h4 {
-          margin-bottom: 20px;
-          margin-top: 20px;
-          font-size: 18px;
-          font-weight: 600;
-          margin-left: 20px;
+            margin-bottom: 60px;
         }
 
         & .related-blogs {
-          padding: 18px;
-          margin-bottom: 40px;
+            margin-bottom: 80px;
         }
-      }
+
+        @include themify($themes) {
+            background-color: themed('background1');
+            color: themed('textColor');
+        }
+    }
+
+    .comments-container {
+        padding: 35px;
+        background-color: $bg-light1;
+
+        @include themify($themes) {
+            background-color: themed('background1');
+            color: themed('textColor');
+        }
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .article {
+        .banner {
+            height: 300px !important;
+        }
+
+        .reader-container {
+            & select {
+                width: 220px;
+            }
+        }
+
+        .article-header-container {
+            margin: 0;
+            padding: 0px 30px;
+
+            .article-header {
+                padding: 45px 0 0 !important;
+
+                & h1 {
+                    font-size: 22px;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .article-content {
+            padding: 30px;
+
+            & section {
+                & p {
+                    font-size: 17px;
+                }
+            }
+        }
+
+        .article-actions {
+            padding: 45px 30px;
+        }
+    }
+
+    .article-page-bottom {
+        .related-blogs-container {
+            padding: 20px;
+
+            & h4 {
+                margin-bottom: 20px;
+                margin-top: 20px;
+                font-size: 18px;
+                font-weight: 600;
+                margin-left: 20px;
+            }
+
+            & .related-blogs {
+                padding: 18px;
+                margin-bottom: 40px;
+            }
+        }
     }
 
     .screenshot-modal {
-      width: 100vw;
-      overflow: scroll;
-      background-color: $white;
-      padding: 20px;
-      position: relative;
+        width: 100vw;
+        overflow: scroll;
+        background-color: $white;
+        padding: 20px;
+        position: relative;
 
-      & button {
-        position: absolute;
-        right: 30px;
-      }
+        & button {
+            position: absolute;
+            right: 30px;
+        }
 
-      & h2 {
-        padding-left: 10px;
-        padding-bottom: 15px;
-      }
+        & h2 {
+            padding-left: 10px;
+            padding-bottom: 15px;
+        }
 
-
-      & .download-screenshot {
-        padding: 4px 6px;
-      }
+        & .download-screenshot {
+            padding: 4px 6px;
+        }
     }
-  }
+}

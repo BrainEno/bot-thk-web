@@ -1,7 +1,7 @@
-import { ImageLoader, ImageLoaderProps } from 'next/image';
+import { ImageLoader, ImageLoaderProps } from 'next/image'
 
 const myLoader: ImageLoader = ({ src, width, quality }: ImageLoaderProps) => {
-  return `${src}?w=${width}&q=${quality || 75}`;
-};
+    return `${src}?w=${width}&q=${quality || 75}`
+}
 
-export default myLoader;
+export default myLoader

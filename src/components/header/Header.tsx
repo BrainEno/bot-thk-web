@@ -2,9 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BiLogIn, BiLogOut } from 'react-icons/bi'
 import { HiOutlineMenu } from 'react-icons/hi'
 import classNames from 'classnames'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
+import { useTranslation } from 'next-i18next'
 
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useBlogPulished } from '../../hooks/subscriptions/useBlogPublished'
@@ -20,11 +22,12 @@ import MyBrand from '../common/MyBrand'
 import { MenuNotification } from './Notification/MenuNotification'
 import MenuSearch from './Search/MenuSearch'
 import { MenuTheme } from './Theme/MenuTheme'
-import dynamic from 'next/dynamic'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Avatar = dynamic(() => import('../common/Avatar'), { ssr: false })
 
 const Header = () => {
+    const { t, i18n } = useTranslation('common')
     const logOut = useAuthStore((state) => state.logOut)
     const router = useRouter()
     const isAuth = useAuth(true)
@@ -132,7 +135,12 @@ const Header = () => {
                     onMouseLeave={() => setMenuActive(false)}
                     ref={menuRef}
                 >
-                    <ul className={classNames('nav', { 'no-user': !user })}>
+                    <ul
+                        className={classNames('nav', {
+                            'no-user': !user,
+                            en: i18n.language === 'en',
+                        })}
+                    >
                         <li>
                             <Link
                                 className={classNames('nav-link', {
@@ -140,7 +148,7 @@ const Header = () => {
                                 })}
                                 href={{ pathname: '/' }}
                             >
-                                首页
+                                {t('home').toUpperCase()}
                             </Link>
                         </li>
                         <li>
@@ -150,7 +158,7 @@ const Header = () => {
                                 })}
                                 href={{ pathname: '/blogs' }}
                             >
-                                全部
+                                {t('all').toUpperCase()}
                             </Link>
                         </li>
                         <li>
@@ -163,7 +171,7 @@ const Header = () => {
                                     query: { slug: 'novel' },
                                 }}
                             >
-                                小说
+                                {t('novel').toUpperCase()}
                             </Link>
                         </li>
                         <li>
@@ -176,7 +184,7 @@ const Header = () => {
                                     query: { slug: 'poetry' },
                                 }}
                             >
-                                诗歌
+                                {t('poetry').toUpperCase()}
                             </Link>
                         </li>
                         <li>
@@ -189,7 +197,7 @@ const Header = () => {
                                     query: { slug: 'original' },
                                 }}
                             >
-                                原创
+                                {t('original').toUpperCase()}
                             </Link>
                         </li>
                         <li>
@@ -202,13 +210,14 @@ const Header = () => {
                                     query: { slug: 'else' },
                                 }}
                             >
-                                其他
+                                {t('else').toUpperCase()}
                             </Link>
                         </li>
                     </ul>
                     <MenuTheme />
                     <MenuSearch isAuth={isAuth} />
                     <MenuNotification isAuth={isAuth} />
+                    <LanguageSwitcher />
                     {isAuth && (
                         <div className="menu-avtar-container">
                             <Link href="/dashboard" passHref>
@@ -218,7 +227,7 @@ const Header = () => {
                                             char={user.name
                                                 ?.slice(0, 1)
                                                 .toUpperCase()}
-                                            title="个人主页"
+                                            title={t('dashboard')}
                                             size={38}
                                             radius={38}
                                             src={`${user?.image ?? ''}`}
@@ -240,7 +249,7 @@ const Header = () => {
                                     className="nav-link"
                                 >
                                     <BiLogOut size={25} />
-                                    退出
+                                    {t('logout')}
                                 </div>
                             </div>
                         ) : (
@@ -248,7 +257,7 @@ const Header = () => {
                                 <div>
                                     <Link className="nav-link" href="/signin">
                                         <BiLogIn size={25} />
-                                        <div>登录</div>
+                                        <div>{t('login')}</div>
                                     </Link>
                                 </div>
                             </div>

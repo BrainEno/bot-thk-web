@@ -1,3 +1,7 @@
+.theme-dark .search-dropdown {
+    border: 1px solid #c9c9c962;
+}
+
 .menu-search {
     position: relative;
     display: flex;
@@ -27,15 +31,11 @@
             background-color: $menu-btn-hover-light;
         }
 
-
-
-
         &.clicked svg {
             color: $black;
         }
 
         @include themify($themes) {
-
             &:hover,
             &.clicked {
                 background-color: themed('menuBtnHover');
@@ -56,15 +56,15 @@
     width: 376px;
     height: 300px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 1px 0 rgba(0, 0, 0, .02);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(0, 0, 0, 0.02);
     overflow-y: scroll;
     transition: all 0.5 ease-in-out;
 
     @include themify($themes) {
         background-color: themed('background2');
         color: themed('textColor');
-
-
     }
 
     .search-form {
@@ -149,25 +149,23 @@
         z-index: 5;
         background-color: $white;
 
-
         @include themify($themes) {
             background-color: themed('background2');
         }
 
-        &>span {
+        & > span {
             color: $info-light;
             font-size: 14px;
             vertical-align: middle;
             cursor: default;
             margin-left: 5px;
 
-
             @include themify($themes) {
                 color: themed('infoColor');
             }
         }
 
-        &>button {
+        & > button {
             margin: 0;
             width: max-content;
             padding: 0;
@@ -213,11 +211,9 @@
         }
 
         @include themify($themes) {
-
             &:hover {
                 background-color: themed('conversationHovered');
             }
-
         }
 
         & .drop-item-title {
@@ -269,7 +265,6 @@
                 }
             }
         }
-
     }
 }
 

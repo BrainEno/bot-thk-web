@@ -3,10 +3,13 @@ import { useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import { useTranslation } from 'next-i18next'
 
 import { showAlert } from '../common/Alert'
 
 const SigninComponent = () => {
+    const { t } = useTranslation('account')
+
     const [values, setValues] = useState({
         email: '',
         password: '',
@@ -39,7 +42,7 @@ const SigninComponent = () => {
             setErrors({
                 ...errors,
                 password: '',
-                email: '邮箱地址不得为空，请重新输入',
+                email: t('Email Required'),
             })
             setValues({
                 ...values,
@@ -49,7 +52,7 @@ const SigninComponent = () => {
             setErrors({
                 ...errors,
                 email: '',
-                password: '密码不得为空，请重新输入',
+                password: t('Password Required'),
             })
             setValues({
                 ...values,
@@ -63,7 +66,7 @@ const SigninComponent = () => {
                         setValues({
                             ...values,
                             loading: false,
-                            message: '邮箱或密码错误，请重试',
+                            message: t('Auth Error'),
                         })
                     }
                 })
@@ -72,7 +75,7 @@ const SigninComponent = () => {
                         setValues({
                             ...values,
                             loading: false,
-                            message: '请求超时，请稍后重试',
+                            message: t('Unkown Error'),
                         })
                 })
         }
@@ -86,7 +89,7 @@ const SigninComponent = () => {
                         htmlFor="inputEmail"
                         className={classNames({ error: !!errors.email })}
                     >
-                        {errors.email || '邮箱'}
+                        {errors.email || t('Email')}
                     </label>
                     <input
                         id="inputEmail"
@@ -98,7 +101,7 @@ const SigninComponent = () => {
                         name="email"
                         value={email}
                         onChange={handleChange}
-                        placeholder="请输入您的邮箱"
+                        placeholder={t('Enter Email')}
                     />
                 </div>
                 <div className="form-group">
@@ -106,7 +109,7 @@ const SigninComponent = () => {
                         htmlFor="inputPassword"
                         className={classNames({ error: !!errors.password })}
                     >
-                        {errors.password || '密码'}
+                        {errors.password || t('Password')}
                     </label>
                     <input
                         id="inputPassword"
@@ -118,11 +121,11 @@ const SigninComponent = () => {
                         name="password"
                         value={password}
                         onChange={handleChange}
-                        placeholder="请输入您的密码"
+                        placeholder={t('Enter Password')}
                     />
                 </div>
                 <button type="submit" className="form-btn">
-                    登 录
+                    {t('Login')}
                 </button>
             </form>
         )
@@ -130,20 +133,11 @@ const SigninComponent = () => {
 
     return (
         <>
-            {loading && showAlert('正在加载...', 'info')}
+            {loading && showAlert(`${t('Loading')}...`, 'info')}
             {message && showAlert(message, 'warn')}
             {showForm && signinForm()}
-            <Link href="/auth/password/forgot" passHref>
-                <span
-                    style={{
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        color: '#0879bf !important',
-                        margin: '10px 0 25px',
-                    }}
-                >
-                    忘记密码
-                </span>
+            <Link href="/auth/password/forgot" className="forgot-password">
+                {t('Forgot Password')}
             </Link>
         </>
     )

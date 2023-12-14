@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { signOut, useSession } from 'next-auth/react'
 
@@ -14,7 +14,7 @@ const useAuth = (shouldRedirect: boolean) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const logOut = useAuthStore((state) => state.logOut)
 
-    useEffect(() => {
+    const redirect = useCallback(async () => {
         if (session?.error === 'RefreshAccessTokenError') {
             signOut({ callbackUrl: '/signin', redirect: shouldRedirect })
         }
@@ -24,15 +24,15 @@ const useAuth = (shouldRedirect: boolean) => {
                 router.route.includes('dashboard') ||
                 router.route.includes('conversation')
             ) {
-                router.replace('/signin')
+                await router.replace('/signin')
             }
 
-            logOut()
+            await logOut()
 
             setIsAuthenticated(false)
         } else if (session !== undefined) {
-            if (router.route === '/signin') {
-                router.replace('/')
+            if (router.route.includes('/signin')) {
+                await router.replace('/')
             }
 
             setIsAuthenticated(true)
@@ -40,10 +40,14 @@ const useAuth = (shouldRedirect: boolean) => {
                 Authrization: `Bearer ${session?.access_token}`,
             })
             if (!userId || userId !== session.user.id) {
-                setUser()
+                await setUser()
             }
         }
     }, [logOut, router, session, setUser, shouldRedirect, userId])
+
+    useEffect(() => {
+        redirect()
+    }, [redirect])
 
     return isAuthenticated
 }

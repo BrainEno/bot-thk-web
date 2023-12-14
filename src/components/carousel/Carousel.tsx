@@ -14,6 +14,7 @@ const items: ICarouselItem[] = [
     {
         src: '/images/recent-post.jpg',
         title: 'Recent Post',
+        slug: 'recent-post',
         link: '/categories/recent-post',
         width: 2048,
         height: 1701,
@@ -21,6 +22,7 @@ const items: ICarouselItem[] = [
     {
         src: '/images/featured.png',
         title: 'Featured',
+        slug: 'featured',
         link: '/categories/featured',
         width: 1920,
         height: 1657,
@@ -28,6 +30,7 @@ const items: ICarouselItem[] = [
     {
         src: '/images/trending.png',
         title: 'Trending',
+        slug: 'trending',
         link: '/categories/trending',
         width: 1920,
         height: 1299,

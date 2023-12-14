@@ -8,7 +8,7 @@
     }
 
     @include themify($themes) {
-        background-color: themed("background1");
+        background-color: themed('background1');
     }
 }
 
@@ -19,23 +19,20 @@
     align-items: center;
     background-color: $bg-light1;
 
-
-
-    &>div>a {
+    & > div > a {
         display: block;
         width: max-content;
 
         & h1 {
             color: $black;
         }
-
     }
 
     @include themify($themes) {
-        background-color: themed("background1");
+        background-color: themed('background1');
 
-        &>div>a>h1 {
-            color: themed("textColor");
+        & > div > a > h1 {
+            color: themed('textColor');
         }
     }
 }
@@ -46,7 +43,7 @@
     justify-content: center;
 
     & .recent-container {
-        &>a {
+        & > a {
             display: block;
             width: max-content;
         }
@@ -63,12 +60,10 @@
         }
     }
 
-
     @include themify($themes) {
         background-color: themed('background2');
 
-
-        & a>h1 {
+        & a > h1 {
             color: themed('textColor');
         }
 
@@ -80,12 +75,10 @@
                     background-color: themed('background1');
                     color: themed('textColor');
                 }
-
             }
         }
     }
 }
-
 
 .trending-posts-container {
     display: flex;
@@ -93,14 +86,14 @@
     background-color: $bg-light1;
 
     @include themify($themes) {
-        background-color: themed("background1");
+        background-color: themed('background1');
 
-        &>div>a>h1 {
-            color: themed("textColor");
+        & > div > a > h1 {
+            color: themed('textColor');
         }
     }
 
-    &>div>a {
+    & > div > a {
         display: block;
         width: max-content;
     }

@@ -2,10 +2,14 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { BiHide, BiShow } from 'react-icons/bi'
 import { BsSend, BsTags } from 'react-icons/bs'
 import { GrImage } from 'react-icons/gr'
+import { IoArrowBackCircleOutline, IoSaveOutline } from 'react-icons/io5'
+import { MdOutlinePublic, MdOutlinePublicOff } from 'react-icons/md'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
+import localforage from 'localforage'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 import { BlogInput } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
@@ -13,15 +17,12 @@ import { QuillFormats, QuillModules } from '../../helpers/ToolbarOptions'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useTagStore } from '../../hooks/store/useTagsStore'
 import { useUploadImage } from '../../hooks/useUpload'
+import useWindowSize from '../../hooks/useWindowSize'
 import { showAlert } from '../common/Alert'
 import BannerImg from '../common/BannerImg'
+import { Switch } from '../common/Switch'
 
 import { TagList } from './TagList'
-import localforage from 'localforage'
-import { Switch } from '../common/Switch'
-import { MdOutlinePublic, MdOutlinePublicOff } from 'react-icons/md'
-import { IoArrowBackCircleOutline, IoSaveOutline } from 'react-icons/io5'
-import useWindowSize from '../../hooks/useWindowSize'
 
 const defaultImgUri =
     'https://res.cloudinary.com/hapmoniym/image/upload/v1644331126/bot-thk/no-image_eaeuge.jpg'
@@ -62,6 +63,7 @@ export const BlogForm = ({
     draftTags,
     blogId,
 }: BlogFormProps) => {
+    const { t } = useTranslation('dashboard')
     const router = useRouter()
     const blogContainerRef = useRef<null | HTMLDivElement>(null)
     const queryClient = useQueryClient()
@@ -78,13 +80,13 @@ export const BlogForm = ({
     const [body, setBody] = useState<string>('')
     const [msg, setMsg] = useState('')
     const [err, setErr] = useState('')
-    const { image, setImage, upload, error } = useUploadImage(
-        defaultImgUri,
-        () => {
-            if (image !== defaultImgUri) setShowBanner(true)
-        }
+    const { image, setImage, upload, error } = useUploadImage('', () => {
+        if (image !== defaultImgUri) setShowBanner(true)
+    })
+    const [showBanner, setShowBanner] = useState(
+        !!(image && image !== defaultImgUri) || false
     )
-    const [showBanner, setShowBanner] = useState(!!image || false)
+
     const [showTags, setShowTags] = useState(!!draftTags?.length || false)
     const [selectedTags, setSelectedTags] = useState<string[]>(draftTags ?? [])
 
@@ -154,7 +156,7 @@ export const BlogForm = ({
         if (!blogInput.active) blogInput.active = true
 
         if (!selectedTags.length) {
-            setMsg('点击下方标签图标为文章添加标签')
+            setMsg(t('add-label-tip'))
             return
         }
 
@@ -164,7 +166,7 @@ export const BlogForm = ({
                 tagIds: selectedTags,
             })
             if (!res.createBlog.success) {
-                setErr('文章发布失败，请稍后重试')
+                setErr(t('publish-fail-info'))
             }
             queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
         } else if (formType === 'edit') {
@@ -175,7 +177,7 @@ export const BlogForm = ({
                     tagIds: selectedTags,
                 })
                 if (!res.updateBlog.success) {
-                    setErr('文章更新失败，请稍后重试')
+                    setErr(t('update fail info'))
                 }
                 queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
                 queryClient.invalidateQueries({
@@ -221,7 +223,7 @@ export const BlogForm = ({
             })
 
             if (!res.createBlog.success) {
-                setErr('文章保存失败，请重试')
+                setErr(t('save-fail-info'))
             }
 
             const blogId = res.createBlog.blog?._id
@@ -246,7 +248,7 @@ export const BlogForm = ({
                 })
 
                 if (!res.updateBlog.success) {
-                    setErr('文章保存失败，请重试')
+                    setErr(t('save-fail-info'))
                 }
 
                 queryClient.invalidateQueries({ queryKey: ['userBlogs'] })
@@ -295,6 +297,7 @@ export const BlogForm = ({
             setTitle('')
             setActive(false)
         }
+        // eslint-disable-next-line
     }, [])
 
     return (
@@ -314,13 +317,13 @@ export const BlogForm = ({
                         value={title}
                         name="title"
                         onChange={handleTitle}
-                        placeholder="输入标题"
+                        placeholder={t('title')}
                     />
                     <div className="separator"> / </div>
                     <div className="blog-form-icons">
                         <label
                             className="icon-btn"
-                            title="更改图片"
+                            title={t('edit-img')}
                             htmlFor="blog-image"
                         >
                             <input
@@ -337,7 +340,7 @@ export const BlogForm = ({
                             <button
                                 type="button"
                                 className="icon-btn"
-                                title="隐藏图片"
+                                title={t('hide-img')}
                                 onClick={() => {
                                     setShowBanner(false)
                                 }}
@@ -358,7 +361,7 @@ export const BlogForm = ({
                                             setShowBanner(true)
                                         }, 500)
                                     }}
-                                    title="预览图片"
+                                    title={t('show-img')}
                                 >
                                     <BiShow />
                                 </button>
@@ -385,7 +388,7 @@ export const BlogForm = ({
                             modules={QuillModules}
                             formats={QuillFormats}
                             value={body}
-                            placeholder="开始创作..."
+                            placeholder={`${t('Start writing')}...`}
                             onChange={setBody}
                         />
                     </Suspense>
@@ -410,7 +413,7 @@ export const BlogForm = ({
                     <div className="tags-form">
                         <button
                             type="button"
-                            title="添加标签"
+                            title={t('add-label')}
                             className="icon-btn"
                             onClick={handleTags}
                         >
@@ -433,7 +436,7 @@ export const BlogForm = ({
                             {isMobile ? (
                                 <IoArrowBackCircleOutline size={20} />
                             ) : (
-                                '退出'
+                                t('blog-cancel')
                             )}
                         </button>
                         <button
@@ -441,14 +444,14 @@ export const BlogForm = ({
                             className="form-btn"
                             onClick={publishBlog}
                         >
-                            {isMobile ? <BsSend size={16} /> : '发布'}
+                            {isMobile ? <BsSend size={16} /> : t('publish')}
                         </button>
                         <button
                             type="button"
                             className="form-btn"
                             onClick={saveBlog}
                         >
-                            {isMobile ? <IoSaveOutline size={18} /> : '保存'}
+                            {isMobile ? <IoSaveOutline size={18} /> : t('save')}
                         </button>
                     </div>
                 </div>

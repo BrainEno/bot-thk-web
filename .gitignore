@@ -8,3 +8,10 @@ yarn-debug.log*
 yarn-error.log*
 # Local Netlify folder
 .netlify
+
+# next-pwa
+**/public/workbox**
+**/public/sw**
+**/public/worker**
+**/public/fallback**
+**/public/precache**

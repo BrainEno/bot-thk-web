@@ -1,13 +1,17 @@
 import { useMemo } from 'react'
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { NextRouter, withRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { PostGrid, PostMasonry } from '../components/blog'
 import Carousel from '../components/carousel/Carousel'
 import Footer from '../components/common/Footer'
-import { sdk } from '../generated/sdk'
 import { PopulatedCardBlog } from '../generated/graphql-request'
+import { sdk } from '../generated/sdk'
+import { ServerSideTranslations } from '../types'
 
 interface IndexPageProps {
     router: NextRouter
@@ -23,6 +27,8 @@ const Index: React.FC<IndexPageProps> = ({
     featured,
 }) => {
     const titleText = `Home | ${process.env.NEXT_PUBLIC_APP_NAME}`
+    const { t } = useTranslation('common')
+
     const head = useMemo(() => {
         return (
             <Head>
@@ -67,33 +73,6 @@ const Index: React.FC<IndexPageProps> = ({
         )
     }, [router.pathname, titleText])
 
-    // const [isSubscribed, setIsSubscribed] = useState(false)
-    // const [subscription, setSubscription] = useState<PushSubscription | null>(
-    //     null
-    // )
-    // const [registration, setRegistration] =
-    //     useState<ServiceWorkerRegistration | null>(null)
-
-    // useEffect(() => {
-    //     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-    //         navigator.serviceWorker.ready.then((reg) => {
-    //             reg.pushManager.getSubscription().then((sub) => {
-    //                 if (
-    //                     sub &&
-    //                     !(
-    //                         sub.expirationTime &&
-    //                         Date.now() > sub.expirationTime - 5 * 60 * 100
-    //                     )
-    //                 ) {
-    //                     setSubscription(sub)
-    //                     setIsSubscribed(true)
-    //                 }
-    //             })
-    //             setRegistration(reg)
-    //         })
-    //     }
-    // }, [])
-
     return (
         <>
             {head}
@@ -102,7 +81,7 @@ const Index: React.FC<IndexPageProps> = ({
                 <section className="featured-posts-container">
                     <div>
                         <Link href="/categories/featured">
-                            <h1>Featured</h1>
+                            <h1>{t('featured')}</h1>
                         </Link>
                         <PostMasonry
                             imgFor="featured"
@@ -117,7 +96,7 @@ const Index: React.FC<IndexPageProps> = ({
                     <section className="bg-white">
                         <div className="recent-container">
                             <Link href="/categories/recent-post">
-                                <h1>Recent Post</h1>
+                                <h1>{t('recent-post')}</h1>
                             </Link>
                             <PostGrid posts={recent} />
                         </div>
@@ -127,7 +106,7 @@ const Index: React.FC<IndexPageProps> = ({
                 <section className="trending-posts-container">
                     <div>
                         <Link href="/categories/trending">
-                            <h1>Trending</h1>
+                            <h1>{t('trending')}</h1>
                         </Link>
                         <PostMasonry
                             imgFor="trending"
@@ -143,7 +122,9 @@ const Index: React.FC<IndexPageProps> = ({
     )
 }
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps<ServerSideTranslations> = async ({
+    locale,
+}) => {
     const { getCatBlogs: trending } = await sdk.GetCatBlogs({
         getCatBlogsSlug: 'trending',
     })
@@ -156,7 +137,12 @@ export const getStaticProps = async () => {
         getCatBlogsSlug: 'featured',
     })
     return {
-        props: { recent, trending, featured },
+        props: {
+            recent,
+            trending,
+            featured,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
         revalidate: 10,
     }
 }

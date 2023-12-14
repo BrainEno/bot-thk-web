@@ -1,0 +1,20 @@
+{
+    "Loading": "正在加载",
+    "Login": "登录",
+    "Email": "邮箱",
+    "Password": "密码",
+    "here": "这里",
+    "Forgot Password": "忘记密码",
+    "Reset Password": "修改密码",
+    "Username": "用户名",
+    "Register": "注册",
+    "Enter Username": "请输入用户名",
+    "Enter Email": "请输入您的邮箱",
+    "Enter Password": "请输入您的密码",
+    "Send Link": "发送验证连接",
+    "Username Required": "用户名不得为空",
+    "Email Required": "邮箱地址不得为空，请重新输入",
+    "Password Required": "密码不得为空，请重新输入",
+    "Auth Error": "邮箱或密码错误，请重试",
+    "Unkown Error": "请求超时，请稍后重试"
+}

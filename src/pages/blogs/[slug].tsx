@@ -1,22 +1,22 @@
 import React, { Suspense, useRef } from 'react'
-import dayjs from 'dayjs'
+import { useQuery } from '@tanstack/react-query'
 import {
     GetStaticPaths,
     GetStaticPathsResult,
     GetStaticProps,
     GetStaticPropsContext,
 } from 'next'
-import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { ParsedUrlQuery } from 'querystring'
 
+import ArticleActions from '../../components/article/ArticleActions'
 import { TagRow } from '../../components/blog'
 import BannerImg from '../../components/common/BannerImg'
-import { sdk } from '../../generated/sdk'
-import { useAuthStore } from '../../hooks/store/useAuthStore'
-import ArticleActions from '../../components/article/ArticleActions'
-import { useQuery } from '@tanstack/react-query'
 import {
     GetBlogBySlugDocument,
     GetBlogBySlugQuery,
@@ -24,8 +24,11 @@ import {
     GetRelatedBlogsQuery,
     PopulatedTag,
 } from '../../generated/graphql-request'
+import { sdk } from '../../generated/sdk'
 import { fetcher } from '../../graphql/gqlClient'
-import { ParsedUrlQuery } from 'querystring'
+import { getLocaleFormatedTime } from '../../helpers/date'
+import { useAuthStore } from '../../hooks/store/useAuthStore'
+import { ServerSideTranslations } from '../../types'
 
 const DisqusThread = dynamic(
     () =>
@@ -59,6 +62,8 @@ const Article: React.FC<ArticleProps> = ({
     initialData,
     relatedBlogsInitialData,
 }) => {
+    const { t, i18n } = useTranslation('common')
+
     const user = useAuthStore((state) => state.user)
     const pathname = usePathname()
     const containerRef = useRef<HTMLDivElement | null>(null)
@@ -141,7 +146,7 @@ const Article: React.FC<ArticleProps> = ({
                             <h1>{blog && blog!.title}</h1>
                             <p>
                                 <span className="author-text">
-                                    By : {'  '}
+                                    {t('By')} : {'  '}
                                     {blog && (
                                         <Link
                                             href={`/profile/${blog.author?.username}`}
@@ -153,12 +158,10 @@ const Article: React.FC<ArticleProps> = ({
                                 <span className="description-text">
                                     {' '}
                                     |{' '}
-                                    {blog &&
-                                        dayjs(
-                                            blog!.createdAt,
-                                            'zh',
-                                            true
-                                        ).format('MMM,DD,YYYY')}
+                                    {getLocaleFormatedTime(
+                                        blog.createdAt,
+                                        i18n.language
+                                    )}
                                 </span>
                             </p>
                             {blog && (
@@ -232,8 +235,9 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<
     }
 }
 
-export const getStaticProps: GetStaticProps = async ({
+export const getStaticProps: GetStaticProps<ServerSideTranslations> = async ({
     params,
+    locale,
 }: GetStaticPropsContext) => {
     const slug = (params as ParsedUrlQuery).slug as string
 
@@ -255,6 +259,7 @@ export const getStaticProps: GetStaticProps = async ({
             initialData,
             relatedBlogsInitialData,
             slug: params!.slug!,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
         },
         revalidate: 10,
     }

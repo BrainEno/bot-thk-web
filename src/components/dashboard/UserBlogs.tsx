@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'next-i18next'
 
 import { GetUserBlogsQuery } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
@@ -19,6 +20,8 @@ interface UserBlogsProps {
     username: string
 }
 const UserBlogs: React.FC<UserBlogsProps> = ({ blogs, username }) => {
+    const { t, i18n } = useTranslation('dashboard')
+    const isZh = i18n.language === 'zh'
     const [current, setCurrent] = useState(1)
     const [selectedId, setSelectedId] = useState('')
     const [showModal, setShowModal] = useState(false)
@@ -54,20 +57,24 @@ const UserBlogs: React.FC<UserBlogsProps> = ({ blogs, username }) => {
             {showModal && (
                 <Modal
                     onClose={() => setShowModal(false)}
-                    title={`删除文章`}
+                    title={t('delete-post')}
                     closeOnClickOutside
                 >
-                    <p>确认要删除该文章吗？</p>
+                    <p>
+                        {isZh
+                            ? '确认要删除该文章吗？'
+                            : 'The Article will be completely deleted,are you sure?'}
+                    </p>
                     <div className="Modal__footer">
                         <button onClick={handleDeleteBlog(selectedId)}>
-                            确定
+                            {t('yes')}
                         </button>
                         <button
                             onClick={() => {
                                 setShowModal(false)
                             }}
                         >
-                            退出
+                            {t('no')}
                         </button>
                     </div>
                 </Modal>
@@ -80,11 +87,19 @@ const UserBlogs: React.FC<UserBlogsProps> = ({ blogs, username }) => {
                     <h2>{username}</h2>
                     {blogs && blogs?.length > 0 ? (
                         <h5 className="userInfo-text">
-                            在 BOT THK 一共发布了 {blogs.length} 篇文章
+                            {isZh
+                                ? `在 BOT THK 一共发布了 ${blogs.length} 篇文章`
+                                : `Has published ${blogs.length} ${
+                                      blogs.length === 1
+                                          ? 'article'
+                                          : 'articles'
+                                  } on BOT THK`}
                         </h5>
                     ) : (
                         <h5 className="userInfo-text">
-                            还没有在 BOT THK 发布过文章
+                            {isZh
+                                ? '还没有在 BOT THK 发布过文章'
+                                : 'Haven’t published any articles on BOT THK yet'}
                         </h5>
                     )}
                 </div>

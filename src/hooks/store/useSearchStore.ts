@@ -1,10 +1,10 @@
 import { produce } from 'immer'
+import localforage from 'localforage'
 import { create } from 'zustand'
-import { StateStorage, createJSONStorage, persist } from 'zustand/middleware'
+import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
 import { makeId } from '../../helpers/makeId'
-import localforage from 'localforage'
 
 export interface ISearchItem {
     id: string

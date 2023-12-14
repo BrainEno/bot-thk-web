@@ -1,5 +1,6 @@
-import html2canvas from 'html2canvas'
 import { useState } from 'react'
+import html2canvas from 'html2canvas'
+
 import { getErrorMsg } from '../helpers/getErrorMsg'
 
 export const useScreenshot = ({

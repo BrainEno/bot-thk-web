@@ -1,3 +1,5 @@
+import { useTranslation } from 'next-i18next'
+
 import { PopulatedTag } from '../../generated/graphql-request'
 
 const categoryColors: { [key: string]: string } = {
@@ -8,6 +10,7 @@ const categoryColors: { [key: string]: string } = {
 }
 
 const TagRow = ({ tags }: { tags: PopulatedTag[] }) => {
+    const { t, i18n } = useTranslation('common')
     return (
         <div className="tags-container">
             {tags.map((tag, ind) => (
@@ -16,9 +19,11 @@ const TagRow = ({ tags }: { tags: PopulatedTag[] }) => {
                     className="tag"
                     style={{
                         backgroundColor: categoryColors[tag.name],
+                        letterSpacing: i18n.language === 'zh' ? 1.2 : 1,
+                        textAlign: 'center',
                     }}
                 >
-                    {tag.name.toUpperCase()}
+                    {t(tag.slug).toUpperCase()}
                 </span>
             ))}
         </div>

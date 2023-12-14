@@ -16,6 +16,7 @@ import {
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
 import { useFollowInfo } from '../../hooks/query/useFollowInfo'
+
 import LikedBlogs from './LikedBlogs'
 
 const FollowInfoList = dynamic(
@@ -96,7 +97,7 @@ const UserDashboard = ({ user, router }: UserDashboardProps) => {
 
     return (
         <div className="user-dashboard">
-            <UserInfo user={user} setStatus={setStatus} />
+            <UserInfo user={user} status={status} setStatus={setStatus} />
             {status === 'SELF' && userBlogs && (
                 <UserBlogs blogs={userBlogs} username={user.name} />
             )}

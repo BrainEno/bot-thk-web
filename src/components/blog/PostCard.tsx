@@ -1,12 +1,14 @@
 import React, { memo, useMemo } from 'react'
 import classNames from 'classnames'
-import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
+
+import { PopulatedCardBlog } from '../../generated/graphql-request'
+import { getLocaleFormatedTime } from '../../helpers/date'
 
 import { TagRow } from './index'
 import { ImgUseFor } from './PostMasonry'
-import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 interface PostCardProps {
     post: Omit<PopulatedCardBlog, '_id' | 'author' | 'description'>
@@ -21,6 +23,7 @@ const PostCard: React.FC<PostCardProps> = ({
     imgFor,
     index,
 }) => {
+    const { i18n } = useTranslation('common')
     const IsExtraCls = imgFor && index !== undefined
     const extraClassName = useMemo(() => `${imgFor}_${index}`, [imgFor, index])
 
@@ -54,12 +57,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 <div>
                     <h2 className="image-title">{post.title}</h2>
                     <span className="image-date">
-                        {dayjs(
-                            post.createdAt,
-                            'MMM,DD,YYYY',
-                            'zh',
-                            true
-                        ).format('MMMM,DD,YYYY')}
+                        {getLocaleFormatedTime(post.createdAt, i18n.language)}
                     </span>
                 </div>
             </div>

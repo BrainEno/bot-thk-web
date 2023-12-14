@@ -11,6 +11,7 @@ import { IoMdArrowBack } from 'react-icons/io'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import { GetFollowInfoQuery } from '../../generated/graphql-request'
 import { useFollowMutation } from '../../hooks/mutation/useFollowMutation'
@@ -35,7 +36,7 @@ interface FollowInfoListProps {
     hideFollowInfo: () => void
 }
 
-export const DEFAULT_AVATAR = process.env.NEXT_PUBLIC_DEFULT_AVATAR as string
+export const DEFAULT_AVATAR = process.env.NEXT_PUBLIC_DEFAULT_AVATAR as string
 
 export const FollowInfo = ({
     user,
@@ -43,6 +44,7 @@ export const FollowInfo = ({
     setShowModal,
     setToUnFollow,
 }: FollowInfoProps) => {
+    const { t, i18n } = useTranslation('dashboard')
     const unFollowBtn = useRef<HTMLButtonElement>(null!)
     const unFollowHovered = useHover(unFollowBtn)
 
@@ -105,18 +107,21 @@ export const FollowInfo = ({
                     <button
                         className={classNames('unFollow-btn', {
                             hovered: unFollowHovered,
+                            en: i18n.language === 'en',
                         })}
                         ref={unFollowBtn}
                         onClick={() => handleUnFollowClick(user.name)}
                     >
-                        {unFollowHovered ? '取消关注' : '已关注'}
+                        {unFollowHovered ? t('unfollow') : t('following')}
                     </button>
                 ) : (
                     <button
                         onClick={() => follow(user.name)}
-                        className={'follow-btn'}
+                        className={classNames('follow-btn', {
+                            en: i18n.language === 'en',
+                        })}
                     >
-                        关注
+                        {t('follow')}
                     </button>
                 )}
             </div>
@@ -130,6 +135,8 @@ const FollowInfoList = ({
     followings,
     hideFollowInfo,
 }: FollowInfoListProps) => {
+    const { t, i18n } = useTranslation('dashboard')
+    const isZh = i18n.language === 'zh'
     const [showModal, setShowModal] = useState(false)
     const [toUnFollow, setToUnFollow] = useState('')
     const confirmUnFollow = useRef(false)
@@ -169,13 +176,17 @@ const FollowInfoList = ({
             {showModal && (
                 <Modal
                     onClose={() => setShowModal(false)}
-                    title={`取消关注`}
+                    title={t('unfollow')}
                     closeOnClickOutside
                 >
-                    <p>确定要取消关注用户 {toUnFollow} 吗？</p>
+                    <p>
+                        {isZh
+                            ? `确定要取消关注用户 ${toUnFollow} 吗？`
+                            : `Unfollow User ${toUnFollow}?`}
+                    </p>
                     <div className="Modal__footer">
-                        <button onClick={handleConfirm}>确定</button>
-                        <button onClick={handleCancel}>取消</button>
+                        <button onClick={handleConfirm}>{t('yes')}</button>
+                        <button onClick={handleCancel}>{t('no')}</button>
                     </div>
                 </Modal>
             )}
@@ -183,7 +194,7 @@ const FollowInfoList = ({
                 <div className="followInfo-back">
                     <button onClick={hideFollowInfo}>
                         <IoMdArrowBack size={32} />
-                        返回
+                        {t('my-blogs')}
                     </button>
                 </div>
             )}

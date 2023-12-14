@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
+import { PopulatedCardBlog } from '../../generated/graphql-request'
 import { Pagination } from '../common/Pagination'
 
 import PostWithInfo from './PostWithInfo'
-import { PopulatedCardBlog } from '../../generated/graphql-request'
 
 const pageSize = 9
 

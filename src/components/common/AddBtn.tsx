@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import styled from '@emotion/styled'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import themes from '../../styles/variables.module.scss'
 import { ThemeContext } from '../context/ThemeContext'
@@ -67,9 +68,15 @@ const BtnWrp = styled.div`
 const AddBtn: React.FC<AddBtnProps> = ({ href, size }) => {
     const { theme } = useContext(ThemeContext)
     const isDark = theme === 'dark'
+    const { t } = useTranslation('dashboard')
 
     return (
-        <BtnWrp className="add-btn" size={size} isDark={isDark} title="新建">
+        <BtnWrp
+            className="add-btn"
+            size={size}
+            isDark={isDark}
+            title={t('create')}
+        >
             <Link href={href}>+</Link>
         </BtnWrp>
     )

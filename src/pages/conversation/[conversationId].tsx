@@ -1,5 +1,7 @@
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ConversationContent } from '../../components/chat/ConversationContent'
 import ConversationList from '../../components/chat/ConversationList'
@@ -8,6 +10,7 @@ import ConversationModalProvider from '../../components/context/ModalContext'
 import { useMarkConversationAsReadMutation } from '../../hooks/mutation/useMarkConversationAsReadMutation'
 import { useConversationsQuery } from '../../hooks/query/useConversationsQuery'
 import { useConversationUpdated } from '../../hooks/subscriptions/useConversationUpdated'
+import { ServerSideTranslations } from '../../types'
 
 const Conversations = () => {
     const { data: session } = useSession()
@@ -65,3 +68,13 @@ const Conversations = () => {
 }
 
 export default Conversations
+
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
+    }
+}

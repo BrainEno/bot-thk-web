@@ -10,7 +10,6 @@ $text-light: #999999;
 $primary: #401f7c;
 $scroll-bar: #000000;
 
-
 $bg-light1: #eff3f8;
 $bg-light2: #ffffff;
 $font-light: $black;
@@ -20,8 +19,6 @@ $link-hover-light: #999999;
 $menu-btn-hover-light: #e5e5e5;
 $conversation-item-hovered-light: #e5e5e5;
 $conversation-item-selected-light: #e7f2ff;
-
-
 
 $bg-dark1: #2c2f33;
 $bg-dark2: #1f1f1f;
@@ -33,23 +30,26 @@ $conversation-item-hovered-dark: #2c2c2c;
 $conversation-item-selected-dark: #29272e;
 
 $themes: (
-  light: (background1: $bg-light1,
-    background2:$bg-light2,
-    headerBg:$white,
-    textColor: $font-light,
-    infoColor:$info-light,
-    linkColor:$link-light,
-    menuBtnHover:$menu-btn-hover-light,
-    conversationSelected:$conversation-item-selected-light,
-    conversationHovered:$conversation-item-hovered-light ),
-  dark: (background1: $bg-dark1,
-    background2:$bg-dark2,
-    headerBg:$black,
-    textColor: $font-dark,
-    infoColor:$info-dark,
-    linkColor:$link-dark,
-    menuBtnHover:$menu-btn-hover-dark,
-    conversationSelected:$conversation-item-selected-dark,
-    conversationHovered:$conversation-item-hovered-dark ),
-
+    light: (
+        background1: $bg-light1,
+        background2: $bg-light2,
+        headerBg: $white,
+        textColor: $font-light,
+        infoColor: $info-light,
+        linkColor: $link-light,
+        menuBtnHover: $menu-btn-hover-light,
+        conversationSelected: $conversation-item-selected-light,
+        conversationHovered: $conversation-item-hovered-light,
+    ),
+    dark: (
+        background1: $bg-dark1,
+        background2: $bg-dark2,
+        headerBg: $black,
+        textColor: $font-dark,
+        infoColor: $info-dark,
+        linkColor: $link-dark,
+        menuBtnHover: $menu-btn-hover-dark,
+        conversationSelected: $conversation-item-selected-dark,
+        conversationHovered: $conversation-item-hovered-dark,
+    ),
 );

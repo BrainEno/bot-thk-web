@@ -1,6 +1,10 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { NextRouter, withRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import PostInfo from '../../components/blog/PostWithInfo'
 import {
@@ -9,7 +13,7 @@ import {
 } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'
 import { fetcher } from '../../graphql/gqlClient'
-import { useMemo } from 'react'
+import { ServerSideTranslations } from '../../types'
 
 type BlogsProps = {
     router: NextRouter
@@ -27,6 +31,7 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
         initialData,
         select: (res) => res.listBlogsWithCatTag,
     })
+    const { t } = useTranslation('common')
 
     const titleText = `All Blogs | ${process.env.NEXT_PUBLIC_APP_NAME}`
     const head = () => (
@@ -73,7 +78,7 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
             {head()}
             <main className="allBlogs">
                 <section className="all-blogs-container">
-                    <h1>All Blogs</h1>
+                    <h1>{t('all-page')}</h1>
                     <div className="all-blog-cards">
                         <section className="post-grid">{postInfo}</section>
                     </div>
@@ -85,10 +90,15 @@ const Blogs = ({ router, initialData }: BlogsProps) => {
 
 export default withRouter(Blogs)
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
     const initialData = await sdk.ListBlogsWithCatTag()
 
     return {
-        props: { initialData },
+        props: {
+            initialData,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
     }
 }

@@ -1,14 +1,16 @@
 import React from 'react'
 import { FiDelete, FiEdit, FiSlash } from 'react-icons/fi'
 import { RxReader } from 'react-icons/rx'
-import dayjs from 'dayjs'
+import { useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 import { GetUserBlogsQuery } from '../../generated/graphql-request'
-import { RightSideStatus } from './UserDashboard'
+import { getLocaleFormatedTime } from '../../helpers/date'
 import { useToggleLikeMutation } from '../../hooks/mutation/useToggleLikeMutation'
-import { useQueryClient } from '@tanstack/react-query'
+
+import { RightSideStatus } from './UserDashboard'
 
 interface UserBlogCardProps {
     setSelectedId?: (id: string) => void
@@ -25,6 +27,8 @@ export const UserBlogCard = ({
     setShowModal,
     type,
 }: UserBlogCardProps) => {
+    const { t, i18n } = useTranslation('dashboard')
+    const { t: tc } = useTranslation('common')
     const router = useRouter()
     const toggleLikeMutation = useToggleLikeMutation()
     const queryClient = useQueryClient()
@@ -58,7 +62,8 @@ export const UserBlogCard = ({
                 <h5>{blog.title}</h5>
             </Link>
             <span className="desc-text">
-                By: {username} | {dayjs(blog.createdAt).format('MMM,DD-YYYY')}
+                {tc('By')}: {username} |{' '}
+                {getLocaleFormatedTime(blog.createdAt, i18n.language)}
             </span>
             <div>
                 <p>{(blog.description as string).replace(/<[^>]+>/g, '')}</p>
@@ -66,20 +71,23 @@ export const UserBlogCard = ({
 
             <div className="blog-icon-container">
                 {type === 'SELF' && (
-                    <FiEdit onClick={() => handleEdit(blog._id)} title="编辑" />
+                    <FiEdit
+                        onClick={() => handleEdit(blog._id)}
+                        title={t('edit')}
+                    />
                 )}
                 {type === 'SELF' ? (
                     <FiDelete
                         onClick={handleDeleteClick(blog._id)}
-                        title="删除"
+                        title={t('delete')}
                     />
                 ) : (
                     <FiSlash
-                        title="取消收藏"
+                        title={t('unsave')}
                         onClick={handleUnlike(blog._id)}
                     />
                 )}
-                <RxReader onClick={handleRead(blog.slug)} title="查看" />
+                <RxReader onClick={handleRead(blog.slug)} title={t('view')} />
             </div>
         </div>
     )

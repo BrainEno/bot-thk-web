@@ -1,5 +1,5 @@
 // Import the v2 api and rename it to cloudinary
-import { v2 as cloudinary, TransformationOptions } from 'cloudinary'
+import { TransformationOptions, v2 as cloudinary } from 'cloudinary'
 
 // Initialize the sdk with cloud_name, api_key and api_secret
 cloudinary.config({

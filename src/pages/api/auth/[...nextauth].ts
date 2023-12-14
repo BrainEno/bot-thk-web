@@ -136,9 +136,6 @@ export const authOptions: AuthOptions = {
         }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
-    pages: {
-        signIn: '/signin',
-    },
     callbacks: {
         jwt: async ({ token, user }: { token: JWT; user: User }) => {
             if (user) {

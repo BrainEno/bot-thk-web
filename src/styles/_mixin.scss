@@ -125,7 +125,8 @@ $breakpoints: (
     $dark-color: #88a5bf7a
 ) {
     & {
-        box-shadow: '-#{$x-offset}' '-#{$y-offset}' $blur $light-color,
+        box-shadow:
+            '-#{$x-offset}' '-#{$y-offset}' $blur $light-color,
             '#{$x-offset}' '#{$y-offset}' $blur $dark-color;
     }
 }

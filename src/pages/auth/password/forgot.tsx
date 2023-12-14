@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import classNames from 'classnames'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
+import { showAlert } from '../../../components/common/Alert'
 import MyBrand from '../../../components/common/MyBrand'
 import { sdk } from '../../../generated/sdk'
 import { getErrorMsg } from '../../../helpers/getErrorMsg'
+import { ServerSideTranslations } from '../../../types'
 
 const ForgotPassword = () => {
+    const { t, i18n } = useTranslation('account')
+    const isZh = i18n.language === 'zh'
+
     const [values, setValues] = useState({
         email: '',
         message: '',
@@ -31,7 +39,7 @@ const ForgotPassword = () => {
             setValues({
                 ...values,
                 message: '',
-                error: '邮箱地址不得为空，请重新输入',
+                error: t('Email Required'),
             })
         } else {
             setValues({ ...values, message: '', error: '' })
@@ -52,32 +60,6 @@ const ForgotPassword = () => {
         }
     }
 
-    const showError = () =>
-        error ? (
-            <div
-                className="error"
-                style={{ marginBottom: '16px', transform: 'easein 200ms' }}
-            >
-                {error}
-            </div>
-        ) : (
-            ''
-        )
-    const showMessage = () =>
-        message ? (
-            <div
-                style={{
-                    width: '70%',
-                    margin: '20px auto',
-                    wordBreak: 'break-all',
-                }}
-            >
-                <h3>{message}</h3>
-            </div>
-        ) : (
-            ''
-        )
-
     const passwordForgotForm = () => (
         <form onSubmit={handleSubmit} className="sign-form">
             <div className="form-group">
@@ -89,11 +71,11 @@ const ForgotPassword = () => {
                         isInvalid: error,
                     })}
                     value={email}
-                    placeholder="请输入账号邮箱"
+                    placeholder={t('Enter Email')}
                     required
                 />
             </div>
-            <button className="form-btn">发送验证链接</button>
+            <button className="form-btn">{t('Send Link')}</button>
         </form>
     )
 
@@ -104,10 +86,10 @@ const ForgotPassword = () => {
                     <MyBrand width={45} height={45} />
                 </div>
                 <h2 className="sign-title" style={{ margin: '50px auto' }}>
-                    忘记了密码？
+                    {isZh ? '忘记了密码？' : 'Fogot your password?'}
                 </h2>
-                {error && showError()}
-                {message && showMessage()}
+                {error && showAlert(error, 'error')}
+                {message && showAlert(message, 'warn')}
                 {showForm && passwordForgotForm()}
             </div>
         </div>
@@ -115,3 +97,16 @@ const ForgotPassword = () => {
 }
 
 export default ForgotPassword
+
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', [
+                'common',
+                'account',
+            ])),
+        },
+    }
+}

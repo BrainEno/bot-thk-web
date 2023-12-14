@@ -1,0 +1,20 @@
+{
+    "Loading": "Loading",
+    "Login": "Log In",
+    "Email": "Email",
+    "Password": "Password",
+    "here": "here",
+    "Forgot Password": "Forgot Password",
+    "Reset Password": "Reset Password",
+    "Username": "Username",
+    "Register": "Sign Up",
+    "Enter Username": "Enter Username",
+    "Enter Email": "Email address",
+    "Enter Password": "Password",
+    "Send Link": "Send Password Reset Email",
+    "Username Required": "Username is required",
+    "Email Required": "Email is required",
+    "Password Required": "Password is required",
+    "Auth Error": "The username or password you entered is incorrect, please try again.",
+    "Unkown Error": "Network error,please try again later."
+}

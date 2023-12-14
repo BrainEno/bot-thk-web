@@ -1,0 +1,22 @@
+{
+    "home": "Home",
+    "all": "All",
+    "novel": "Novel",
+    "poetry": "Poetry",
+    "original": "Original",
+    "else": "Else",
+    "login": "Log In",
+    "logout": "Log Out",
+    "dashboard": "Dashboard",
+    "featured": "Featured",
+    "recent-post": "Recent Post",
+    "trending": "Trending",
+    "all-page": "All Blogs",
+    "novel-page": "Novel Blogs",
+    "poetry-page": "Poetry Blogs",
+    "original-page": "Original Blogs",
+    "else-page": "Else Blogs",
+    "By": "By",
+    "Read More": "Read More",
+    "Related Blogs": "Related Blogs"
+}

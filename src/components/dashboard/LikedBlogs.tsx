@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'next-i18next'
+
 import { GetUserLikedBlogsQuery } from '../../generated/graphql-request'
-import { UserBlogCard } from './UserBlogCard'
-import { Pagination } from '../common/Pagination'
 import MyBrand from '../common/MyBrand'
+import { Pagination } from '../common/Pagination'
+
+import { UserBlogCard } from './UserBlogCard'
 
 interface LikedBlogsProps {
     blogs: GetUserLikedBlogsQuery['getUserLikedBlogs']
@@ -12,6 +15,8 @@ interface LikedBlogsProps {
 const PAGE_SIZE = 9
 
 const LikedBlogs = ({ blogs, username }: LikedBlogsProps) => {
+    const { i18n } = useTranslation('dashboard')
+    const isZh = i18n.language === 'zh'
     const [current, setCurrent] = useState(1)
 
     const paginatedBlogs = useMemo(() => {
@@ -31,10 +36,20 @@ const LikedBlogs = ({ blogs, username }: LikedBlogsProps) => {
                     <h2>{username}</h2>
                     {blogs && blogs?.length > 0 ? (
                         <h5 className="userInfo-text">
-                            您一共收藏了 {blogs.length} 篇文章
+                            {isZh
+                                ? `您一共收藏了 ${blogs.length} 篇文章`
+                                : `You have saved ${blogs.length} ${
+                                      blogs.length === 1
+                                          ? 'article'
+                                          : 'articles'
+                                  }`}
                         </h5>
                     ) : (
-                        <h5 className="userInfo-text">还没有收藏文章</h5>
+                        <h5 className="userInfo-text">
+                            {isZh
+                                ? '还没有收藏文章'
+                                : `You haven't saved any articles yet`}
+                        </h5>
                     )}
                 </div>
             </div>

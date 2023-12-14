@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { showAlert } from '../../components/common/Alert'
 import Avatar from '../../components/common/Avatar'
@@ -30,6 +31,7 @@ import { fetcher } from '../../graphql/gqlClient'
 import { useAuthStore } from '../../hooks/store/useAuthStore'
 import { useStartConversation } from '../../hooks/useStartConversation'
 import useWindowSize from '../../hooks/useWindowSize'
+import { ServerSideTranslations } from '../../types'
 
 const pageSize = 6
 
@@ -252,10 +254,15 @@ const UserProfile: React.FC<IUserProfileProps> = ({ query }) => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-    query,
-}: GetServerSidePropsContext) => {
-    return { props: { query } }
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ query, locale }: GetServerSidePropsContext) => {
+    return {
+        props: {
+            query,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
+    }
 }
 
 export default UserProfile

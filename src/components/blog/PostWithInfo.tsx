@@ -1,16 +1,20 @@
 import React, { memo } from 'react'
-import dayjs from 'dayjs'
+import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { TagRow } from './index'
 import { PopulatedCardBlog } from '../../generated/graphql-request'
+import { getLocaleFormatedTime } from '../../helpers/date'
+
+import { TagRow } from './index'
 
 interface IPostCardProps {
     post: PopulatedCardBlog
 }
 
 const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
+    const { t, i18n } = useTranslation('common')
+
     return (
         <div className="post-container" id={post._id}>
             <Link
@@ -32,6 +36,7 @@ const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
                         loading="lazy"
                         className="post-img"
                         quality={70}
+                        crossOrigin="anonymous"
                     />
                 </div>
             </Link>
@@ -39,18 +44,13 @@ const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
             <section>
                 <p className="post-title">{post.title}</p>
                 <div className="author-text">
-                    <span> By: </span>
-                    <Link href={post.author.profile!}>
-                        {' ' + post.author.name + '  '}
+                    <span style={{ marginRight: 3.5 }}>{`${t('By')}:`}</span>
+                    <Link href={`/profile/${post.author.username}`}>
+                        {post.author.name}
                     </Link>
                     <span>
                         {' - '}
-                        {dayjs(
-                            post.createdAt,
-                            'MMM,DD,YYYY',
-                            'zh',
-                            true
-                        ).format('MMMM,DD,YYYY')}
+                        {getLocaleFormatedTime(post.createdAt, i18n.language)}
                     </span>
                 </div>
                 <div className="description-text">
@@ -64,7 +64,7 @@ const PostWithInfo: React.FC<IPostCardProps> = ({ post }) => {
                         query: { slug: post.slug },
                     }}
                 >
-                    Read More...
+                    {`${t('Read More')}...`}
                 </Link>
             </p>
         </div>

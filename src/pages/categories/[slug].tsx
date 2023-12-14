@@ -1,9 +1,12 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { PostMasonry } from '../../components/blog'
-import { sdk } from '../../generated/sdk'
+import { PostGrid } from '../../components/blog'
 import { PopulatedCardBlog } from '../../generated/graphql-request'
+import { sdk } from '../../generated/sdk'
+import { ServerSideTranslations } from '../../types'
 
 interface ICategoryProps {
     catName: string
@@ -11,6 +14,7 @@ interface ICategoryProps {
     catSlug: string
 }
 const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
+    const { t } = useTranslation('common')
     const titleText = `${catName} | ${process.env.NEXT_PUBLIC_APP_NAME}`
 
     const head = () => (
@@ -51,22 +55,21 @@ const Category: React.FC<ICategoryProps> = ({ catName, catBlogs, catSlug }) => {
     return (
         <>
             {catName && head()}
-            <main className="category-blogs">
-                <section className="category-blogs-container">
-                    <h1>{catName}</h1>
-                    <PostMasonry
-                        imgFor="default"
-                        posts={catBlogs}
-                        columns={3}
-                        tagsOnTop={true}
-                    />
+            <main className="tagBlogs">
+                <section className="tagBlogs-container">
+                    <h1>{t(catSlug)}</h1>
+                    <div className="tag-blog-cards">
+                        <PostGrid posts={catBlogs} />
+                    </div>
                 </section>
             </main>
         </>
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ params, locale }) => {
     const catSlug = params!.slug as string
     // eslint-disable-next-line no-useless-escape
     const matchFirst = /(?<=[\.!?]\s)([a-z])|^([a-z])/g
@@ -79,7 +82,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     })
 
     return {
-        props: { catBlogs, catName, catSlug },
+        props: {
+            catBlogs,
+            catName,
+            catSlug,
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
     }
 }
 

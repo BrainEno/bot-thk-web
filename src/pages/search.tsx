@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { showAlert } from '../components/common/Alert'
 import { DEFAULT_AVATAR } from '../components/dashboard/FollowInfoList'
@@ -23,6 +25,7 @@ import { useAuthStore } from '../hooks/store/useAuthStore'
 import { useSearchStore } from '../hooks/store/useSearchStore'
 import { useClient } from '../hooks/useClient'
 import useScrollDirection from '../hooks/useScrollDirection'
+import { ServerSideTranslations } from '../types'
 
 const BlogCard = dynamic(
     import('../components/search/BlogCard').then((mod) => mod.default),
@@ -161,3 +164,13 @@ const SearchResult = () => {
 }
 
 export default SearchResult
+
+export const getServerSideProps: GetServerSideProps<
+    ServerSideTranslations
+> = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
+    }
+}

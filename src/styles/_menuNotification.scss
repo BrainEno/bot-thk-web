@@ -1,249 +1,262 @@
-    .menu-notification {
+.theme-dark .menu-notification .notifications {
+    border: 1px solid #c9c9c962;
+}
+
+.menu-notification {
+    position: relative;
+
+    .notification-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+        padding-top: 1px;
+        margin-left: 0px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transform-origin: center;
+        transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
         position: relative;
 
-        .notification-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 36px;
-            width: 36px;
-            border-radius: 50%;
-            padding-top: 1px;
-            margin-left: 0px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            transform-origin: center;
-            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-            position: relative;
+        & svg {
+            color: #999999;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        }
 
-            & svg {
-                color: #999999;
-                transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-            }
+        &:hover,
+        &.clicked {
+            background-color: $menu-btn-hover-light;
+        }
 
+        &.clicked svg {
+            color: $black;
+        }
+
+        @include themify($themes) {
             &:hover,
             &.clicked {
-                background-color: $menu-btn-hover-light;
-
+                background-color: themed('menuBtnHover');
             }
 
             &.clicked svg {
-                color: $black;
-            }
-
-            @include themify($themes) {
-
-                &:hover,
-                &.clicked {
-                    background-color: themed('menuBtnHover');
-                }
-
-                &.clicked svg {
-                    color: themed('textColor');
-                }
-            }
-
-            & .new {
-                border-radius: 50%;
-                background-color: $link-actived;
-                width: 5px;
-                height: 5px;
-                position: absolute;
-                right: 4px;
-                top: 6px;
+                color: themed('textColor');
             }
         }
 
-        .notifications {
-            padding: 6px 16px;
-            transform-origin: top center;
-            transition: opacity 345ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 230ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        & .new {
+            border-radius: 50%;
+            background-color: $link-actived;
+            width: 5px;
+            height: 5px;
             position: absolute;
-            top: 50px;
-            left: -157px;
-            background: $white;
-            border-radius: 8px;
-            height: max-content;
-            max-height: 360px;
-            width: 318px;
-            overflow-y: scroll;
-            z-index: 5;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 1px 0 rgba(0, 0, 0, .02);
+            right: 4px;
+            top: 6px;
+        }
+    }
 
-            @include themify($themes) {
-                background-color: themed('background2');
+    .notifications {
+        padding: 6px 16px;
+        transform-origin: top center;
+        transition:
+            opacity 345ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+            transform 230ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        position: absolute;
+        top: 50px;
+        left: -157px;
+        background: $white;
+        border-radius: 8px;
+        height: max-content;
+        max-height: 360px;
+        width: 318px;
+        overflow-y: scroll;
+        z-index: 5;
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 1px 0 rgba(0, 0, 0, 0.02);
 
-                & .checkAll {
-                    color: themed('infoColor');
-                }
-
-            }
+        @include themify($themes) {
+            background-color: themed('background2');
 
             & .checkAll {
+                color: themed('infoColor');
+            }
+        }
+
+        & .checkAll {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 14px;
+            border-bottom: 1px solid $menu-btn-hover-light;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            color: #474747;
+
+            @include themify($themes) {
+                border-bottom: 1px solid themed('menuBtnHover');
+            }
+
+            & > button {
+                border: none;
+                color: #fefefe;
+                padding: 4px 10px;
+                font-size: 12px;
+                border-radius: 3px;
+                letter-spacing: 1px;
+                background-color: $link-actived;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                margin-right: -3px;
+
+                @include themify($themes) {
+                    color: themed('background1');
+                }
+
+                &:hover {
+                    color: $white;
+                    background-color: #2897ff;
+                }
+            }
+        }
+
+        & .notification-container {
+            padding: 6px 16px;
+            border-bottom: 0.5px solid #c9c9c9;
+            margin-bottom: -1px;
+            font-size: 14px;
+            letter-spacing: 0.8px;
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+
+            .notification-label {
+                margin-bottom: 3px;
+                font-size: 12px;
+                font-weight: 500;
+                color: $link-hover-light;
+                display: flex;
+                height: 24px;
+                justify-content: space-between;
+                align-items: center;
+                flex-direction: row;
+                letter-spacing: 0.2px;
+
+                @include themify($themes) {
+                    color: themed('linkHover');
+                }
+
+                & p:first-child {
+                    margin-right: 12px;
+                }
+            }
+
+            .notification-message {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    'Segoe UI',
+                    Roboto,
+                    Oxygen,
+                    Ubuntu,
+                    Cantarell,
+                    'Open Sans',
+                    'Helvetica Neue',
+                    sans-serif;
+                font-size: 15px;
+                font-weight: 500;
+                color: $info-light;
+                margin-bottom: 8px;
+                cursor: default;
+                position: relative;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
-                align-items: center;
-                padding: 15px 14px;
-                border-bottom: 1px solid $menu-btn-hover-light;
-                font-size: 15px;
-                font-weight: 600;
-                letter-spacing: 0.4px;
-                color: #474747;
-
 
                 @include themify($themes) {
-                    border-bottom: 1px solid themed('menuBtnHover');
+                    color: themed('infoColor');
                 }
 
-                &>button {
-                    border: none;
-                    color: #fefefe;
-                    padding: 4px 10px;
-                    font-size: 12px;
+                .checkNew {
+                    width: 20px;
+                    height: 20px;
                     border-radius: 3px;
-                    letter-spacing: 1px;
                     background-color: $link-actived;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
-                    margin-right: -3px;
-
-                    @include themify($themes) {
-                        color: themed('background1');
-                    }
-
-                    &:hover {
-                        color: $white;
-                        background-color: #2897ff;
-                    }
-                }
-            }
-
-
-            & .notification-container {
-                padding: 6px 16px;
-                border-bottom: 0.5px solid #c9c9c9;
-                margin-bottom: -1px;
-                font-size: 14px;
-                letter-spacing: 0.8px;
-
-                &:last-of-type {
-                    border-bottom: none;
                 }
 
-                .notification-label {
-                    margin-bottom: 3px;
-                    font-size: 12px;
-                    font-weight: 500;
+                & .new {
+                    border-radius: 50%;
+                    background-color: $link-actived;
+                    width: 5px;
+                    height: 5px;
+                    position: absolute;
+                    left: -1px;
+                    top: 10px;
+                }
+
+                & span {
+                    margin-left: 12px;
                     color: $link-hover-light;
-                    display: flex;
-                    height: 24px;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-direction: row;
-                    letter-spacing: 0.2px;
 
                     @include themify($themes) {
                         color: themed('linkHover');
                     }
-
-                    & p:first-child {
-                        margin-right: 12px;
-                    }
                 }
 
-                .notification-message {
-                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                    font-size: 15px;
+                & span a {
+                    color: #474747;
                     font-weight: 500;
-                    color: $info-light;
-                    margin-bottom: 8px;
-                    cursor: default;
-                    position: relative;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
 
                     @include themify($themes) {
                         color: themed('infoColor');
                     }
 
-                    .checkNew {
-                        width: 20px;
-                        height: 20px;
-                        border-radius: 3px;
-                        background-color: $link-actived;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        cursor: pointer;
-                    }
-
-                    & .new {
-                        border-radius: 50%;
-                        background-color: $link-actived;
-                        width: 5px;
-                        height: 5px;
-                        position: absolute;
-                        left: -1px;
-                        top: 10px;
-                    }
-
-                    & span {
-                        margin-left: 12px;
-                        color: $link-hover-light;
-
-                        @include themify($themes) {
-                            color: themed('linkHover');
-                        }
-                    }
-
-
-                    & span a {
-                        color: #474747;
-                        font-weight: 500;
-
-                        @include themify($themes) {
-                            color: themed('infoColor');
-                        }
-
-                        &:hover {
-                            color: $link-actived;
-                            font-weight: 600;
-                        }
+                    &:hover {
+                        color: $link-actived;
+                        font-weight: 600;
                     }
                 }
             }
         }
     }
+}
 
-    @media screen and (max-width:900px) {
-        .menu-notification {
+@media screen and (max-width: 900px) {
+    .menu-notification {
+        position: fixed;
+        top: 15px;
+        right: 50px;
+        margin: 0;
+        z-index: 4;
+        background-color: transparent;
+
+        & .notification-btn {
+            & svg {
+                color: #444;
+            }
+        }
+
+        .notifications {
             position: fixed;
-            top: 15px;
-            right: 50px;
-            margin: 0;
-            z-index: 4;
-            background-color: transparent;
-
-            & .notification-btn {
-                & svg {
-                    color: #444;
-                }
-            }
-
-            .notifications {
-                position: fixed;
-                padding: 10px 0;
-                width: 100%;
-                transform-origin: top center;
-                left: 0;
-                top: 60px;
-                border: none;
-            }
+            padding: 10px 0;
+            width: 100%;
+            transform-origin: top center;
+            left: 0;
+            top: 60px;
+            border: none;
         }
     }
+}

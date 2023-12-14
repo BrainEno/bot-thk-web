@@ -1,524 +1,501 @@
 .theme-dark .blog-form-container {
-  .blog-form {
+    .blog-form {
+        .form-btn,
+        .icon-btn {
+            box-shadow:
+                2px 2px 2px #121212,
+                -2px -2px 3px #303030;
 
-    .form-btn,
-    .icon-btn {
-      box-shadow: 2px 2px 2px #121212, -2px -2px 3px #303030;
-
-      &:hover {
-        box-shadow: inset 2px 2px 2px #121212, inset -2px -2px 3px #303030;
-      }
+            &:hover {
+                box-shadow:
+                    inset 2px 2px 2px #121212,
+                    inset -2px -2px 3px #303030;
+            }
+        }
     }
 
-  }
-
-  .ql-toolbar.ql-snow {
-
-    & svg .ql-fill,
-    & .ql-picker,
-    & .ql-stroke {
-      color: $font-dark;
-      stroke: $font-dark;
+    .ql-toolbar.ql-snow {
+        & svg .ql-fill,
+        & .ql-picker,
+        & .ql-stroke {
+            color: $font-dark;
+            stroke: $font-dark;
+        }
     }
-  }
 }
 
-
 .blog-form-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  position: fixed;
-  height: calc(100vh - 160px);
-  top: 150px;
-  overflow-y: scroll;
-
-  @include themify($themes) {
-    color: themed('textColor');
-
-    .blog-form {
-
-      .form-btn {
-        background-color: themed('background2');
-        color: themed('textColor');
-      }
-
-      .icon-btn {
-        background-color: themed('background2');
-        color: themed('textColor');
-
-        & svg path {
-          fill: themed('textColor');
-        }
-      }
-    }
-  }
-
-
-  .blog-form {
-    width: 60%;
-    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 15px;
-    position: relative;
+    justify-content: flex-start;
+    align-items: center;
+    position: fixed;
+    height: calc(100vh - 160px);
+    top: 150px;
+    overflow-y: scroll;
 
+    @include themify($themes) {
+        color: themed('textColor');
 
+        .blog-form {
+            .form-btn {
+                background-color: themed('background2');
+                color: themed('textColor');
+            }
 
-    .form-btn,
-    .icon-btn {
-      cursor: pointer;
-      background-color: $white;
-      border: none;
-      margin-left: 12px;
-      border-radius: 3px;
-      box-shadow: -2px -2px 2px #eff3f8, 2px 2px 3px rgba(136, 165, 191, 0.48);
+            .icon-btn {
+                background-color: themed('background2');
+                color: themed('textColor');
 
-      &:hover {
-        box-shadow: inset -2px -2px 3px #e9eef5, inset 2px 2px 3px rgba(136, 165, 191, 0.48);
-      }
+                & svg path {
+                    fill: themed('textColor');
+                }
+            }
+        }
     }
 
-
-    .blog-form-bottom {
-      padding: 8px 0;
-      padding-left: 20px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      background-color: $white;
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
-      position: sticky;
-      transform: translateY(1px);
-      bottom: 0;
-      left: 0;
-      right: 0;
-
-      @include themify($themes) {
-        background-color: themed('background2');
-        color: themed('textColor');
-      }
-
-
-      & .switch-group {
+    .blog-form {
+        width: 60%;
+        height: 100%;
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-        & svg {
-          margin-right: 10px;
-
-          @include themify($themes) {
-            color: themed('textColor');
-
-            &.unpublic {
-              color: themed('infoColor');
-            }
-          }
-        }
-      }
-
-      .tags-form {
+        flex-direction: column;
+        border-radius: 15px;
         position: relative;
-        width: 74%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
 
+        .form-btn,
         .icon-btn {
-          position: absolute;
-          left: 0px;
+            cursor: pointer;
+            background-color: $white;
+            border: none;
+            margin-left: 12px;
+            border-radius: 3px;
+            box-shadow:
+                -2px -2px 2px #eff3f8,
+                2px 2px 3px rgba(136, 165, 191, 0.48);
+
+            &:hover {
+                box-shadow:
+                    inset -2px -2px 3px #e9eef5,
+                    inset 2px 2px 3px rgba(136, 165, 191, 0.48);
+            }
         }
 
-        .tag-list-container {
-          position: absolute;
-          left: 50px;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-
-
-          .tag-list {
-            display: flex;
-            flex-direction: row;
-
-
-
-            .chip {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border: 1.5px solid #c6cad0;
-              border-radius: 20px;
-              height: 30px;
-              padding: 6px 8px;
-              margin-left: 8px;
-              cursor: pointer;
-
-              &.selected {
-                border: 1.5px solid #0066cc;
-              }
-            }
-          }
-
-
-          .tag-input {
-            width: 80px;
-            height: 20px;
-            display: flex;
-            flex-direction: row;
-            border: 1px solid #c6cad0;
+        .blog-form-bottom {
+            padding: 8px 0;
+            padding-left: 20px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            border-radius: 5px;
-            padding: 6px 8px;
+            background-color: $white;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            position: sticky;
+            transform: translateY(1px);
+            bottom: 0;
+            left: 0;
+            right: 0;
 
-            & input {
-              width: 80%;
-              border: none;
-              outline: none;
-              flex: 1;
+            @include themify($themes) {
+                background-color: themed('background2');
+                color: themed('textColor');
             }
 
-            .tag-input-btn {
-              display: none;
-              border: none;
-              height: 100%;
-              background-color: transparent;
+            & .switch-group {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
 
-              &.show {
-                display: block;
-                cursor: pointer;
-              }
-            }
-          }
-        }
+                & svg {
+                    margin-right: 10px;
 
-        .tag-add-btn {
-          width: 20px;
-          height: 20px;
-          padding: 0;
-          display: block;
-          border-radius: 50%;
-          border: 1px solid #c6cad0;
-          margin-left: 10px;
-          margin-right: 10px;
-          cursor: pointer;
-        }
+                    @include themify($themes) {
+                        color: themed('textColor');
 
-      }
-
-      .icon-btn {
-        box-shadow: none;
-        border: none;
-        background-color: transparent;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        & svg {
-          width: 30px;
-          height: 20px;
-        }
-      }
-
-      .form-btns {
-        padding: 10px 0;
-
-        .form-btn {
-          width: 70px;
-          padding: 8px 12px;
-          font-weight: 600;
-          letter-spacing: 1px;
-          margin-left: -5px;
-          margin-right: 20px;
-
-          &:hover {
-            color: #0066cc;
-          }
-        }
-      }
-    }
-
-
-    .title-container {
-      padding: 30px 12px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: $white;
-      border: none;
-      border-bottom: solid 2.5px #eff3f8;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      z-index: 2;
-      position: sticky;
-      top: 0;
-      left: 0;
-      right: 0;
-
-      @include themify($themes) {
-        background-color: themed('background2');
-        color: themed('textColor');
-      }
-
-
-      .separator {
-        display: flex;
-        align-items: center;
-        line-height: 1.2em;
-        padding-bottom: 8px;
-        height: 100%;
-        font-size: 24px;
-        font-weight: 500;
-        color: #b7c2cf;
-        margin-right: 16px;
-      }
-
-      .title-form {
-        width: calc(100% - 25px);
-        padding-left: 25px;
-        height: 40px;
-        border: none;
-        font-size: 17px;
-        outline: none;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-
-
-        @include themify($themes) {
-          background-color: themed('background2');
-          color: themed('textColor');
-
-          &::placeholder {
-            color: themed('infoColor');
-          }
-        }
-      }
-
-      .blog-form-icons {
-        display: flex;
-        flex-direction: row;
-        padding-right: 10px;
-
-        .icon-btn {
-          width: 30px;
-          height: 30px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          &:hover {
-            color: #0066cc;
-
-            & svg path {
-              stroke: #0066cc;
+                        &.unpublic {
+                            color: themed('infoColor');
+                        }
+                    }
+                }
             }
 
+            .tags-form {
+                position: relative;
+                width: 74%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
 
-          }
+                .icon-btn {
+                    position: absolute;
+                    left: 0px;
+                }
+
+                .tag-list-container {
+                    position: absolute;
+                    left: 50px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+
+                    .tag-list {
+                        display: flex;
+                        flex-direction: row;
+
+                        .chip {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: 1.5px solid #c6cad0;
+                            border-radius: 20px;
+                            height: 30px;
+                            padding: 6px 8px;
+                            margin-left: 8px;
+                            cursor: pointer;
+
+                            &.selected {
+                                border: 1.5px solid #0066cc;
+                            }
+                        }
+                    }
+
+                    .tag-input {
+                        width: 80px;
+                        height: 20px;
+                        display: flex;
+                        flex-direction: row;
+                        border: 1px solid #c6cad0;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-radius: 5px;
+                        padding: 6px 8px;
+
+                        & input {
+                            width: 80%;
+                            border: none;
+                            outline: none;
+                            flex: 1;
+                        }
+
+                        .tag-input-btn {
+                            display: none;
+                            border: none;
+                            height: 100%;
+                            background-color: transparent;
+
+                            &.show {
+                                display: block;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+
+                .tag-add-btn {
+                    width: 20px;
+                    height: 20px;
+                    padding: 0;
+                    display: block;
+                    border-radius: 50%;
+                    border: 1px solid #c6cad0;
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+            }
+
+            .icon-btn {
+                box-shadow: none;
+                border: none;
+                background-color: transparent;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                & svg {
+                    width: 30px;
+                    height: 20px;
+                }
+            }
+
+            .form-btns {
+                padding: 10px 0;
+
+                .form-btn {
+                    width: 70px;
+                    padding: 8px 12px;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    margin-left: -5px;
+                    margin-right: 20px;
+
+                    &:hover {
+                        color: #0066cc;
+                    }
+                }
+            }
         }
-      }
+
+        .title-container {
+            padding: 30px 12px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: $white;
+            border: none;
+            border-bottom: solid 2.5px #eff3f8;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            z-index: 2;
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+
+            @include themify($themes) {
+                background-color: themed('background2');
+                color: themed('textColor');
+            }
+
+            .separator {
+                display: flex;
+                align-items: center;
+                line-height: 1.2em;
+                padding-bottom: 8px;
+                height: 100%;
+                font-size: 24px;
+                font-weight: 500;
+                color: #b7c2cf;
+                margin-right: 16px;
+            }
+
+            .title-form {
+                width: calc(100% - 25px);
+                padding-left: 25px;
+                height: 40px;
+                border: none;
+                font-size: 17px;
+                outline: none;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+
+                @include themify($themes) {
+                    background-color: themed('background2');
+                    color: themed('textColor');
+
+                    &::placeholder {
+                        color: themed('infoColor');
+                    }
+                }
+            }
+
+            .blog-form-icons {
+                display: flex;
+                flex-direction: row;
+                padding-right: 10px;
+
+                .icon-btn {
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    &:hover {
+                        color: #0066cc;
+
+                        & svg path {
+                            stroke: #0066cc;
+                        }
+                    }
+                }
+            }
+        }
+
+        .body-container {
+            max-height: max-content;
+
+            @include themify($themes) {
+                .ql-toolbar.ql-snow,
+                .ql-container.ql-snow,
+                .ql-editor {
+                    background-color: themed('background2');
+                    color: themed('textColor');
+                }
+
+                & .ql-editor.ql-blank::before {
+                    color: themed('infoColor');
+                }
+            }
+
+            & .banner-container {
+                position: sticky;
+            }
+
+            .ql-toolbar.ql-snow {
+                border: none !important;
+                background-color: $white;
+                position: sticky;
+                top: 0;
+                left: 0;
+                right: 0;
+            }
+
+            .ql-container.ql-snow {
+                border: none !important;
+                background-color: $white;
+            }
+
+            .ql-editor {
+                border: none !important;
+                background-color: $white;
+                font-size: 16px;
+                letter-spacing: 1px;
+                height: 900px;
+                padding-bottom: 200px;
+            }
+        }
     }
-
-    .body-container {
-      max-height: max-content;
-
-      @include themify($themes) {
-
-        .ql-toolbar.ql-snow,
-        .ql-container.ql-snow,
-        .ql-editor {
-          background-color: themed('background2');
-          color: themed('textColor');
-        }
-
-
-
-        & .ql-editor.ql-blank::before {
-          color: themed('infoColor');
-        }
-      }
-
-      & .banner-container {
-        position: sticky;
-      }
-
-      .ql-toolbar.ql-snow {
-        border: none !important;
-        background-color: $white;
-        position: sticky;
-        top: 0;
-        left: 0;
-        right: 0;
-      }
-
-      .ql-container.ql-snow {
-        border: none !important;
-        background-color: $white;
-      }
-
-      .ql-editor {
-        border: none !important;
-        background-color: $white;
-        font-size: 16px;
-        letter-spacing: 1px;
-        height: 900px;
-        padding-bottom: 200px;
-      }
-    }
-
-  }
-
 }
 
 .theme-dark .blog-form-container .blog-form .title-container {
-  border-bottom: solid 1px #444;
+    border-bottom: solid 1px #444;
 }
 
 @media screen and (max-width: 900px) {
-  .blog-form-container {
-    width: 100%;
-    padding: 0;
-    top: 70px;
-    height: 100vh;
-    padding: 20px 0;
-    justify-content: center;
-    align-items: center;
+    .blog-form-container {
+        width: 100%;
+        padding: 0;
+        top: 70px;
+        height: calc(100vh - 70px);
+        padding: 30px 0 60px;
+        justify-content: center;
+        align-items: center;
 
-
-
-    .blog-form {
-      margin: 0;
-      padding: 0;
-      width: 320px;
-      height: 100%;
-      box-shadow: none;
-
-      .title-container {
-        padding: 4px;
-
-        .title-form {
-          padding-left: 12px;
-          font-size: 16px;
-        }
-      }
-
-      .body-container {
-        .ql-toolbar.ql-snow {
-          display: none;
-        }
-
-        .ql-editor {
-          font-size: 14px;
-          letter-spacing: 1px;
-          height: 45vh;
-        }
-
-        &.without-img {
-          .ql-editor {
-            font-size: 14px;
-            letter-spacing: 1px;
-            height: 72vh;
-          }
-        }
-      }
-
-      .blog-form-bottom {
-
-        .tags-form {
-          width: 75px;
-
-          .icon-btn {
-            left: 0;
-            margin: 0 8px;
-          }
-
-          .tag-add-btn {
-            display: none;
-          }
-
-          .tag-list-container {
-            display: flex;
-            background: #1e1e1e;
-            justify-content: center;
-            align-items: center;
-            width: 100px;
-            left: 35px;
-            bottom: 0;
-            padding: 0;
+        .blog-form {
             margin: 0;
-
-            .tag-list {
-              justify-content: center;
-              align-items: center;
-              flex-direction: column;
-              margin: 0;
-              padding: 0;
-              width: 100%;
-
-              .chip {
-                display: flex;
-                flex-direction: row;
-                justify-content: flex-start;
-                align-items: center;
-                margin: 6px 0;
-                width: calc(100% - 12px);
-                border: none;
-                border-radius: 0;
-                height: 20px;
-                padding: 5px 6px;
-                font-size: 12px;
-                color: #c1c1c1;
-                text-transform: uppercase;
-
-                & svg {
-                  margin-right: 4px;
-                }
-
-                &.selected {
-                  border: none;
-                  background: #252525;
-                  color: $white;
-                }
-              }
-            }
-          }
-        }
-
-        .form-btns {
-          display: flex;
-
-          .form-btn {
-            width: 30px;
-            height: 30px;
             padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 320px;
+            height: 100%;
+            box-shadow: none;
 
-            & svg {
-              @include themify($themes) {
-                color: themed('textColor');
-              }
+            .title-container {
+                padding: 4px;
+
+                .title-form {
+                    padding-left: 12px;
+                    font-size: 16px;
+                }
             }
-          }
+
+            .body-container {
+                .ql-toolbar.ql-snow {
+                    display: none;
+                }
+
+                .ql-editor {
+                    font-size: 14px;
+                    letter-spacing: 1px;
+                    height: 45vh;
+                }
+
+                &.without-img {
+                    .ql-editor {
+                        font-size: 14px;
+                        letter-spacing: 1px;
+                        height: 72vh;
+                    }
+                }
+            }
+
+            .blog-form-bottom {
+                .tags-form {
+                    width: 75px;
+
+                    .icon-btn {
+                        left: 0;
+                        margin: 0 8px;
+                    }
+
+                    .tag-add-btn {
+                        display: none;
+                    }
+
+                    .tag-list-container {
+                        display: flex;
+                        background: #1e1e1e;
+                        justify-content: center;
+                        align-items: center;
+                        width: 100px;
+                        left: 35px;
+                        bottom: 0;
+                        padding: 0;
+                        margin: 0;
+
+                        .tag-list {
+                            justify-content: center;
+                            align-items: center;
+                            flex-direction: column;
+                            margin: 0;
+                            padding: 0;
+                            width: 100%;
+
+                            .chip {
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: flex-start;
+                                align-items: center;
+                                margin: 6px 0;
+                                width: calc(100% - 12px);
+                                border: none;
+                                border-radius: 0;
+                                height: 20px;
+                                padding: 5px 6px;
+                                font-size: 12px;
+                                color: #c1c1c1;
+                                text-transform: uppercase;
+
+                                & svg {
+                                    margin-right: 4px;
+                                }
+
+                                &.selected {
+                                    border: none;
+                                    background: #252525;
+                                    color: $white;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .form-btns {
+                    display: flex;
+
+                    .form-btn {
+                        width: 30px;
+                        height: 30px;
+                        padding: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        & svg {
+                            @include themify($themes) {
+                                color: themed('textColor');
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-
-
-
-  }
 }

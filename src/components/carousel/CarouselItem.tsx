@@ -1,6 +1,8 @@
 import { memo, useMemo, useState } from 'react'
+import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import { ICarouselItem } from '../../types'
 
@@ -25,6 +27,7 @@ const CarouselItem: React.FC<ICarouselItemProps> = ({
     next,
 }) => {
     const [titleShow, setTitleShow] = useState(false)
+    const { t, i18n } = useTranslation('common')
 
     const onLoaded = () => {
         setTitleShow(true)
@@ -46,14 +49,19 @@ const CarouselItem: React.FC<ICarouselItemProps> = ({
             }),
         }
     }, [direction])
+
     return (
         <AnimatePresence initial={false} custom={direction}>
             <div className="carousel-item">
                 <Link href={item.link} passHref>
                     {titleShow && (
-                        <div className="carousel-title">
-                            <h1>{item.title}</h1>
-                            <h1>{item.title}</h1>
+                        <div
+                            className={classNames('carousel-title', {
+                                zh: i18n.language === 'zh',
+                            })}
+                        >
+                            <h1>{t(item.slug)}</h1>
+                            <h1>{t(item.slug)}</h1>
                         </div>
                     )}
                 </Link>

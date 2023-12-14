@@ -1,8 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
 import React, { memo, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'next-i18next'
+
 import {
-    GetRelatedBlogsQuery,
     GetRelatedBlogsDocument,
+    GetRelatedBlogsQuery,
     GetRelatedBlogsQueryVariables,
 } from '../../generated/graphql-request'
 import { fetcher } from '../../graphql/gqlClient'
@@ -23,6 +25,7 @@ const RelatedBlogs = ({
     catIds,
     limit = 3,
 }: RelatedBlogsProps) => {
+    const { t } = useTranslation('common')
     const { data: relatedBlogs } = useQuery<
         GetRelatedBlogsQuery,
         Error,
@@ -54,7 +57,7 @@ const RelatedBlogs = ({
 
     return (
         <div className="related-blogs-container">
-            <h4 className="text-center">相关推荐</h4>
+            <h4 className="text-center">{t('Related blogs')}</h4>
             <div className="related-blogs">{blogs}</div>
         </div>
     )

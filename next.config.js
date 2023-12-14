@@ -6,7 +6,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 })
 
-module.exports = withBundleAnalyzer({
+
+const { i18n } = require('./next-i18next.config')
+
+const nextConfig = withBundleAnalyzer({
     staticPageGenerationTimeout: 300,
     compiler: {
         styledComponents: true,
@@ -15,6 +18,7 @@ module.exports = withBundleAnalyzer({
         inCludePaths: [path.join(__dirname, 'styles')],
     },
     poweredByHeader: false,
+    i18n,
     images: {
         remotePatterns: [
             {
@@ -30,22 +34,17 @@ module.exports = withBundleAnalyzer({
         contentSecurityPolicy:
             "default-src 'self'; script-src 'none'; sandbox;",
         deviceSizes: [350, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        loader: 'custom',
+        loaderFile: './loader.js'
     },
     swcMinify: true,
     webpack: (config, { isServer }) => {
         if (isServer) {
-            ;() => import(path.join(__dirname, 'helpers/generate-sitemap'))
+            ; () => import(path.join(__dirname, 'helpers/generate-sitemap'))
         }
-
-        config.module.rules.push({
-            test: /\.ttf/,
-            use: [
-                {
-                    loader: 'url-loader',
-                },
-            ],
-        })
 
         return config
     },
 })
+
+module.exports = nextConfig

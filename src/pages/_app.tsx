@@ -12,15 +12,16 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import type { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
+import { appWithTranslation } from 'next-i18next'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 
 import ThemeProvider from '../components/context/ThemeContext'
 import GraphqlProvider from '../components/graphql/GraphqlProvider'
 import Header from '../components/header/Header'
 import RefreshTokenHandler from '../components/RefreshTokenHandler'
-import Head from 'next/head'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -94,4 +95,4 @@ function MyApp({
     )
 }
 
-export default MyApp
+export default appWithTranslation(MyApp)
