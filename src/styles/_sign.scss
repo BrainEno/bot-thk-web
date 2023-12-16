@@ -182,6 +182,17 @@
                 .form-group {
                     width: 80%;
                     margin-bottom: 10px;
+
+                    .form-input {
+                        height: 45px;
+                        padding: 0 12px;
+
+                        @include themify($themes) {
+                            background-color: themed('background2');
+                            color: themed('textColor');
+                            caret-color: themed('textColor');
+                        }
+                    }
                 }
 
                 .form-btn {

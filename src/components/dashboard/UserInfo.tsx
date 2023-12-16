@@ -134,13 +134,13 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                                 <span className="userInfo-text">
                                     {!isZh
                                         ? `Joined BOT THK ${getLocaleFromNow(
-                                            user.createdAt,
-                                            'en'
-                                        )}`
+                                              user.createdAt,
+                                              'en'
+                                          )}`
                                         : `${getLocaleFromNow(
-                                            user.createdAt,
-                                            'zh'
-                                        )} 加入 BOT THK`}
+                                              user.createdAt,
+                                              'zh'
+                                          )} 加入 BOT THK`}
                                 </span>
                             )}
                         </div>
@@ -206,11 +206,12 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                                 onClick={() => setStatus('FOLLOWING')}
                             >
                                 {isZh
-                                    ? ` ${t('followings')} ${followings.length
-                                    } `
+                                    ? ` ${t('followings')} ${
+                                          followings.length
+                                      } `
                                     : ` ${followings.length} ${t(
-                                        'followings'
-                                    )} `}
+                                          'followings'
+                                      )} `}
                             </span>{' '}
                             ·
                             <span

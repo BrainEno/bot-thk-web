@@ -25,7 +25,12 @@ const nextConfig = withBundleAnalyzer({
                 protocol: 'https',
                 hostname: 'bot-thk.vercel.app',
             },
-            { protocol: 'https', hostname: 'res.cloudinary.com' },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: `/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload/**`
+            },
             { hostname: 'twitter.com' },
             { hostname: 'localhost' },
             { hostname: '[::1]' },
@@ -34,8 +39,7 @@ const nextConfig = withBundleAnalyzer({
         contentSecurityPolicy:
             "default-src 'self'; script-src 'none'; sandbox;",
         deviceSizes: [350, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-        loader: 'custom',
-        loaderFile: './loader.js'
+        minimumCacheTTL: 60
     },
     swcMinify: true,
     webpack: (config, { isServer }) => {

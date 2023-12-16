@@ -42,6 +42,14 @@ const Index: React.FC<IndexPageProps> = ({
                     href={`${process.env.NEXT_PUBLIC_DOMAIN}${router.pathname}`}
                 />
                 <meta
+                    property="twitter:image"
+                    content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/recent.jpg`}
+                />
+                <meta
+                    property="twitter:title"
+                    content={`Cruel Literature,novels,poemes,and else | ${process.env.NEXT_PUBLIC_APP_NAME}`}
+                />
+                <meta
                     property="og:title"
                     content={`Cruel Literature,novels,poemes,and else | ${process.env.NEXT_PUBLIC_APP_NAME}`}
                 />

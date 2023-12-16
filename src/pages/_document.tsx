@@ -6,7 +6,7 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <link rel=" shortcut icon" href="/favicon.ico" />
+                    <link rel="shortcut icon" href="/favicon.ico" />
                     <link
                         rel="mask-icon"
                         href="/moshIcon.png"

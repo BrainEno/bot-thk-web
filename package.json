@@ -41,6 +41,7 @@
     "@urql/exchange-graphcache": "^6.3.3",
     "@urql/introspection": "^1.0.2",
     "@vercel/analytics": "^1.1.1",
+    "accept-language": "^3.0.18",
     "classnames": "^2.3.1",
     "cloudinary": "^1.35.0",
     "cloudinary-react": "^1.7.0",
