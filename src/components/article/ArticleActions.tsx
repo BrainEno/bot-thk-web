@@ -17,6 +17,7 @@ import {
 } from 'react-icons/md'
 import { PiDotsThreeOutlineFill } from 'react-icons/pi'
 import { RWebShare } from 'react-web-share'
+import { motion } from 'framer-motion'
 import { convert } from 'html-to-text'
 import { jsPDF } from 'jspdf'
 import Image from 'next/image'
@@ -34,6 +35,7 @@ interface ArticleActionsProps {
     blogId: string
     blogTitle: string
     blogBody: string
+    blogAuthor: string
     title: string
     description: string
     pathname: string
@@ -45,6 +47,7 @@ const ArticleActions = ({
     blogId,
     blogTitle,
     blogBody,
+    blogAuthor,
     title,
     description,
     pathname,
@@ -60,12 +63,16 @@ const ArticleActions = ({
     const { windowWidth } = useWindowSize()
 
     const dropdownRef = useRef<HTMLDivElement | null>(null)
+    const btnRef = useRef<HTMLButtonElement | null>(null)
 
-    useClickOutside(dropdownRef, (e) => {
-        if (showMore) e.preventDefault()
-
-        setShowMore(false)
-    })
+    useClickOutside(
+        dropdownRef,
+        (e) => {
+            if (showMore) e.preventDefault()
+            setShowMore(false)
+        },
+        btnRef
+    )
 
     const { image, takeScreenshot, canvasWidth, canvasHeight } = useScreenshot(
         {}
@@ -129,10 +136,15 @@ const ArticleActions = ({
             if (y + oneLineHeight + margin > pageHeight) {
                 doc.setFontSize(11)
                     .setTextColor(191, 191, 191)
-                    .text('版权归作者所有，请勿随意转载', 200, pageHeight - 8, {
-                        align: 'right',
-                        maxWidth: maxLineWidth,
-                    })
+                    .text(
+                        `版权归作者 '${blogAuthor}' 所有，请勿随意转载`,
+                        200,
+                        pageHeight - 8,
+                        {
+                            align: 'right',
+                            maxWidth: maxLineWidth,
+                        }
+                    )
                 doc.addPage()
                 y = 15
             }
@@ -147,10 +159,15 @@ const ArticleActions = ({
 
         doc.setFontSize(11)
             .setTextColor(191, 191, 191)
-            .text('版权归作者所有，请勿随意转载', 200, pageHeight - 8, {
-                align: 'right',
-                maxWidth: maxLineWidth,
-            })
+            .text(
+                `版权归作者 '${blogAuthor}' 所有，请勿随意转载`,
+                200,
+                pageHeight - 8,
+                {
+                    align: 'right',
+                    maxWidth: maxLineWidth,
+                }
+            )
 
         doc.save(`${blogTitle}.pdf`)
     }
@@ -189,14 +206,18 @@ const ArticleActions = ({
                         <MdIosShare size={22} />
                     </button>
                 </RWebShare>
-                <button onClick={toggleMore}>
+                <button onClick={toggleMore} ref={btnRef}>
                     <PiDotsThreeOutlineFill size={18} />
                 </button>
+
                 {showMore && (
-                    <div
+                    <motion.div
                         className="more-dropdown"
                         data-html2canvas-ignore="true"
                         ref={dropdownRef}
+                        initial={{ y: -10, z: -1, opacity: 0 }}
+                        animate={{ y: 0, z: 5, opacity: 1 }}
+                        exit={{ y: -10, z: -1, opacity: 0 }}
                     >
                         <div className="dropdown-item" onClick={getScreenshot}>
                             文章截图
@@ -204,39 +225,41 @@ const ArticleActions = ({
                         <div className="dropdown-item" onClick={saveAsPDF}>
                             下载PDF
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
-                {showScreenshot && (
-                    <Modal
-                        title="文章截图"
-                        onClose={() => setShowScreenshot(false)}
-                        closeOnClickOutside
-                        className="screenshot-modal"
-                    >
-                        {image ? (
-                            <div className="screenshot-wrapper">
-                                <Image
-                                    width={imgWidth}
-                                    height={imgHeight}
-                                    objectFit="contain"
-                                    src={image}
-                                    alt="screenshot"
-                                    crossOrigin="anonymous"
-                                />
-                                <a
-                                    href={image}
-                                    className="download-screenshot"
-                                    download={`${title}-screenshot.png`}
-                                >
-                                    <FiDownload size={24} />
-                                </a>
-                            </div>
-                        ) : (
-                            <CircleLoader size={30} />
-                        )}
-                    </Modal>
-                )}
+                {showScreenshot ? (
+                    image ? (
+                        <Modal
+                            title="文章截图"
+                            onClose={() => setShowScreenshot(false)}
+                            closeOnClickOutside
+                            className="screenshot-modal"
+                        >
+                            {
+                                <div className="screenshot-wrapper">
+                                    <Image
+                                        width={imgWidth}
+                                        height={imgHeight}
+                                        objectFit="contain"
+                                        src={image}
+                                        alt="screenshot"
+                                        crossOrigin="anonymous"
+                                    />
+                                    <a
+                                        href={image}
+                                        className="download-screenshot"
+                                        download={`${title}-screenshot.png`}
+                                    >
+                                        <FiDownload size={24} />
+                                    </a>
+                                </div>
+                            }
+                        </Modal>
+                    ) : (
+                        <CircleLoader size={30} />
+                    )
+                ) : null}
             </div>
         </div>
     )

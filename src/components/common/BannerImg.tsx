@@ -44,13 +44,13 @@ const BannerImg = ({
                 >
                     <Image
                         className="banner-img"
-                        priority={true}
+                        loading="eager"
                         sizes="(max-width: 900px) 305px,
                                350px"
                         fill
                         alt={alt || 'banner'}
                         src={imgSrc}
-                        quality={windowWidth! > 900 ? 75 : 45}
+                        quality={windowWidth! > 900 ? 75 : 50}
                     />
                 </motion.div>
             )}

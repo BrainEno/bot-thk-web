@@ -96,6 +96,7 @@
             bottom: 0;
             left: 0;
             right: 0;
+            z-index: 3;
 
             @include themify($themes) {
                 background-color: themed('background2');
@@ -384,7 +385,7 @@
             margin: 0;
             padding: 0;
             width: 320px;
-            height: 100%;
+            height: calc(100vh - 160px);
             box-shadow: none;
 
             .title-container {
@@ -411,7 +412,7 @@
                     .ql-editor {
                         font-size: 14px;
                         letter-spacing: 1px;
-                        height: 72vh;
+                        height: calc(45vh + 250px);
                     }
                 }
             }

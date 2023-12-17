@@ -5,7 +5,6 @@ import React, {
     useRef,
     useState,
 } from 'react'
-import { useTranslation } from 'next-i18next'
 import {
     FiBookmark,
     FiHome,
@@ -16,6 +15,7 @@ import {
 import classNames from 'classnames'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import { CurrentUserQuery } from '../../generated/graphql-request'
 import { sdk } from '../../generated/sdk'

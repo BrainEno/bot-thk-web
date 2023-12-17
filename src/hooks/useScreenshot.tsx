@@ -20,14 +20,11 @@ export const useScreenshot = ({
             if (!node) {
                 throw new Error('html node not provided')
             }
-            console.log('element node:', node)
-            const ele = document.querySelector('.article-container')
-            if (!ele) return
 
             const scale = window.devicePixelRatio
             const cvs = document.createElement('canvas')
-            cvs.width = ele.getBoundingClientRect().width * scale
-            cvs.height = ele.getBoundingClientRect().height * scale
+            cvs.width = node.getBoundingClientRect().width * scale
+            cvs.height = node.getBoundingClientRect().height * scale
 
             const ctx = cvs.getContext('2d')
             if (!ctx) return

@@ -189,6 +189,7 @@ const Article: React.FC<ArticleProps> = ({
                                 blogId={blog._id}
                                 blogTitle={blog.title}
                                 blogBody={blog.body}
+                                blogAuthor={blog.author.name}
                                 title={blog.title}
                                 description={blog.description}
                                 pathname={pathname}

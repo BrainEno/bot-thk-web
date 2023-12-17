@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
-import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import { PopulatedCardBlog } from '../../generated/graphql-request'
 import { getLocaleFormatedTime } from '../../helpers/date'

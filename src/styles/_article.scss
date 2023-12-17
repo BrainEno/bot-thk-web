@@ -336,6 +336,12 @@
 
         .article-actions {
             padding: 45px 30px;
+
+            .more-dropdown {
+                top: 60px;
+                right: -10px;
+                transform-origin: right top;
+            }
         }
     }
 
