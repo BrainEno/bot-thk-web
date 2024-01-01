@@ -194,7 +194,7 @@ const FollowInfoList = ({
                 <div className="followInfo-back">
                     <button onClick={hideFollowInfo}>
                         <IoMdArrowBack size={32} />
-                        {t('my-blogs')}
+                        {t('My Posts')}
                     </button>
                 </div>
             )}

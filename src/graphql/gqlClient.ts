@@ -13,5 +13,5 @@ export const fetcher =
         query: RequestDocument | TypedDocumentNode<unknown, Variables>,
         variables?: TVariables
     ) =>
-    async (): Promise<TData> =>
-        await gqlClient.request<TData>(query, variables)
+        async (): Promise<TData> =>
+            await gqlClient.request<TData>(query, variables)

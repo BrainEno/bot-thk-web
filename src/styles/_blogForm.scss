@@ -1,5 +1,6 @@
 .theme-dark .blog-form-container {
     .blog-form {
+
         .form-btn,
         .icon-btn {
             box-shadow:
@@ -15,6 +16,7 @@
     }
 
     .ql-toolbar.ql-snow {
+
         & svg .ql-fill,
         & .ql-picker,
         & .ql-stroke {
@@ -31,9 +33,13 @@
     justify-content: flex-start;
     align-items: center;
     position: fixed;
-    height: calc(100vh - 160px);
+    height: calc(100svh - 160px);
     top: 150px;
     overflow-y: scroll;
+
+    @include mq(ll) {
+        top: 115px;
+    }
 
     @include themify($themes) {
         color: themed('textColor');
@@ -128,6 +134,11 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+
+
+                @include mq(ll) {
+                    width: 60%;
+                }
 
                 .icon-btn {
                     position: absolute;
@@ -230,12 +241,16 @@
                 padding: 10px 0;
 
                 .form-btn {
-                    width: 70px;
+                    width: 75px;
                     padding: 8px 12px;
                     font-weight: 600;
                     letter-spacing: 1px;
                     margin-left: -5px;
                     margin-right: 20px;
+
+                    @include mq(ll) {
+                        width: 80px;
+                    }
 
                     &:hover {
                         color: #0066cc;
@@ -325,6 +340,7 @@
             max-height: max-content;
 
             @include themify($themes) {
+
                 .ql-toolbar.ql-snow,
                 .ql-container.ql-snow,
                 .ql-editor {
@@ -376,7 +392,7 @@
         width: 100%;
         padding: 0;
         top: 70px;
-        height: calc(100vh - 70px);
+        height: calc(100svh - 70px);
         padding: 30px 0 60px;
         justify-content: center;
         align-items: center;
@@ -385,7 +401,7 @@
             margin: 0;
             padding: 0;
             width: 320px;
-            height: calc(100vh - 160px);
+            height: calc(100svh - 160px);
             box-shadow: none;
 
             .title-container {
@@ -405,14 +421,14 @@
                 .ql-editor {
                     font-size: 14px;
                     letter-spacing: 1px;
-                    height: 45vh;
+                    height: 45svh;
                 }
 
                 &.without-img {
                     .ql-editor {
                         font-size: 14px;
                         letter-spacing: 1px;
-                        height: calc(45vh + 250px);
+                        height: calc(45svh + 250px);
                     }
                 }
             }
@@ -494,6 +510,8 @@
                                 color: themed('textColor');
                             }
                         }
+
+
                     }
                 }
             }

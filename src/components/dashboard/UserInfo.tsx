@@ -134,13 +134,13 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                                 <span className="userInfo-text">
                                     {!isZh
                                         ? `Joined BOT THK ${getLocaleFromNow(
-                                              user.createdAt,
-                                              'en'
-                                          )}`
+                                            user.createdAt,
+                                            'en'
+                                        )}`
                                         : `${getLocaleFromNow(
-                                              user.createdAt,
-                                              'zh'
-                                          )} 加入 BOT THK`}
+                                            user.createdAt,
+                                            'zh'
+                                        )} 加入 BOT THK`}
                                 </span>
                             )}
                         </div>
@@ -149,7 +149,7 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                             className="userInfo-btn"
                             onClick={() => setIsEditing(!isEditing)}
                         >
-                            {t('edit-info')}
+                            {t('Edit profile')}
                         </button>
                     </>
                 )}
@@ -206,12 +206,11 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                                 onClick={() => setStatus('FOLLOWING')}
                             >
                                 {isZh
-                                    ? ` ${t('followings')} ${
-                                          followings.length
-                                      } `
+                                    ? ` ${t('followings')} ${followings.length
+                                    } `
                                     : ` ${followings.length} ${t(
-                                          'followings'
-                                      )} `}
+                                        'followings'
+                                    )} `}
                             </span>{' '}
                             ·
                             <span
@@ -234,7 +233,7 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                     onClick={() => setStatus('SELF')}
                 >
                     <FiList />
-                    {isDesktop && <span>{t('my-blogs')}</span>}
+                    {isDesktop && <span>{t('My Posts')}</span>}
                 </button>
                 <button
                     className={classNames('userInfo-nav-btn', {
@@ -243,7 +242,7 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                     onClick={() => setStatus('FOLLOWING')}
                 >
                     <FiUserCheck />
-                    {isDesktop && <span>{t('my-followings')}</span>}
+                    {isDesktop && <span>{t('Following')}</span>}
                 </button>
                 <button
                     className={classNames('userInfo-nav-btn', {
@@ -252,11 +251,11 @@ const UserInfo = ({ user, status, setStatus }: UserInfoProps) => {
                     onClick={() => setStatus('LIKED')}
                 >
                     <FiBookmark />
-                    {isDesktop && <span>{t('saved')}</span>}
+                    {isDesktop && <span>{t('Bookmarks')}</span>}
                 </button>
                 <Link className="userInfo-nav-btn" href="/">
                     <FiHome />
-                    {isDesktop && <span>{t('home-page')}</span>}
+                    {isDesktop && <span>{t('Home Page')}</span>}
                 </Link>
             </div>
         </div>

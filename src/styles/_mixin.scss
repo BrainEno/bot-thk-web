@@ -2,77 +2,113 @@
 *VRIABLES
 */
 $breakpoints: (
-    fk: 3000px,
+    fk: 2200px,
     ll: 1450px,
     lg: 1024px,
     md: 768px,
     sm: 640px,
     xs: 400px,
-) !default;
+    ) !default;
 
 /*
 *MIXINS
 */
 @mixin mq($min: null, $max: null) {
-    $min-type: type-of($min);
-    $max-type: type-of($max);
+    $min-type: type-of($min
+    );
+$max-type: type-of($max);
 
-    @if $min-type==string {
-        @if $min==xs {
-            $min: '(min-width:#{map-get($breakpoints,xs)})';
-        } @else if $min==sm {
-            $min: '(min-width:#{map-get($breakpoints, xs )})';
-        } @else if $min==md {
-            $min: '(min-width:#{map-get($breakpoints, md )})';
-        } @else if $min==lg {
-            $min: '(min-width:#{map-get($breakpoints, lg )})';
-        } @else if $min==ll {
-            $min: '(min-width:#{map-get($breakpoints, ll )})';
-        } @else if $min==fk {
-            $min: '(min-width:#{map-get($breakpoints,fk)})';
-        } @else {
-            @warn "mq mixin supports:xs,sm,md,lg,ll,fk";
-        }
-    } @else if $min-type==number {
-        $min: '(min-width:#{$min})';
+@if $min-type==string {
+    @if $min==xs {
+        $min: '(min-width:#{map-get($breakpoints,xs)})';
     }
 
-    @if $max-type==string {
-        @if $max==xs {
-            $max: '(max-width:#{map-get($breakpoints,xs)})';
-        } @else if $max==sm {
-            $max: '(max-width:#{map-get($breakpoints, xs )})';
-        } @else if $max==md {
-            $max: '(max-width:#{map-get($breakpoints, md )})';
-        } @else if $max==lg {
-            $max: '(max-width:#{map-get($breakpoints, lg )})';
-        } @else if $max==ll {
-            $max: '(max-width:#{map-get($breakpoints, ll )})';
-        } @else if $max==fk {
-            $max: '(max-width:#{map-get($breakpoints,li)})';
-        } @else {
-            @warn "mq mixin supports:xs,sm,md,lg,ll";
-        }
-    } @else if $min-type==number {
-        $max: '(max-width:#{$max})';
+    @else if $min==sm {
+        $min: '(min-width:#{map-get($breakpoints, xs )})';
     }
 
-    $query: false;
-    @if $min and $max {
-        $query: '#{$min} and #{$max}';
-    } @else if $min {
-        $query: '#{$min}';
-    } @else if $max {
-        $query: '#{$max}';
+    @else if $min==md {
+        $min: '(min-width:#{map-get($breakpoints, md )})';
     }
 
-    @if (not $query) {
-        @warn "Invalid media query";
-    } @else {
-        @media #{$query} {
-            @content;
-        }
+    @else if $min==lg {
+        $min: '(min-width:#{map-get($breakpoints, lg )})';
     }
+
+    @else if $min==ll {
+        $min: '(min-width:#{map-get($breakpoints, ll )})';
+    }
+
+    @else if $min==fk {
+        $min: '(min-width:#{map-get($breakpoints,fk)})';
+    }
+
+    @else {
+        @warn "mq mixin supports:xs,sm,md,lg,ll,fk";
+    }
+}
+
+@else if $min-type==number {
+    $min: '(min-width:#{$min})';
+}
+
+@if $max-type==string {
+    @if $max==xs {
+        $max: '(max-width:#{map-get($breakpoints,xs)})';
+    }
+
+    @else if $max==sm {
+        $max: '(max-width:#{map-get($breakpoints, xs )})';
+    }
+
+    @else if $max==md {
+        $max: '(max-width:#{map-get($breakpoints, md )})';
+    }
+
+    @else if $max==lg {
+        $max: '(max-width:#{map-get($breakpoints, lg )})';
+    }
+
+    @else if $max==ll {
+        $max: '(max-width:#{map-get($breakpoints, ll )})';
+    }
+
+    @else if $max==fk {
+        $max: '(max-width:#{map-get($breakpoints,li)})';
+    }
+
+    @else {
+        @warn "mq mixin supports:xs,sm,md,lg,ll";
+    }
+}
+
+@else if $min-type==number {
+    $max: '(max-width:#{$max})';
+}
+
+$query: false;
+
+@if $min and $max {
+    $query: '#{$min} and #{$max}';
+}
+
+@else if $min {
+    $query: '#{$min}';
+}
+
+@else if $max {
+    $query: '#{$max}';
+}
+
+@if (not $query) {
+    @warn "Invalid media query";
+}
+
+@else {
+    @media #{$query} {
+        @content;
+    }
+}
 }
 
 @mixin mob() {
@@ -81,7 +117,7 @@ $breakpoints: (
     }
 }
 
-@mixin smart {
+@mixin smart() {
     @include mq(null, sm) {
         @content;
     }
@@ -94,7 +130,7 @@ $breakpoints: (
 }
 
 @mixin tab-landscape() {
-    @include mq(md, lg) {
+    @include mq(md) {
         @content;
     }
 }
@@ -105,33 +141,30 @@ $breakpoints: (
     }
 }
 
-@mixin four-k {
+@mixin four-k() {
     @include mq(fk) {
         @content;
     }
 }
 
-@mixin hover-transition {
+@mixin hover-transition() {
     & {
         transition: all 0.6s ease;
     }
 }
 
-@mixin default-showdow(
-    $x-offset: 3px,
+@mixin default-showdow($x-offset: 3px,
     $y-offset: 3px,
     $blur: 7px,
     $light-color: #ffffff,
-    $dark-color: #88a5bf7a
-) {
+    $dark-color: #88a5bf7a) {
     & {
-        box-shadow:
-            '-#{$x-offset}' '-#{$y-offset}' $blur $light-color,
-            '#{$x-offset}' '#{$y-offset}' $blur $dark-color;
+        box-shadow: '-#{$x-offset}' '-#{$y-offset}'$blur $light-color,
+        '#{$x-offset}' '#{$y-offset}'$blur $dark-color;
     }
 }
 
-@mixin flex-center {
+@mixin flex-center() {
     & {
         display: flex;
         align-items: center;

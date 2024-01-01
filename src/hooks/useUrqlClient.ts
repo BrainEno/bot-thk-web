@@ -1,3 +1,4 @@
+import { gql } from 'graphql-tag';
 import { useMemo } from 'react'
 // import { devtoolsExchange } from '@urql/devtools'
 import { AuthConfig, authExchange, AuthUtilities } from '@urql/exchange-auth'
@@ -11,6 +12,11 @@ import {
     ssrExchange,
     subscriptionExchange,
 } from 'urql'
+import { ExecutionResult, getOperationAST } from 'graphql'
+import { isLiveQueryOperationDefinitionNode } from "@n1ru4l/graphql-live-query";
+import { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from '@n1ru4l/push-pull-async-iterable-iterator'
+import { applyLiveQueryJSONDiffPatch } from '@n1ru4l/graphql-live-query-patch-jsondiffpatch'
+import { createClient as createWSClient } from 'graphql-ws'
 
 const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string
 
@@ -28,11 +34,12 @@ const ssr = ssrExchange({
 })
 
 const SSE_URL = `${GRAPHQL_ENDPOINT}/stream`
+const WS_URL = process.env.NEXT_PUBLIC_WS_ENDPOINT as string
 
 const useUrqlClient = (options?: RequestInit) => {
     const { data: session } = useSession()
     const token = session?.access_token
-    // const handleError = useErrorHandler();
+
     const sseClient = useMemo(
         () =>
             createSSEClient({
@@ -46,6 +53,10 @@ const useUrqlClient = (options?: RequestInit) => {
             }),
         [token]
     )
+
+    const wsClient = useMemo(() => createWSClient({
+        url: WS_URL,
+    }), [])
 
     return useMemo(() => {
         const client = createClient({
@@ -68,19 +79,56 @@ const useUrqlClient = (options?: RequestInit) => {
                 fetchExchange,
                 ssr,
                 subscriptionExchange({
+                    isSubscriptionOperation: ({ query, variables }) => {
+                        const definition = getOperationAST(query)
+                        const isSubscription = definition?.kind === 'OperationDefinition' &&
+                            definition.operation === 'subscription';
+
+                        const isLiveQuery = !!definition && isLiveQueryOperationDefinitionNode(definition, variables as any)
+                        return isSubscription || isLiveQuery;
+                    },
                     forwardSubscription(operation) {
-                        return {
+                        const definition = getOperationAST(gql`${operation.query}`)
+                        const isLiveQuery = !!definition && isLiveQueryOperationDefinitionNode(definition, operation.variables as any)
+                        return isLiveQuery ? ({
+                            subscribe: (sink) => {
+                                const source = makeAsyncIterableIteratorFromSink<ExecutionResult>(
+                                    sink => {
+                                        return wsClient.subscribe<ExecutionResult>(
+                                            { ...operation, query: operation.query! },
+                                            {
+                                                next: sink.next.bind(sink) as any,
+                                                complete: sink.complete.bind(sink),
+                                                error: sink.error.bind(sink)
+                                            }
+                                        )
+                                    }
+                                )
+
+                                const wsDispose = applyAsyncIterableIteratorToSink(
+                                    applyLiveQueryJSONDiffPatch(source),
+                                    sink
+                                )
+
+                                return {
+                                    unsubscribe: wsDispose,
+                                }
+                            }
+                        }) : ({
                             subscribe: (sink) => {
                                 const dispose = sseClient.subscribe(
                                     operation as RequestParams,
                                     sink
                                 )
+
                                 return {
-                                    unsubscribe: dispose,
+                                    unsubscribe: dispose
                                 }
-                            },
-                        }
+                            }
+
+                        })
                     },
+                    enableAllOperations: true
                 }),
             ],
             fetchOptions: () => {
@@ -96,7 +144,7 @@ const useUrqlClient = (options?: RequestInit) => {
         })
 
         return client
-    }, [options?.headers, sseClient, token])
+    }, [options?.headers, sseClient, wsClient, token])
 }
 
 export default useUrqlClient

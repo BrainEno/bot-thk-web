@@ -436,7 +436,7 @@ export const BlogForm = ({
                             {isMobile ? (
                                 <IoArrowBackCircleOutline size={20} />
                             ) : (
-                                t('blog-cancel')
+                                t('cancel')
                             )}
                         </button>
                         <button

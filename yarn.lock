@@ -1692,6 +1692,36 @@
   resolved "https://registry.npmmirror.com/@kamilkisiela/fast-url-parser/-/fast-url-parser-1.1.4.tgz#9d68877a489107411b953c54ea65d0658b515809"
   integrity sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==
 
+"@n1ru4l/graphql-live-query-patch-jsondiffpatch@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@n1ru4l/graphql-live-query-patch-jsondiffpatch/-/graphql-live-query-patch-jsondiffpatch-0.8.0.tgz#fd18bde201ca82b491c63d836e0ce13999edb8f9"
+  integrity sha512-m5OPdEhBbqQ+pkFz2dQmPl10JW/RB1Qc2zoVn9QTEXvyeSzQmrl+qNtn3nvv87P9rQDiRD/JWlD86BFX0XloBg==
+  dependencies:
+    "@n1ru4l/graphql-live-query-patch" "^0.7.0"
+    "@n1ru4l/json-patch-plus" "^0.2.0"
+
+"@n1ru4l/graphql-live-query-patch@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@n1ru4l/graphql-live-query-patch/-/graphql-live-query-patch-0.7.0.tgz#c5b30341d218627b9ed15cea37e72ea3c15f3632"
+  integrity sha512-1q49iNxqEIbmUp+qFAEVEn4ts344Cw72g5OtAuFeTwKtJT3V91kTPGMcRk5Pxb5FPHbvn52q+PCVKOAyVrtPwQ==
+  dependencies:
+    "@repeaterjs/repeater" "^3.0.4"
+
+"@n1ru4l/graphql-live-query@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@n1ru4l/graphql-live-query/-/graphql-live-query-0.10.0.tgz#2306151630b0e74b017cc1067ebbea351acf56f8"
+  integrity sha512-qZ7OHH/NB0NcG/Xa7irzgjE63UH0CkofZT0Bw4Ko6iRFagPRHBM8RgFXwTt/6JbFGIEUS4STRtaFoc/Eq/ZtzQ==
+
+"@n1ru4l/json-patch-plus@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@n1ru4l/json-patch-plus/-/json-patch-plus-0.2.0.tgz#b8fa09fd980c3460dfdc109a7c4cc5590157aa6b"
+  integrity sha512-pLkJy83/rVfDTyQgDSC8GeXAHEdXNHGNJrB1b7wAyGQu0iv7tpMXntKVSqj0+XKNVQbco40SZffNfVALzIt0SQ==
+
+"@n1ru4l/push-pull-async-iterable-iterator@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@n1ru4l/push-pull-async-iterable-iterator/-/push-pull-async-iterable-iterator-3.2.0.tgz#c15791112db68dd9315d329d652b7e797f737655"
+  integrity sha512-3fkKj25kEjsfObL6IlKPAlHYPq/oYwUkkQ03zsTTiDjD7vg/RxjdiLeCydqtxHZP0JgsXL3D/X5oAkMGzuUp/Q==
+
 "@netlify/blobs@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npmmirror.com/@netlify/blobs/-/blobs-2.2.0.tgz#bf634e6f1a43df3fab2088b5093c9e8eda01b393"
@@ -2164,7 +2194,7 @@
     "@prefresh/core" "^1.5.0"
     "@prefresh/utils" "^1.2.0"
 
-"@repeaterjs/repeater@^3.0.4":
+"@repeaterjs/repeater@^3.0.4", "@repeaterjs/repeater@^3.0.5":
   version "3.0.5"
   resolved "https://registry.npmmirror.com/@repeaterjs/repeater/-/repeater-3.0.5.tgz#b77571685410217a548a9c753aa3cdfc215bfc78"
   integrity sha512-l3YHBLAol6d/IKnB9LhpD0cEZWAoe3eFKUyTYWmFmCO2Q/WOckxLQAUyMZWwZV2M/m3+4vgRoaolFqaII82/TA==
@@ -2271,7 +2301,7 @@
 
 "@testing-library/user-event@^14.5.1":
   version "14.5.1"
-  resolved "https://registry.npmmirror.com/@testing-library/user-event/-/user-event-14.5.1.tgz#27337d72046d5236b32fd977edee3f74c71d332f"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.5.1.tgz#27337d72046d5236b32fd977edee3f74c71d332f"
   integrity sha512-UCcUKrUYGj7ClomOo2SpNVvx4/fkd/2BbIHDCle8A0ax+P3bU7yJwDBDrS6ZwdTMARWTGODX1hEsCcO+7beJjg==
 
 "@tootallnate/once@2":
@@ -5108,9 +5138,9 @@ graphql-tag@^2.11.0:
   dependencies:
     tslib "^2.1.0"
 
-graphql-ws@^5.14.0:
+graphql-ws@^5.14.0, graphql-ws@^5.14.2:
   version "5.14.2"
-  resolved "https://registry.npmmirror.com/graphql-ws/-/graphql-ws-5.14.2.tgz#7db6f6138717a544d9480f0213f65f2841ed1c52"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.14.2.tgz#7db6f6138717a544d9480f0213f65f2841ed1c52"
   integrity sha512-LycmCwhZ+Op2GlHz4BZDsUYHKRiiUz+3r9wbhBATMETNlORQJAaFlAgTFoeRh6xQoQegwYwIylVD1Qns9/DA3w==
 
 graphql@^16.7.1:
@@ -9082,6 +9112,11 @@ which@^2.0.1:
 "wonka@>= 4.0.9", wonka@^6.3.2:
   version "6.3.4"
   resolved "https://registry.npmmirror.com/wonka/-/wonka-6.3.4.tgz#76eb9316e3d67d7febf4945202b5bdb2db534594"
+  integrity sha512-CjpbqNtBGNAeyNS/9W6q3kSkKE52+FjIj7AkFlLr11s/VWGUu6a2CdYSdGxocIhIVjaW/zchesBQUKPVU69Cqg==
+
+wonka@^6.3.4:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.3.4.tgz#76eb9316e3d67d7febf4945202b5bdb2db534594"
   integrity sha512-CjpbqNtBGNAeyNS/9W6q3kSkKE52+FjIj7AkFlLr11s/VWGUu6a2CdYSdGxocIhIVjaW/zchesBQUKPVU69Cqg==
 
 wrap-ansi@^6.0.1, wrap-ansi@^6.2.0:

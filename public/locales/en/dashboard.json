@@ -1,15 +1,15 @@
 {
     "followings": "Following",
     "followers": "Followers",
-    "my-blogs": "My Posts",
-    "my-followings": "Following",
-    "saved": "Bookmarks",
-    "home-page": "Home Page",
+    "My Posts": "My Posts",
+    "Following": "Following",
+    "Bookmarks": "Bookmarks",
+    "Home Page": "Home Page",
     "create": "Write",
     "follow": "Follow",
     "following": "Following",
     "unfollow": "Unfollow",
-    "edit-info": "Edit profile",
+    "Edit profile": "Edit profile",
     "name": "Name",
     "bio": "Bio",
     "save": "Save",
@@ -32,6 +32,6 @@
     "save-fail-info": "Article saving failed, please try again later",
     "publish-fail-info": "Article publishing failed, please try again later",
     "update-fail-info": "Article updating failed, please try again later",
-    "blog-cancel": "Back",
+    "back": "Back",
     "publish": "Publish"
 }

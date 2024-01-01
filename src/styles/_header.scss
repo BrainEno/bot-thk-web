@@ -5,11 +5,7 @@
     filter: invert(100%);
 }
 
-.theme-dark
-    .site-navigation
-    .menu-content-container
-    .menu-avtar-container
-    .my-avatar {
+.theme-dark .site-navigation .menu-content-container .menu-avtar-container .my-avatar {
     background-color: $bg-dark2;
     border: $bg-dark2 5px solid;
     box-shadow:
@@ -53,21 +49,17 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 500ms;
     color: $font-light;
-    background: linear-gradient(
-        to bottom,
-        $white,
-        rgba($color: $white, $alpha: 0.95),
-        rgba($color: $white, $alpha: 0.85)
-    );
+    background: linear-gradient(to bottom,
+            $white,
+            rgba($color: $white, $alpha: 0.95),
+            rgba($color: $white, $alpha: 0.85));
 
     @include themify($themes) {
         color: themed('textColor');
-        background: linear-gradient(
-            to bottom,
-            themed('headerBg'),
-            rgba($color: themed('headerBg'), $alpha: 0.95),
-            rgba($color: themed('headerBg'), $alpha: 0.85)
-        );
+        background: linear-gradient(to bottom,
+                themed('headerBg'),
+                rgba($color: themed('headerBg'), $alpha: 0.95),
+                rgba($color: themed('headerBg'), $alpha: 0.85));
     }
 
     .menu-title {
@@ -129,6 +121,7 @@
             }
 
             @include themify($themes) {
+
                 &:hover,
                 &.clicked {
                     background-color: themed('menuBtnHover');
@@ -301,7 +294,7 @@
 
         .menu-content-container {
             width: 55vw;
-            height: calc(100vh + 65px);
+            height: calc(100svh + 65px);
             background: $white;
             position: fixed;
             top: 65px;
@@ -314,10 +307,8 @@
             z-index: 100;
 
             @include themify($themes) {
-                background-color: rgba(
-                    $color: themed('background2'),
-                    $alpha: 0.97
-                );
+                background-color: rgba($color: themed('background2'),
+                        $alpha: 0.97);
                 color: themed('textColor');
             }
 
